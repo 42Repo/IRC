@@ -1,10 +1,7 @@
 #pragma once
 
 #include "Channel.h"
-#include <iostream>
-#include <map>
 #include <poll.h>
-#include <string>
 #include <vector>
 
 class Server {

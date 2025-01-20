@@ -2,7 +2,6 @@
 
 #include "Client.h"
 #include <map>
-#include <string>
 
 class Channel {
   public:
