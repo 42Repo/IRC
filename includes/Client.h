@@ -12,12 +12,12 @@ class Client {
     Client(const Client &client);
     Client &operator=(const Client &client);
 
-    int         fd;
-    std::string nickname;
-    std::string username;
-    std::string realname;
-    std::string hostname;
-    bool        isAuthenticated;
-    std::string messageBuffer;
-    bool        isOperator;
+    int         _fd;
+    std::string _nickname;
+    std::string _username;
+    std::string _realname;
+    std::string _hostname;
+    bool        _isAuthenticated;
+    std::string _messageBuffer;
+    bool        _isOperator;
 };

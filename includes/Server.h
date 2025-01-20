@@ -20,10 +20,10 @@ class Server {
     Server(const Server &server);
     Server &operator=(const Server &server);
 
-    int                              port;
-    std::string                      password;
-    int                              server_fd;
-    std::vector<Client *>            clients;
-    std::map<std::string, Channel *> channels;
-    std::vector<pollfd>              fds;
+    int                              _port;
+    std::string                      _password;
+    int                              _server_fd;
+    std::vector<Client *>            _clients;
+    std::map<std::string, Channel *> _channels;
+    std::vector<pollfd>              _fds;
 };

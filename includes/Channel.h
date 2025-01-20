@@ -10,11 +10,11 @@ class Channel {
     ~Channel();
 
   private:
-    std::string              name;
-    std::string              topic;
-    std::string              password;
-    std::map<Client *, bool> members;
-    int                      userLimit;
-    bool                     isInviteOnly;
-    bool                     isTopicOperatorOnly;
+    std::string              _name;
+    std::string              _topic;
+    std::string              _password;
+    std::map<Client *, bool> _members;
+    int                      _userLimit;
+    bool                     _isInviteOnly;
+    bool                     _isTopicOperatorOnly;
 };
