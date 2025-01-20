@@ -1,6 +1,9 @@
+#pragma once
+
 #include "Client.h"
 #include <map>
 #include <string>
+
 class Channel {
   public:
     Channel(std::string name);

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Channel.h"
 #include <iostream>
 #include <map>
@@ -10,8 +12,8 @@ class Server {
     Server(int port, std::string password);
     ~Server();
 
-    void start();
-    void stop();
+    void     run();
+    void     setupServerSocket();
 
   private:
     Server();
