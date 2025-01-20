@@ -21,7 +21,7 @@ OBJ_DIR      := $(BUILD_DIR)/obj
 DEP_DIR      := $(BUILD_DIR)/dep
 
 # Source and Object Files
-SRCS         := main.cpp 
+SRCS         := srcs/main.cpp 
 OBJS         := $(addprefix $(OBJ_DIR)/,$(SRCS:.cpp=.o))
 DEPS         := $(addprefix $(DEP_DIR)/,$(SRCS:.cpp=.d))
 
@@ -57,6 +57,7 @@ $(OBJ_DIR)/%.o: %.cpp | $(OBJ_DIR) $(DEP_DIR)
 	$(eval PERCENTAGE=$(shell echo $$(($(CURR)*100/$(TOTAL)))))
 	@printf "$(FG_GREEN)\033[2K[$(shell printf "% 3s" "$(PERCENTAGE)")%%] $(shell printf "%*d/%d" $(TOTAL_LEN) $(CURR) $(TOTAL)) Compiling $<\r$(RESET)"
 	@mkdir -p $(dir $@)
+	@mkdir -p $(dir $(DEP_DIR)/$*.d)
 	@$(CXX) $(CXXFLAGS) -MMD -MP -MF $(DEP_DIR)/$*.d -c $< -o $@
 
 # Linking
