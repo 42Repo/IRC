@@ -8,10 +8,10 @@ class Channel {
 
   private:
     std::string              name;
-    std::string              topic = NULL;
-    std::string              password = NULL;
+    std::string              topic;
+    std::string              password;
     std::map<Client *, bool> members;
-    int                      userLimit = 0;
-    bool                     isInviteOnly = false;
-    bool                     isTopicOperatorOnly = false;
+    int                      userLimit;
+    bool                     isInviteOnly;
+    bool                     isTopicOperatorOnly;
 };
