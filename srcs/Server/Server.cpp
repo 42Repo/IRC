@@ -1,4 +1,5 @@
 #include "../../includes/Server.h"
+#include "CommandHandler.hpp"
 #include <errno.h>
 #include <fcntl.h>
 #include <iostream>
@@ -99,6 +100,10 @@ void Server::run() {
 
                     std::cout << "New client connected to the server" << std::endl;
                 }
+				char buffer[1024];
+				read(_fds[i].fd, &buffer, 1024);
+				//appeler command handler
+				std::cout << buffer<< std::endl;
                 // else {
                 //      Nouveau truc a faire sur un clien connecter
                 // }

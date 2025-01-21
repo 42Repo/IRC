@@ -6,7 +6,8 @@
 class CommandHandler {
 
   public:
-    CommandHandler(Client *client, std::string &input);
+    CommandHandler();
+	static void handleCommand(Client *client, const std::string input);
 
   private:
     std::map<std::string, void (CommandHandler::*)(Client *client, const std::string &)> commandMap;

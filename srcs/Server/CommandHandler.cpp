@@ -1,7 +1,7 @@
 #include "../../includes/CommandHandler.hpp"
 
 
-CommandHandler::CommandHandler(Client *client, std::string &input)
+CommandHandler::CommandHandler()
 {
   // parsing() -> split prefixe/command/arg/suffixe
 
@@ -9,6 +9,10 @@ CommandHandler::CommandHandler(Client *client, std::string &input)
   /*
     commandMap["JOIN"] = &CommandHandler::handleJoin
   */
+}
+void CommandHandler::handleCommand(Client *client, const std::string input)
+{
+  std::cout << "Command handler :" << input << std::endl;
 }
 
 /*
