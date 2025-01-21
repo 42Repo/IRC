@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Channel.h"
+#include "CommandHandler.h"
 #include <poll.h>
 #include <vector>
 
@@ -9,8 +10,8 @@ class Server {
     Server(int port, std::string password);
     ~Server();
 
-    void     run();
-    void     setupServerSocket();
+    void run();
+    void setupServerSocket();
 
   private:
     Server();
@@ -23,4 +24,6 @@ class Server {
     std::vector<Client *>            _clients;
     std::map<std::string, Channel *> _channels;
     std::vector<pollfd>              _fds;
+    time_t                           _creationTime;
+    CommandHandler                   _commandHandler;
 };

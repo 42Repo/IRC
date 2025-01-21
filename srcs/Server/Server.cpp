@@ -1,5 +1,4 @@
 #include "../../includes/Server.h"
-#include "CommandHandler.hpp"
 #include <errno.h>
 #include <fcntl.h>
 #include <iostream>
