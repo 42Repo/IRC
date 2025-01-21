@@ -1,13 +1,108 @@
 #include "../../includes/Server.h"
+#include <errno.h>
+#include <fcntl.h>
+#include <iostream>
+#include <netinet/in.h>
+#include <stdexcept>
+#include <string.h>
+#include <unistd.h>
 
 Server::Server(int port, std::string password)
     : _port(port),
       _password(password),
       _server_fd(0),
       _clients(0),
-      _fds(0) {}
+      _fds(0) {
+    setupServerSocket();
+}
 
-Server::~Server() {}
+Server::~Server() {
+    for (size_t i = 0; i < _fds.size(); ++i) {
+        close(_fds[i].fd);
+    }
+}
 
-void Server::setupServerSocket() {};
-void Server::run() {};
+void setNonBlocking(int fd) {
+    int flags = fcntl(fd, F_GETFL, 0);
+    if (flags == -1) {
+        throw std::runtime_error("Failed to get socket flags: " + std::string(strerror(errno)));
+    }
+    if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) {
+        throw std::runtime_error("Failed to set socket to non-blocking mode: " +
+                                 std::string(strerror(errno)));
+    }
+}
+
+void Server::setupServerSocket() {
+    _server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (_server_fd == -1) {
+        throw std::runtime_error("Failed to create server socket");
+    }
+
+    int optval = 1;
+    if (setsockopt(_server_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1) {
+        throw std::runtime_error("Failed to set socket option SO_REUSEADDR");
+    }
+
+    struct sockaddr_in serverAddress;
+    memset(&serverAddress, 0, sizeof(serverAddress));
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_addr.s_addr = INADDR_ANY;
+    serverAddress.sin_port = htons(_port);
+
+    if (bind(_server_fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) == -1) {
+        throw std::runtime_error("Failed to bind server socket to port");
+    }
+
+    if (listen(_server_fd, SOMAXCONN) == -1) {
+        throw std::runtime_error("Failed to listen on server socket");
+    }
+
+    setNonBlocking(_server_fd);
+
+    pollfd server_pfd;
+    server_pfd.fd = _server_fd;
+    server_pfd.events = POLLIN;
+    _fds.push_back(server_pfd);
+}
+
+void Server::run() {
+    std::cout << "Server running. Listening on port " << _port << std::endl;
+
+    while (true) {
+        int pollResult = poll(_fds.data(), _fds.size(), -1);
+
+        if (pollResult == -1) {
+            throw std::runtime_error("Error in poll: " + std::string(strerror(errno)));
+        }
+
+        for (size_t i = 0; i < _fds.size(); ++i) {
+            if (_fds[i].revents & POLLIN) {
+                if (_fds[i].fd == _server_fd) {
+                    struct sockaddr_in clientAddress;
+                    socklen_t          clientAddressLength = sizeof(clientAddress);
+                    int                clientSocket =
+                        accept(_server_fd, (struct sockaddr *)&clientAddress, &clientAddressLength);
+
+                    if (clientSocket == -1) {
+                        std::cerr << "Failed to accept incoming connection: " << strerror(errno)
+                                  << std::endl;
+                        continue;
+                    }
+
+                    setNonBlocking(clientSocket);
+
+                    pollfd newClient;
+                    newClient.fd = clientSocket;
+                    newClient.events = POLLIN;
+                    _fds.push_back(newClient);
+
+                    std::cout << "New client connected to the server" << std::endl;
+                }
+                // else {
+                //      Nouveau truc a faire sur un clien connecter
+                // }
+            }
+        }
+    }
+}
