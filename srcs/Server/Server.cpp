@@ -123,15 +123,6 @@ void Server::run() {
                         continue;
                     }
 
-                    if (bytesRead == 0) {
-                        // client a fermé la connexion
-                        close(_fds[i].fd);
-                        _fds.erase(_fds.begin() + i);
-                        delete _clients[i];
-                        _clients.erase(_clients.begin() + i);
-                        continue;
-                    }
-
                     std::string message(buffer, bytesRead);
                     std::cout << "Received message from client: " << message << std::endl;
 

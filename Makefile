@@ -15,7 +15,7 @@ FG_WHITE    := $(shell printf "\033[37m")
 # Project Settings
 TARGET       := ircserv
 CXX          := c++
-CXXFLAGS     := -Wall -Werror -Wextra -std=c++98
+CXXFLAGS     := -Wall -Werror -Wextra -std=c++98 -Wno-unused-private-field
 BUILD_DIR    := .build
 OBJ_DIR      := $(BUILD_DIR)/obj
 DEP_DIR      := $(BUILD_DIR)/dep
