@@ -8,7 +8,7 @@ class Channel;
 
 class Client {
   public:
-    Client(int fd);
+    Client(int fd, Server *server);
     ~Client();
 
   private:

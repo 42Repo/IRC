@@ -13,7 +13,7 @@ CommandHandler::CommandHandler()
 void CommandHandler::handleCommand(Client *client, const std::string input)
 {
   (void)client;
-  std::cout << "Command handler :" << input << std::endl;
+  std::cout << "Command handler : " << input << std::endl;
 }
 
 /*

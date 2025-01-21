@@ -6,8 +6,8 @@
 #include <netinet/in.h>
 #include <stdexcept>
 #include <string.h>
-#include <unistd.h>
 #include <time.h>
+#include <unistd.h>
 
 Server::Server(int port, std::string password)
     : _port(port),
@@ -15,8 +15,8 @@ Server::Server(int port, std::string password)
       _server_fd(0),
       _clients(0),
       _fds(0),
-	  _creationTime(std::time(0)),
-	  _commandHandler(CommandHandler()){
+      _creationTime(std::time(0)),
+      _commandHandler(CommandHandler()) {
     setupServerSocket();
 }
 
@@ -26,7 +26,7 @@ Server::~Server() {
     }
 }
 
-void setNonBlocking(int fd) {
+static void setNonBlocking(int fd) {
     int flags = fcntl(fd, F_GETFL, 0);
     if (flags == -1) {
         throw std::runtime_error("Failed to get socket flags: " + std::string(strerror(errno)));
@@ -94,23 +94,42 @@ void Server::run() {
                         continue;
                     }
 
-                    setNonBlocking(clientSocket);
+                    Client *newClient = new Client(clientSocket, this);
+                    _clients.push_back(newClient);
 
-                    pollfd newClient;
-                    newClient.fd = clientSocket;
-                    newClient.events = POLLIN;
-                    _fds.push_back(newClient);
+                    pollfd client_pfd;
+                    client_pfd.fd = clientSocket;
+                    client_pfd.events = POLLIN;
+                    _fds.push_back(client_pfd);
 
                     std::cout << "New client connected to the server" << std::endl;
+                } else {
+                    // on a un client qui a envoyé un message
+                    // on doit le lire et le traiter
+                    char buffer[1024];
+                    int  bytesRead = read(_fds[i].fd, buffer, sizeof(buffer));
+
+                    if (bytesRead == -1) {
+                        std::cerr << "Failed to read from client socket: " << strerror(errno)
+                                  << std::endl;
+                        continue;
+                    }
+
+                    if (bytesRead == 0) {
+                        // client a fermé la connexion
+                        close(_fds[i].fd);
+                        _fds.erase(_fds.begin() + i);
+                        delete _clients[i];
+                        _clients.erase(_clients.begin() + i);
+                        continue;
+                    }
+
+                    std::string message(buffer, bytesRead);
+                    std::cout << "Received message from client: " << message << std::endl;
+
+                    // on traite le message
+                    _commandHandler.handleCommand(_clients[i], message);
                 }
-				char buffer[1024];
-				read(_fds[i].fd, &buffer, 1024);
-				//appeler command handler
-				_commandHandler.handleCommand(_fds[i], buffer);
-				std::cout << buffer<< std::endl;
-                // else {
-                //      Nouveau truc a faire sur un clien connecter
-                // }
             }
         }
     }
