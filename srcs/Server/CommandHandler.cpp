@@ -1,4 +1,11 @@
 #include "../../includes/CommandHandler.h"
+#include <vector>
+
+static std::vector<std::string> commandParser(std::string input) {
+    std::vector<std::string> command(4);
+    (void)input;
+    return command;
+}
 
 CommandHandler::CommandHandler(Server *server) : _server(server) {
     // parsing() -> split prefixe/command/arg/suffixe
@@ -9,8 +16,8 @@ CommandHandler::CommandHandler(Server *server) : _server(server) {
     */
 }
 void CommandHandler::handleCommand(Client *client, const std::string input) {
-    (void)client;
-    std::cout << "Command handler : " << input << std::endl;
+    std::cout << "Client" << client->getFd() << " : " << input << std::endl;
+    std::vector<std::string> command = commandParser(input);
 }
 
 /*

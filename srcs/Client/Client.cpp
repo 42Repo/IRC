@@ -36,3 +36,4 @@ Client::~Client() {
 	close(_fd);
 }
 
+int Client::getFd(){return _fd;}

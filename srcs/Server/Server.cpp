@@ -8,6 +8,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <vector>
 
 Server::Server(int port, std::string password)
     : _port(port),
@@ -70,6 +71,13 @@ void Server::setupServerSocket() {
     _fds.push_back(server_pfd);
 }
 
+static Client *getClientByFd(std::vector<Client *> clients, int fd) {
+    for (int i = 0; i < (int)clients.size(); i++) {
+        if (clients[i]->getFd() == fd)
+            return clients[i];
+    }
+    return NULL;
+}
 void Server::run() {
     std::cout << "Server running. Listening on port " << _port << std::endl;
 
@@ -128,7 +136,7 @@ void Server::run() {
                     std::cout << "Received message from client: " << message << std::endl;
 
                     // on traite le message
-                    _commandHandler.handleCommand(_clients[i], message);
+                    _commandHandler.handleCommand(getClientByFd(_clients, _fds[i].fd), message);
                 }
             }
         }
