@@ -6,10 +6,11 @@
 class CommandHandler {
 
   public:
-    CommandHandler();
+    CommandHandler(Server *server);
 	static void handleCommand(Client *client, const std::string input);
 
   private:
+    Server *_server;
     std::map<std::string, void (CommandHandler::*)(Client *client, const std::string &)> commandMap;
 
     // ajouter chaque commande

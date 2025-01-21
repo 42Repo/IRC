@@ -16,7 +16,7 @@ Server::Server(int port, std::string password)
       _clients(0),
       _fds(0),
       _creationTime(std::time(0)),
-      _commandHandler(CommandHandler()) {
+      _commandHandler(this) {
     setupServerSocket();
 }
 

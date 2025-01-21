@@ -1,19 +1,16 @@
 #include "../../includes/CommandHandler.h"
 
+CommandHandler::CommandHandler(Server *server) : _server(server) {
+    // parsing() -> split prefixe/command/arg/suffixe
 
-CommandHandler::CommandHandler()
-{
-  // parsing() -> split prefixe/command/arg/suffixe
-
-  //ajouter chaque fonction a la map
-  /*
-    commandMap["JOIN"] = &CommandHandler::handleJoin
-  */
+    // ajouter chaque fonction a la map
+    /*
+      commandMap["JOIN"] = &CommandHandler::handleJoin
+    */
 }
-void CommandHandler::handleCommand(Client *client, const std::string input)
-{
-  (void)client;
-  std::cout << "Command handler : " << input << std::endl;
+void CommandHandler::handleCommand(Client *client, const std::string input) {
+    (void)client;
+    std::cout << "Command handler : " << input << std::endl;
 }
 
 /*
