@@ -1,16 +1,16 @@
 #pragma once
 
+#include "Client.h"
 #include <iostream>
 #include <map>
-#include "Client.h"
 class CommandHandler {
 
   public:
     CommandHandler(Server *server);
-	static void handleCommand(Client *client, const std::string input);
+    static void handleCommand(Client *client, const std::string input);
 
   private:
-    Server *_server;
+    Server                                                                              *_server;
     std::map<std::string, void (CommandHandler::*)(Client *client, const std::string &)> commandMap;
 
     // ajouter chaque commande

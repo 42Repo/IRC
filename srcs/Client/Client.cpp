@@ -1,10 +1,9 @@
 #include "../../includes/Client.h"
+#include <errno.h>
 #include <fcntl.h>
 #include <stdexcept>
 #include <string.h>
 #include <unistd.h>
-#include <errno.h>
-
 
 static void setNonBlocking(int fd) {
     int flags = fcntl(fd, F_GETFL, 0);
@@ -32,8 +31,6 @@ Client::Client(int fd, Server *server)
     setNonBlocking(_fd);
 }
 
-Client::~Client() {
-	close(_fd);
-}
+Client::~Client() { close(_fd); }
 
-int Client::getFd(){return _fd;}
+int Client::getFd() { return _fd; }
