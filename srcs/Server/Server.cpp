@@ -1,4 +1,5 @@
 #include "../../includes/Server.h"
+#include <ctime>
 #include <errno.h>
 #include <fcntl.h>
 #include <iostream>
@@ -6,13 +7,16 @@
 #include <stdexcept>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 Server::Server(int port, std::string password)
     : _port(port),
       _password(password),
       _server_fd(0),
       _clients(0),
-      _fds(0) {
+      _fds(0),
+	  _creationTime(std::time(0)),
+	  _commandHandler(CommandHandler()){
     setupServerSocket();
 }
 
@@ -102,6 +106,7 @@ void Server::run() {
 				char buffer[1024];
 				read(_fds[i].fd, &buffer, 1024);
 				//appeler command handler
+				_commandHandler.handleCommand(_fds[i], buffer);
 				std::cout << buffer<< std::endl;
                 // else {
                 //      Nouveau truc a faire sur un clien connecter
