@@ -102,6 +102,8 @@ void Server::run() {
                         continue;
                     }
 
+                    setNonBlocking(clientSocket);
+
                     Client *newClient = new Client(clientSocket, this);
                     _clients.push_back(newClient);
 

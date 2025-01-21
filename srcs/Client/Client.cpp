@@ -30,7 +30,6 @@ Client::Client(int fd, Server *server)
       _isOperator(false),
       _channels(),
       _status("") {
-    setNonBlocking(_fd);
 
     struct sockaddr_in clientAddress;
     socklen_t          clientAddressLength = sizeof(clientAddress);
