@@ -10,7 +10,7 @@ class Client {
   public:
     Client(int fd, Server *server);
     ~Client();
-
+    int getFd();
   private:
     Client();
     Client(const Client &client);
