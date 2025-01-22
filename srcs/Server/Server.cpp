@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <vector>
 
-Server::Server(int port, std::string password)
+Server::Server(int port, const std::string &password)
     : _port(port),
       _password(password),
       _server_fd(0),
@@ -122,6 +122,17 @@ void Server::run() {
                     if (bytesRead == -1) {
                         std::cerr << "Failed to read from client socket: " << strerror(errno)
                                   << std::endl;
+                        continue;
+                    }
+
+                    if (bytesRead == 0) {
+                        // client disconnected
+                        std::cout << "Client disconnected" << std::endl;
+
+                        close(_fds[i].fd);
+                        _fds.erase(_fds.begin() + i);
+                        delete _clients[i];
+                        _clients.erase(_clients.begin() + i);
                         continue;
                     }
 

@@ -30,6 +30,7 @@ CommandHandler::CommandHandler(Server *server) : _server(server) {
 void CommandHandler::handleCommand(Client *client, const std::string input) {
     std::cout << "Client" << client->getFd() << " : " << input << std::endl;
     std::cout << "hostname : " << client->getHostname() << std::endl;
+    client->sendMessage("You said: " + input + "\r\n");
     std::vector<std::string> command = commandParser(input);
 }
 

@@ -10,7 +10,8 @@ class Client {
   public:
     Client(int fd, Server *server);
     ~Client();
-    int getFd();
+    void        sendMessage(const std::string &message);
+    int         getFd();
     std::string getNickname();
     std::string getUsername();
     std::string getRealname();

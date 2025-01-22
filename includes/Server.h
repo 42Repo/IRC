@@ -7,7 +7,7 @@
 
 class Server {
   public:
-    Server(int port, std::string password);
+    Server(int port, const std::string &password);
     ~Server();
 
     void run();

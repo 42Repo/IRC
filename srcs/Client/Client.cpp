@@ -46,3 +46,11 @@ std::string Client::getUsername() { return _username; }
 std::string Client::getRealname() { return _realname; }
 
 std::string Client::getHostname() { return _hostname; }
+
+void Client::sendMessage(const std::string &msg) {
+    ssize_t bytesSent = send(this->_fd, msg.c_str(), msg.length(), 0);
+    if (bytesSent == -1) {
+        // Handle error (e.g., log it, close the connection)
+        // TODO: Implement error handling
+    }
+}
