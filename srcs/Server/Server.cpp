@@ -146,3 +146,11 @@ void Server::run() {
         }
     }
 }
+
+std::string Server::getHostname() {
+    char hostname[256];
+    if (gethostname(hostname, sizeof(hostname)) == -1) {
+        throw std::runtime_error("Failed to get hostname: " + std::string(strerror(errno)));
+    }
+    return std::string(hostname);
+}

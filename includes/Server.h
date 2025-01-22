@@ -10,8 +10,9 @@ class Server {
     Server(int port, const std::string &password);
     ~Server();
 
-    void run();
-    void setupServerSocket();
+    void        run();
+    void        setupServerSocket();
+    std::string getHostname();
 
   private:
     Server();

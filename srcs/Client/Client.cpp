@@ -1,11 +1,14 @@
 #include "../../includes/Client.h"
+#include "../../includes/Server.h"
 #include <arpa/inet.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <iostream>
 #include <netdb.h>
 #include <stdexcept>
 #include <string.h>
 #include <unistd.h>
+#include <vector>
 
 Client::Client(int fd, Server *server)
     : _fd(fd),
@@ -53,4 +56,25 @@ void Client::sendMessage(const std::string &msg) {
         // Handle error (e.g., log it, close the connection)
         // TODO: Implement error handling
     }
+}
+
+void Client::sendNumericReply(char numericStr[4], const std::vector<std::string> &params) {
+    std::string reply = ":";
+    reply += _server->getHostname();
+    reply += " ";
+
+    reply += numericStr;
+
+    reply += " " + _nickname + " ";
+
+    reply += ":";
+    for (size_t i = 0; i < params.size(); ++i) {
+        reply += params[i];
+        if (i < params.size() - 1) {
+            reply += " ";
+        }
+    }
+
+    reply += "\r\n";
+    sendMessage(reply);
 }

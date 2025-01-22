@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 class Server;
 class Channel;
@@ -11,6 +12,7 @@ class Client {
     Client(int fd, Server *server);
     ~Client();
     void        sendMessage(const std::string &message);
+    void        sendNumericReply(char numericStr[4], const std::vector<std::string> &params);
     int         getFd();
     std::string getNickname();
     std::string getUsername();
