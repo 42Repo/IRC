@@ -4,25 +4,42 @@
 #define RPL_WELCOME(nickname, username, hostname)                                                  \
     (std::string("Welcome to the Internet Relay Network ") + nickname + "!" + username + "@" +     \
      hostname)
+
 // 002
 #define RPL_YOURHOST(server, version)                                                              \
     (std::string("Your host is ") + server + std::string(", running version ") + vers)
+
 // 003
 #define RPL_CREATED(date) (std::string("This server was created ") + date)
+
 // 004
 #define RPL_MYINFO(servername, version, modes, channels)                                           \
     (servername + " " + version + " " + modes + " " + channels)
 
 
-/*
-    221 RPL_UMODEIS
-    
-    301 RPL_AWAY
-    331 RPL_NOTOPIC
-    332 RPL_TOPIC
-    341 RPL_INVITING
+// 221
+#define RPL_UMODEIS(mode) (mode)
 
-    403 ERR_NOSUCHCHANNEL
+
+
+// 301
+#define RPL_AWAY(nick, message) (nick + " : " + message)
+
+// 331
+#define RPL_NOTOPIC(channel) (channel + std::string(":No topic is set"))
+
+// 332
+#define RPL_TOPIC(channel, topic) (channel + " : " + topic)
+
+// 341
+#define RPL_INVITING(channel, nick) (channel + " " + nick)
+
+
+
+// 403
+#define ERR_NOSUCHCHANNEL(channel) (channel + std::string(" :No such channel"))
+
+/*
     404 ERR_CANNOTSENDTOCHAN
     405 ERR_TOOMANYCHANNELS
     407 ERR_TOOMANYTARGETS
@@ -30,7 +47,7 @@
     412 ERR_NOTEXTTOSEND
     413 ERR_NOTOPLEVEL
     414 ERR_WILDTOPLEVEL
-    431 ERR_NONICKNAMEGIVEN 
+    431 ERR_NONICKNAMEGIVEN
     432 ERR_ERRONEUSNICKNAME
     433 ERR_NICKNAMEINUSE
     436 ERR_NICKCOLLISION
@@ -47,11 +64,10 @@
     478 ERR_CHANNELISFULL
     482 ERR_CHANOPRIVSNEEDED
     484 ERR_RESTRICTED
-    
+
     501 ERR_UMODEUNKNOWNFLAG
     502 ERR_USERSDONTMATCH
 */
-
 
 /*
     pass/user
@@ -62,7 +78,7 @@
 
     nick
 
-    431 ERR_NONICKNAMEGIVEN 
+    431 ERR_NONICKNAMEGIVEN
     432 ERR_ERRONEUSNICKNAME
     433 ERR_NICKNAMEINUSE
     436 ERR_NICKCOLLISION
