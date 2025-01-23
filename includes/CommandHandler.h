@@ -16,9 +16,13 @@ class CommandHandler {
     // ajouter chaque commande
     /*
             PASS
-            NICK
             USER
+            NICK
             JOIN
+            MODE
+            TOPIC
+            KICK
+            INVITE
             PRIVMSG
             QUIT
     */
