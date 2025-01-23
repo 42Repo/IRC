@@ -1,14 +1,3 @@
-// 001    RPL_WELCOME
-//            "Welcome to the Internet Relay Network
-//             <nick>!<user>@<host>"
-//     002    RPL_YOURHOST
-//            "Your host is <servername>, running version <ver>"
-//     003    RPL_CREATED
-//            "This server was created <date>"
-//     004    RPL_MYINFO
-//            "<servername> <version> <available user modes>
-//             <available channel modes>"
-
 #pragma once
 
 // 001
@@ -26,6 +15,13 @@
 
 
 /*
+    221 RPL_UMODEIS
+    
+    301 RPL_AWAY
+    331 RPL_NOTOPIC
+    332 RPL_TOPIC
+    341 RPL_INVITING
+
     403 ERR_NOSUCHCHANNEL
     404 ERR_CANNOTSENDTOCHAN
     405 ERR_TOOMANYCHANNELS
@@ -51,13 +47,6 @@
     478 ERR_CHANNELISFULL
     482 ERR_CHANOPRIVSNEEDED
     484 ERR_RESTRICTED
-    
-    221 RPL_UMODEIS
-    
-    301 RPL_AWAY
-    331 RPL_NOTOPIC
-    332 RPL_TOPIC
-    341 RPL_INVITING
     
     501 ERR_UMODEUNKNOWNFLAG
     502 ERR_USERSDONTMATCH
