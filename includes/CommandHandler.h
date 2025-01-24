@@ -7,12 +7,14 @@ class CommandHandler {
 
   public:
     CommandHandler(Server *server);
-    static void handleCommand(Client *client, const std::string input);
+    void handleCommand(Client *client, const std::string input);
+    std::map<std::string, void (CommandHandler::*)(Client *client, const std::string &input)> _commandMap;
 
+protected:
   private:
     Server                                                                              *_server;
-    std::map<std::string, void (CommandHandler::*)(Client *client, const std::string &)> commandMap;
 
+    void handleNick(Client *client, const std::string &input);
     // ajouter chaque commande
     /*
             PASS
@@ -22,7 +24,7 @@ class CommandHandler {
             MODE
             TOPIC
             KICK
-            INVITE
+            INVIsTE
             PRIVMSG
             QUIT
     */
