@@ -4,6 +4,7 @@
 #include "CommandHandler.h"
 #include <poll.h>
 #include <vector>
+#include "Messages.h"
 
 class Server {
   public:
