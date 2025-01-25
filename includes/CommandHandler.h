@@ -16,7 +16,16 @@ protected:
   private:
     Server                                                                              *_server;
 
+    void handlePass(Client *client, const std::string &input);
+    void handleUser(Client *client, const std::string &input);
     void handleNick(Client *client, const std::string &input);
+    void handleJoin(Client *client, const std::string &input);
+    void handleMode(Client *client, const std::string &input);
+    void handleTopic(Client *client, const std::string &input);
+    void handleKick(Client *client, const std::string &input);
+    void handleInvite(Client *client, const std::string &input);
+    void handlePrivmsg(Client *client, const std::string &input);
+    void handleQuit(Client *client, const std::string &input);
     // ajouter chaque commande
     /*
             PASS

@@ -137,7 +137,7 @@ void Server::run() {
                     }
 
                     std::string message(buffer, bytesRead);
-                    std::cout << "Received message from client: " << message << std::endl;
+                    // std::cout << "Received message from client: " << message << std::endl;
 
                     // on traite le message
                     _commandHandler.handleCommand(getClientByFd(_clients, _fds[i].fd), message);
