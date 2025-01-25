@@ -7,11 +7,6 @@
 static std::vector<std::string> commandParser(std::string input) {
     std::vector<std::string> command(4);
 
-    // command[0] = NULL;
-    // command[1] = NULL;
-    // command[2] = NULL;
-    // command[23] = NULL;
-
     std::istringstream stream(input);
 
     if (input[0] == ':') {
@@ -24,12 +19,16 @@ static std::vector<std::string> commandParser(std::string input) {
     std::getline(stream >> std::ws, command[2], ':');
     std::getline(stream, command[3]);
 
+    if (!command[2].empty() && command[2][command[2].length() - 1] == '\n') {
+    command[2].erase(command[2].length() - 1);
+}
     return command;
 }
 
 void CommandHandler::handleNick(Client *client, const std::string &input)
 {
-    std::cout << client->getNickname() << "Renamed to " << input << " !"; 
+    std::cout << "[" << client->getNickname() << "] Renamed to " << input << " !" << std::endl;  
+    client->setNickname(input);
 }
 
 CommandHandler::CommandHandler(Server *server) : _server(server) {
@@ -50,7 +49,13 @@ void CommandHandler::handleCommand(Client *client, const std::string input) {
     //     (char *)"001",
     //     std::vector<std::string>(
     //         1, RPL_WELCOME(client->getNickname(), client->getUsername(), client->getHostname())));
-    (this->*_commandMap[command[1]])(client, command[2]);
+    // (this->*_commandMap[command[1]])(client, command[2]);
+    CommandHandlerFunctionMap::iterator it = _commandMap.find(command[1]);
+    if(it != _commandMap.end())
+        (this->*_commandMap[command[1]])(client, command[2]);
+    else
+        std::cout << "nope" << std::endl;
+         
 }
 
 /*
