@@ -18,6 +18,8 @@ class Client {
     std::string getUsername();
     std::string getRealname();
     std::string getHostname();
+    bool getIsAuthenticaded(){return _isAuthenticated;};
+    void setAuthenticaded(bool value) {_isAuthenticated = value;};
     void        setNickname(std::string nickname) { _nickname = nickname; }
 
   private:

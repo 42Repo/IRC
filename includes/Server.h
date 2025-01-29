@@ -14,7 +14,7 @@ class Server {
     void        run();
     void        setupServerSocket();
     std::string getHostname();
-
+    std::string getPassword(){return _password;};
   private:
     Server();
     Server(const Server &server);
