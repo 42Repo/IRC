@@ -11,21 +11,23 @@ void CommandHandler::handlePass(Client *client, const std::string &input) {
 
     if (input.length() == 0)
     {
-        std::cout << ERR_NEEDMOREPARAMS() << std::endl;
-        // client->sendNumericReply("461", ERR_NEEDMOREPARAMS("PASS"));
+        client->sendNumericReply("461", ERR_NEEDMOREPARAMS("PASS"));
         return;
     }
     if (client->getIsAuthenticaded())
     {
+        client->sendNumericReply("462", ERR_ALREADYREGISTRED);
+
         std::cout << ERR_ALREADYREGISTRED << std::endl;
         return;
     }
-    if(_server->getPassword() == input)
+    if(_server->getPassword() != input)
     {
-        client->setAuthenticaded(true);
-        std::cout << client->getUsername() << " identified" << std::endl;
+        client->sendNumericReply("464", ERR_PASSWDMISMATCH);
+        return;
     }
-    std::cout << client->getNickname() << " called PASS" << std::endl;
+    client->setAuthenticaded(true);
+    std::cout << client->getUsername() << " identified" << std::endl;
 }
 
 // TODO - Command - USER

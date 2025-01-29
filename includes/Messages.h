@@ -78,31 +78,34 @@
 #define ERR_USERONCHANNEL(user, channel) (user + " " + channel + " :is already on channel")
 
 // 461
-#define ERR_NEEDMOREPARAMS(command) (command + " :Not enough parameters")
+#define ERR_NEEDMOREPARAMS(command) (command + std::string(" :Not enough parameters"))
 
 // 462
 #define ERR_ALREADYREGISTRED ": Unauthorized command (already registered)"
 
+// 464
+#define ERR_PASSWDMISMATCH ":Password incorect"
+
 // 471
-#define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)")
+#define ERR_CHANNELISFULL(channel) (channel + ":Cannot join channel (+l)")
 
 // 473
-#define ERR_INVITEONLYCHAN(channel) (channel + " :Cannot join channel (+i)")
+#define ERR_INVITEONLYCHAN(channel) (channel + ":Cannot join channel (+i)")
 
 // 474
-#define ERR_BANNEDFROMCHAN(channel) (channel + " :Cannot join channel (+b)")
+#define ERR_BANNEDFROMCHAN(channel) (channel + ":Cannot join channel (+b)")
 
 // 475
-#define ERR_BADCHANNELKEY(channel) (channel + " :Cannot join channel (+k)")
+#define ERR_BADCHANNELKEY(channel) (channel + ":Cannot join channel (+k)")
 
 // 476
-#define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask")
+#define ERR_BADCHANMASK(channel) (channel + ":Bad Channel Mask")
 
 // 477
-#define ERR_NOCHANMODES(channel) (channel + " :Channel doesn't support modes")
+#define ERR_NOCHANMODES(channel) (channel + ":Channel doesn't support modes")
 
 // 482
-#define ERR_CHANOPRIVSNEEDED(channel) (channel + " :You're not channel operator")
+#define ERR_CHANOPRIVSNEEDED(channel) (channel + ":You're not channel operator")
 
 // 484
 #define ERR_RESTRICTED ":You can't kill a server!"
@@ -122,7 +125,8 @@
     462 ERR_ALREADYREGISTRED
         Client already registred
 
-    nick
+    464 ERR_PASSWDMISMATCH
+        Invalid pass
 
     431 ERR_NONICKNAMEGIVEN
         Missing nick param
