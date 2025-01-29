@@ -1,28 +1,24 @@
 #include "../../includes/CommandHandler.h"
 #include "../../includes/Messages.h"
+#include "../../includes/Server.h"
 #include <sstream>
 #include <string>
 #include <vector>
-#include "../../includes/Server.h"
-
 
 // TODO - Command - PASS
 void CommandHandler::handlePass(Client *client, const std::string &input) {
 
-    if (input.length() == 0)
-    {
+    if (input.length() == 0) {
         client->sendNumericReply("461", ERR_NEEDMOREPARAMS("PASS"));
         return;
     }
-    if (client->getIsAuthenticaded())
-    {
+    if (client->getIsAuthenticaded()) {
         client->sendNumericReply("462", ERR_ALREADYREGISTRED);
 
         std::cout << ERR_ALREADYREGISTRED << std::endl;
         return;
     }
-    if(_server->getPassword() != input)
-    {
+    if (_server->getPassword() != input) {
         client->sendNumericReply("464", ERR_PASSWDMISMATCH);
         return;
     }
@@ -39,11 +35,8 @@ void CommandHandler::handleUser(Client *client, const std::string &input) {
 // TODO - Command - NICK
 void CommandHandler::handleNick(Client *client, const std::string &input) {
 
-
-
-
     // std::cout << "valid NICK call !" << std::endl;
-    
+
     std::cout << "[" << client->getNickname() << "] Renamed to " << input << " !" << std::endl;
     client->setNickname(input);
 }
@@ -138,7 +131,7 @@ void CommandHandler::handleCommand(Client *client, const std::string input) {
         (this->*_commandMap[command[1]])(client, command[2]);
     else {
 
-        std::cout << client->getNickname() << "said : " << command[1];
+        std::cout << client->getNickname() << " said : " << command[1];
         if (command[2] != "")
             std::cout << " " << command[2];
         std::cout << std::endl;

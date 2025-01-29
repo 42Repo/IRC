@@ -24,8 +24,8 @@ class Client {
     void appendToMessageBuffer(const std::string &data);
     void clearMessageBuffer();
     void removeFromMessageBuffer(size_t length);
-    bool getIsAuthenticaded(){return _isAuthenticated;};
-    void setAuthenticaded(bool value) {_isAuthenticated = value;};
+    bool getIsAuthenticaded() { return _isAuthenticated; };
+    void setAuthenticaded(bool value) { _isAuthenticated = value; };
 
   private:
     Client();
