@@ -2,9 +2,9 @@
 
 #include "Channel.h"
 #include "CommandHandler.h"
+#include "Messages.h"
 #include <poll.h>
 #include <vector>
-#include "Messages.h"
 
 class Server {
   public:

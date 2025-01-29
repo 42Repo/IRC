@@ -12,13 +12,13 @@ class Client {
     Client(int fd, Server *server);
     ~Client();
     void        sendMessage(const std::string &message);
-    void        sendNumericReply(char numericStr[4], const std::vector<std::string> &params);
+    void        sendNumericReply(const char *numericStr, const std::vector<std::string> params);
     int         getFd();
     std::string getNickname();
     std::string getUsername();
     std::string getRealname();
     std::string getHostname();
-    void setNickname(std::string nickname){_nickname = nickname;}
+    void        setNickname(std::string nickname) { _nickname = nickname; }
 
   private:
     Client();

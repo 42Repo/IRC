@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <iostream>
 #include <netdb.h>
+#include <sstream>
 #include <stdexcept>
 #include <string.h>
 #include <unistd.h>
@@ -58,23 +59,14 @@ void Client::sendMessage(const std::string &msg) {
     }
 }
 
-void Client::sendNumericReply(char numericStr[4], const std::vector<std::string> &params) {
-    std::string reply = ":";
-    reply += _server->getHostname();
-    reply += " ";
+void Client::sendNumericReply(const char *numericStr, const std::vector<std::string> params) {
+    std::ostringstream replyStream;
+    replyStream << ":" << _server->getHostname() << " " << numericStr << " " << _nickname;
 
-    reply += numericStr;
-
-    reply += " " + _nickname + " ";
-
-    reply += ":";
     for (size_t i = 0; i < params.size(); ++i) {
-        reply += params[i];
-        if (i < params.size() - 1) {
-            reply += " ";
-        }
+        replyStream << " " << params[i];
     }
+    replyStream << "\r\n";
 
-    reply += "\r\n";
-    sendMessage(reply);
+    sendMessage(replyStream.str());
 }

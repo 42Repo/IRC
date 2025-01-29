@@ -7,14 +7,13 @@
 // TODO - Command - PASS
 void CommandHandler::handlePass(Client *client, const std::string &input) {
     std::cout << client->getNickname() << " called PASS" << std::endl;
-    (void) input;
+    (void)input;
 }
-
 
 // TODO - Command - USER
 void CommandHandler::handleUser(Client *client, const std::string &input) {
     std::cout << client->getNickname() << " called USER" << std::endl;
-    (void) input;
+    (void)input;
 }
 
 // TODO - Command - NICK
@@ -26,46 +25,44 @@ void CommandHandler::handleNick(Client *client, const std::string &input) {
 // TODO - Command - JOIN
 void CommandHandler::handleJoin(Client *client, const std::string &input) {
     std::cout << client->getNickname() << " called JOIN" << std::endl;
-    (void) input;
+    (void)input;
 }
 
 // TODO - Command - MODE
 void CommandHandler::handleMode(Client *client, const std::string &input) {
     std::cout << client->getNickname() << " called MODE" << std::endl;
-    (void) input;
+    (void)input;
 }
 
 // TODO - Command - TOPIC
 void CommandHandler::handleTopic(Client *client, const std::string &input) {
     std::cout << client->getNickname() << " called TOPIC" << std::endl;
-    (void) input;
+    (void)input;
 }
 
 // TODO - Command - KICK
 void CommandHandler::handleKick(Client *client, const std::string &input) {
     std::cout << client->getNickname() << " called KICK" << std::endl;
-    (void) input;
+    (void)input;
 }
 
 // TODO - Command - INVITE
 void CommandHandler::handleInvite(Client *client, const std::string &input) {
     std::cout << client->getNickname() << " called INVITE" << std::endl;
-    (void) input;
+    (void)input;
 }
 
 // TODO - Command - PRIVMSG
 void CommandHandler::handlePrivmsg(Client *client, const std::string &input) {
     std::cout << client->getNickname() << " called PRIVATEMSG" << std::endl;
-    (void) input;
+    (void)input;
 }
 
 // TODO - Command - QUIT
 void CommandHandler::handleQuit(Client *client, const std::string &input) {
     std::cout << client->getNickname() << " called QUI" << std::endl;
-    (void) input;
+    (void)input;
 }
-
-
 
 static std::vector<std::string> commandParser(std::string input) {
     std::vector<std::string> command(4);
@@ -109,21 +106,16 @@ void CommandHandler::handleCommand(Client *client, const std::string input) {
     // std::cout << "Client" << client->getFd() << " : " << input << std::endl;
     // std::cout << "hostname : " << client->getHostname() << std::endl;
     // client->sendMessage("You said: " + input + "\r\n");
-    // client->sendNumericReply(
-    //     (char *)"001",
-    //     std::vector<std::string>(
-    //         1, RPL_WELCOME(client->getNickname(), client->getUsername(),
-    //         client->getHostname())));
     // (this->*_commandMap[command[1]])(client, command[2]);
     CommandHandlerFunctionMap::iterator it = _commandMap.find(command[1]);
     if (it != _commandMap.end())
         (this->*_commandMap[command[1]])(client, command[2]);
-    else{
+    else {
 
         std::cout << client->getNickname() << "said : " << command[1];
         if (command[2] != "")
             std::cout << " " << command[2];
-        std::cout << std::endl; 
+        std::cout << std::endl;
         // std::cout << "nope" << std::endl;
     }
 }

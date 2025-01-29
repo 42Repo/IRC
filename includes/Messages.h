@@ -17,7 +17,6 @@
 // 221
 #define RPL_UMODEIS(mode) (mode)
 
-
 // 301
 #define RPL_AWAY(nick, message) (nick + " : " + message)
 
@@ -29,7 +28,6 @@
 
 // 341
 #define RPL_INVITING(channel, nick) (channel + " " + nick)
-
 
 // 403
 #define ERR_NOSUCHCHANNEL(channel) (channel + " :No such channel")
@@ -108,7 +106,6 @@
 
 // 484
 #define ERR_RESTRICTED ":You can't kill a server!"
-
 
 // 501
 #define ERR_UMODEUNKNOWNFLAG ":Unknown MODE flag"

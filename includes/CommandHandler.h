@@ -6,15 +6,16 @@
 class CommandHandler {
 
   public:
-  typedef  void (CommandHandler::*CommandHandlerFunction)(Client *client, const std::string &input) ;
-  typedef std::map<std::string, CommandHandlerFunction>  CommandHandlerFunctionMap;
+    typedef void (CommandHandler::*CommandHandlerFunction)(Client            *client,
+                                                           const std::string &input);
+    typedef std::map<std::string, CommandHandlerFunction> CommandHandlerFunctionMap;
     CommandHandler(Server *server);
-    void handleCommand(Client *client, const std::string input);
+    void                      handleCommand(Client *client, const std::string input);
     CommandHandlerFunctionMap _commandMap;
 
-protected:
+  protected:
   private:
-    Server                                                                              *_server;
+    Server *_server;
 
     void handlePass(Client *client, const std::string &input);
     void handleUser(Client *client, const std::string &input);
