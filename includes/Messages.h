@@ -81,7 +81,7 @@
 #define ERR_NEEDMOREPARAMS(command) (command + " :Not enough parameters")
 
 // 462
-#define ERR_ALREADYREGISTRED (": Unauthorized command (already registered)")
+#define ERR_ALREADYREGISTRED ": Unauthorized command (already registered)"
 
 // 471
 #define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)")
@@ -117,17 +117,30 @@
     pass/user
 
     461 ERR_NEEDMOREPARAMS
-    462 ERR_ALREADYREGISTRED
+        Not enough params
 
+    462 ERR_ALREADYREGISTRED
+        Client already registred
 
     nick
 
     431 ERR_NONICKNAMEGIVEN
+        Missing nick param
+
     432 ERR_ERRONEUSNICKNAME
+        Nick with a forbidden char
+
     433 ERR_NICKNAMEINUSE
+        Nick already exists on server
+
     436 ERR_NICKCOLLISION
+        Nick already exists on connected server
+
     437 ERR_UNAVAILRESOURCE
+        Didnt respect the nick delay
+
     484 ERR_RESTRICTED
+        Si il est restricted r+
 
 
     join

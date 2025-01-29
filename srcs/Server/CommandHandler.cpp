@@ -3,11 +3,29 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "../../includes/Server.h"
+
 
 // TODO - Command - PASS
 void CommandHandler::handlePass(Client *client, const std::string &input) {
+
+    if (input.length() == 0)
+    {
+        std::cout << ERR_NEEDMOREPARAMS() << std::endl;
+        // client->sendNumericReply("461", ERR_NEEDMOREPARAMS("PASS"));
+        return;
+    }
+    if (client->getIsAuthenticaded())
+    {
+        std::cout << ERR_ALREADYREGISTRED << std::endl;
+        return;
+    }
+    if(_server->getPassword() == input)
+    {
+        client->setAuthenticaded(true);
+        std::cout << client->getUsername() << " identified" << std::endl;
+    }
     std::cout << client->getNickname() << " called PASS" << std::endl;
-    (void)input;
 }
 
 // TODO - Command - USER
@@ -18,6 +36,12 @@ void CommandHandler::handleUser(Client *client, const std::string &input) {
 
 // TODO - Command - NICK
 void CommandHandler::handleNick(Client *client, const std::string &input) {
+
+
+
+
+    // std::cout << "valid NICK call !" << std::endl;
+    
     std::cout << "[" << client->getNickname() << "] Renamed to " << input << " !" << std::endl;
     client->setNickname(input);
 }
