@@ -14,6 +14,7 @@ class Server {
     void        run();
     void        setupServerSocket();
     std::string getHostname();
+    void        removeClient(Client *client);
 
   private:
     Server();

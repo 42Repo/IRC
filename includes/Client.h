@@ -12,13 +12,18 @@ class Client {
     Client(int fd, Server *server);
     ~Client();
     void        sendMessage(const std::string &message);
-    void        sendNumericReply(const char *numericStr, const std::vector<std::string> params);
-    int         getFd();
-    std::string getNickname();
-    std::string getUsername();
-    std::string getRealname();
-    std::string getHostname();
-    void        setNickname(std::string nickname) { _nickname = nickname; }
+    void        sendNumericReply(const char *numericStr, const std::string params);
+    int         getFd() const;
+    std::string getNickname() const;
+    std::string getUsername() const;
+    std::string getRealname() const;
+    std::string getHostname() const;
+    std::string getMessageBuffer() const;
+    std::map<std::string, Channel *> getChannels() const;
+    void setNickname(const std::string &nickname) { _nickname = nickname; }
+    void appendToMessageBuffer(const std::string &data);
+    void clearMessageBuffer();
+    void removeFromMessageBuffer(size_t length);
 
   private:
     Client();

@@ -5,8 +5,12 @@
 
 class Channel {
   public:
-    Channel(std::string name);
+    Channel(std::string name, std::string password = "", int userLimit = 0,
+            bool isInviteOnly = false, bool isTopicOperatorOnly = false, std::string modes = "");
     ~Channel();
+
+    void addMember(Client *client, bool isOperator = false);
+    void removeMember(Client *client);
 
   private:
     std::string              _name;

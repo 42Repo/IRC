@@ -14,7 +14,7 @@
 Client::Client(int fd, Server *server)
     : _fd(fd),
       _server(server),
-      _nickname(""),
+      _nickname("*"),
       _username(""),
       _realname(""),
       _hostname(""),
@@ -41,15 +41,15 @@ Client::Client(int fd, Server *server)
 
 Client::~Client() { close(_fd); }
 
-int Client::getFd() { return _fd; }
+int Client::getFd() const { return _fd; }
 
-std::string Client::getNickname() { return _nickname; }
+std::string Client::getNickname() const { return _nickname; }
 
-std::string Client::getUsername() { return _username; }
+std::string Client::getUsername() const { return _username; }
 
-std::string Client::getRealname() { return _realname; }
+std::string Client::getRealname() const { return _realname; }
 
-std::string Client::getHostname() { return _hostname; }
+std::string Client::getHostname() const { return _hostname; }
 
 void Client::sendMessage(const std::string &msg) {
     ssize_t bytesSent = send(this->_fd, msg.c_str(), msg.length(), 0);
@@ -59,14 +59,31 @@ void Client::sendMessage(const std::string &msg) {
     }
 }
 
-void Client::sendNumericReply(const char *numericStr, const std::vector<std::string> params) {
+void Client::sendNumericReply(const char *numericStr, const std::string params) {
     std::ostringstream replyStream;
     replyStream << ":" << _server->getHostname() << " " << numericStr << " " << _nickname;
 
-    for (size_t i = 0; i < params.size(); ++i) {
-        replyStream << " " << params[i];
-    }
+    // for (size_t i = 0; i < params.size(); ++i) {
+    //     replyStream << " " << params[i];
+    // }
+    replyStream << " " << params;    
     replyStream << "\r\n";
 
     sendMessage(replyStream.str());
+}
+
+void Client::appendToMessageBuffer(const std::string &data) { _messageBuffer += data; }
+
+std::string Client::getMessageBuffer() const { return _messageBuffer; }
+
+void Client::clearMessageBuffer() { _messageBuffer.clear(); }
+
+std::map<std::string, Channel *> Client::getChannels() const { return _channels; }
+
+void Client::removeFromMessageBuffer(size_t length) {
+    if (length >= _messageBuffer.length()) {
+        _messageBuffer.clear();
+    } else {
+        _messageBuffer = _messageBuffer.substr(length);
+    }
 }

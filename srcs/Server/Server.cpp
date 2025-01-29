@@ -1,4 +1,5 @@
 #include "../../includes/Server.h"
+#include <algorithm>
 #include <ctime>
 #include <errno.h>
 #include <fcntl.h>
@@ -79,6 +80,27 @@ static Client *getClientByFd(std::vector<Client *> clients, int fd) {
     return NULL;
 }
 
+void Server::removeClient(Client *client) {
+    std::map<std::string, Channel *> channels = client->getChannels();
+    for (std::map<std::string, Channel *>::iterator it = channels.begin(); it != channels.end();
+         ++it) {
+        Channel *channel = it->second;
+        channel->removeMember(client);
+    }
+
+    _clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
+
+    for (size_t i = 0; i < _fds.size(); ++i) {
+        if (_fds[i].fd == client->getFd()) {
+            close(_fds[i].fd);
+            _fds.erase(_fds.begin() + i);
+            break;
+        }
+    }
+
+    delete client;
+}
+
 void Server::run() {
     std::cout << "Server running. Listening on port " << _port << std::endl;
 
@@ -89,63 +111,69 @@ void Server::run() {
             throw std::runtime_error("Error in poll: " + std::string(strerror(errno)));
         }
 
-        for (size_t i = 0; i < _fds.size(); ++i) {
+        if (_fds[0].revents & POLLIN) {
+            struct sockaddr_in clientAddress;
+            socklen_t          clientAddressLength = sizeof(clientAddress);
+            int                clientSocket =
+                accept(_server_fd, (struct sockaddr *)&clientAddress, &clientAddressLength);
+
+            if (clientSocket == -1) {
+                std::cerr << "Failed to accept incoming connection: " << strerror(errno)
+                          << std::endl;
+                continue;
+            }
+
+            setNonBlocking(clientSocket);
+
+            Client *newClient = new Client(clientSocket, this);
+            _clients.push_back(newClient);
+
+            pollfd client_pfd;
+            client_pfd.fd = clientSocket;
+            client_pfd.events = POLLIN;
+            _fds.push_back(client_pfd);
+            newClient->sendNumericReply("001", RPL_WELCOME(newClient->getNickname(),
+                                                           newClient->getUsername(),
+                                                           newClient->getHostname()));
+
+            std::cout << "New client connected to the server" << std::endl;
+        }
+
+        for (size_t i = 1; i < _fds.size(); ++i) {
             if (_fds[i].revents & POLLIN) {
-                if (_fds[i].fd == _server_fd) {
-                    struct sockaddr_in clientAddress;
-                    socklen_t          clientAddressLength = sizeof(clientAddress);
-                    int                clientSocket =
-                        accept(_server_fd, (struct sockaddr *)&clientAddress, &clientAddressLength);
-
-                    if (clientSocket == -1) {
-                        std::cerr << "Failed to accept incoming connection: " << strerror(errno)
-                                  << std::endl;
-                        continue;
-                    }
-
-                    setNonBlocking(clientSocket);
-
-                    Client *newClient = new Client(clientSocket, this);
-                    _clients.push_back(newClient);
-
-                    pollfd client_pfd;
-                    client_pfd.fd = clientSocket;
-                    client_pfd.events = POLLIN;
-                    _fds.push_back(client_pfd);
-                    newClient->sendNumericReply(
-                        "001", std::vector<std::string>(1, RPL_WELCOME(newClient->getNickname(),
-                                                                       newClient->getUsername(),
-                                                                       newClient->getHostname())));
-
-                    std::cout << "New client connected to the server" << std::endl;
-                } else {
-                    // on a un client qui a envoyé un message
-                    // on doit le lire et le traiter
+                Client *currentClient = getClientByFd(_clients, _fds[i].fd);
+                if (currentClient) {
                     char buffer[1024];
                     int  bytesRead = read(_fds[i].fd, buffer, sizeof(buffer));
 
-                    if (bytesRead == -1) {
-                        std::cerr << "Failed to read from client socket: " << strerror(errno)
-                                  << std::endl;
-                        continue;
+                    if (bytesRead > 0) {
+                        currentClient->appendToMessageBuffer(std::string(buffer, bytesRead));
+
+                        size_t crlfPos;
+                        while ((crlfPos = currentClient->getMessageBuffer().find("\r\n")) !=
+                               std::string::npos) {
+                            std::string message =
+                                currentClient->getMessageBuffer().substr(0, crlfPos);
+                            currentClient->removeFromMessageBuffer(crlfPos + 2);
+                            _commandHandler.handleCommand(currentClient, message);
+                        }
+                    } else if (bytesRead == 0) {
+                        std::cout << "Client "
+                                  << (currentClient->getNickname() != "*"
+                                          ? currentClient->getNickname()
+                                          : "unknown")
+                                  << " disconnected" << std::endl;
+
+                        removeClient(currentClient);
+
+                        --i;
+                    } else {
+                        std::cerr << "Error receiving data from client "
+                                  << (currentClient->getNickname() != "*"
+                                          ? currentClient->getNickname()
+                                          : "unknown")
+                                  << ": " << strerror(errno) << std::endl;
                     }
-
-                    if (bytesRead == 0) {
-                        // client disconnected
-                        std::cout << "Client disconnected" << std::endl;
-
-                        close(_fds[i].fd);
-                        _fds.erase(_fds.begin() + i);
-                        delete _clients[i];
-                        _clients.erase(_clients.begin() + i);
-                        continue;
-                    }
-
-                    std::string message(buffer, bytesRead);
-                    // std::cout << "Received message from client: " << message << std::endl;
-
-                    // on traite le message
-                    _commandHandler.handleCommand(getClientByFd(_clients, _fds[i].fd), message);
                 }
             }
         }
