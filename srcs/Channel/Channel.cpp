@@ -10,3 +10,5 @@ Channel::Channel(std::string name, std::string password, int userLimit, bool isI
       _modes(modes) {}
 
 void Channel::removeMember(Client *client) { _members.erase(client); }
+
+void Channel::addMember(Client *client, bool isOperator) { _members[client] = isOperator; }
