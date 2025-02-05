@@ -84,7 +84,7 @@
 #define ERR_ALREADYREGISTRED ": Unauthorized command (already registered)"
 
 // 464
-#define ERR_PASSWDMISMATCH(nick) (nick + " :Password incorect")
+#define ERR_PASSWDMISMATCH(nick) (nick + " :Password incorrect")
 
 // 471
 #define ERR_CHANNELISFULL(channel) (channel + ":Cannot join channel (+l)")
