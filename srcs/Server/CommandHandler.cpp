@@ -201,6 +201,18 @@ static std::vector<std::string> commandParser(std::string input) {
     return command;
 }
 
+void CommandHandler::handleCap(Client *client, const std::string &input) {
+    if (input == "LS 302") {
+        client->sendNumericReply("CAP * LS :", "");
+    } else if (input.rfind("REQ", 0) == 0) {
+        client->sendNumericReply("CAP * ACK :", "");
+    } else if (input == "END") {
+        // TODO : Handle CAP END
+    } else {
+        std::cerr << "Unhandled CAP command: " << input << std::endl;
+    }
+}
+
 CommandHandler::CommandHandler(Server *server) : _server(server) {
     // ajouter chaque fonction a la map
 
@@ -214,6 +226,7 @@ CommandHandler::CommandHandler(Server *server) : _server(server) {
     _commandMap["INVITE"] = &CommandHandler::handleInvite;
     _commandMap["PRIVMSG"] = &CommandHandler::handlePrivmsg;
     _commandMap["QUIT"] = &CommandHandler::handleQuit;
+    _commandMap["CAP"] = &CommandHandler::handleCap;
 }
 
 void CommandHandler::handleCommand(Client *client, const std::string input) {

@@ -27,6 +27,7 @@ class CommandHandler {
     void handleInvite(Client *client, const std::string &input);
     void handlePrivmsg(Client *client, const std::string &input);
     void handleQuit(Client *client, const std::string &input);
+    void handleCap(Client *client, const std::string &input);
     // ajouter chaque commande
     /*
             PASS
