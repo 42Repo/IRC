@@ -21,7 +21,7 @@ OBJ_DIR      := $(BUILD_DIR)/obj
 DEP_DIR      := $(BUILD_DIR)/dep
 
 # Source and Object Files
-SRCS         := srcs/main.cpp srcs/Server/Server.cpp srcs/Client/Client.cpp srcs/Channel/Channel.cpp srcs/Server/CommandHandler.cpp
+SRCS         := srcs/main.cpp srcs/Server/Server.cpp srcs/Client/Client.cpp srcs/Channel/Channel.cpp srcs/Server/CommandHandler.cpp srcs/Server/Privmsg.cpp
 OBJS         := $(addprefix $(OBJ_DIR)/,$(SRCS:.cpp=.o))
 DEPS         := $(addprefix $(DEP_DIR)/,$(SRCS:.cpp=.d))
 

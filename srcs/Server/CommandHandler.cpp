@@ -161,11 +161,7 @@ void CommandHandler::handleInvite(Client *client, const std::string &input) {
     (void)input;
 }
 
-// TODO - Command - PRIVMSG
-void CommandHandler::handlePrivmsg(Client *client, const std::string &input) {
-    std::cout << client->getNickname() << " called PRIVATEMSG" << std::endl;
-    (void)input;
-}
+
 
 // TODO - Command - QUIT
 void CommandHandler::handleQuit(Client *client, const std::string &input) {
