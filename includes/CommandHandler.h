@@ -6,7 +6,7 @@
 class CommandHandler {
 
   public:
-    typedef void (CommandHandler::*CommandHandlerFunction)(Client            *client,
+    typedef void (CommandHandler::*CommandHandlerFunction)(Client                         *client,
                                                            const std::vector<std::string> &input);
     typedef std::map<std::string, CommandHandlerFunction> CommandHandlerFunctionMap;
     CommandHandler(Server *server);
@@ -29,6 +29,7 @@ class CommandHandler {
     void handleQuit(Client *client, const std::vector<std::string> &input);
     void handleCap(Client *client, const std::vector<std::string> &input);
     void handleWho(Client *client, const std::vector<std::string> &input);
+    void handleUserMode(Client *client, const std::vector<std::string> &input);
     void welcomeMsg(Client *client);
 
     // ajouter chaque commande

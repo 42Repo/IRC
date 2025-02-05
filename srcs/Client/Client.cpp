@@ -96,3 +96,16 @@ void Client::leaveChannel(Channel *channel) {
         _channels.erase(channel->getName());
     }
 }
+
+void Client::addMode(char mode) {
+    if (_userModes.find(mode) == std::string::npos) {
+        _userModes += mode;
+    }
+}
+
+void Client::removeMode(char mode) {
+    size_t pos = _userModes.find(mode);
+    if (pos != std::string::npos) {
+        _userModes.erase(pos, 1);
+    }
+}

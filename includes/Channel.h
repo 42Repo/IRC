@@ -22,6 +22,14 @@ class Channel {
     bool                     isOperator(Client *client) const;
     bool                     isMember(Client *client) const;
     std::map<Client *, bool> getMembers() const { return _members; }
+    // addOperator
+    void addOperator(Client *client) { _members[client] = true; }
+    void removeOperator(Client *client) { _members[client] = false; }
+    void setUserLimit(int limit) { _userLimit = limit; }
+    void setIsInviteOnly(bool value) { _isInviteOnly = value; }
+    void setIsTopicOperatorOnly(bool value) { _isTopicOperatorOnly = value; }
+    void setModes(const std::string &modes) { _modes = modes; }
+    void setPassword(const std::string &password) { _password = password; }
 
   private:
     std::string              _name;

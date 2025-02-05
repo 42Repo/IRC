@@ -1,6 +1,8 @@
 #include "../../includes/CommandHandler.h"
 #include "../../includes/Messages.h"
 #include "../../includes/Server.h"
+#include <cstdlib>
+#include <cstring>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -156,8 +158,26 @@ bool isValidChannelName(const std::string &name) {
 }
 
 // TODO - Command - JOIN
+std::string getMemberList(Channel *channel) {
+    std::string              memberList;
+    std::map<Client *, bool> members = channel->getMembers();
+    for (std::map<Client *, bool>::iterator it = members.begin(); it != members.end(); ++it) {
+        Client *member = it->first;
+        if (channel->isOperator(member)) {
+            memberList += "@";
+        }
+        memberList += member->getNickname() + " ";
+    }
+    return memberList;
+}
+
+// Commande JOIN
 void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &input) {
     std::vector<std::string> channels = splitString(input[2], ',');
+    std::vector<std::string> passwords;
+    if (input.size() > 3) {
+        passwords = splitString(input[3], ',');
+    }
 
     if (channels.empty()) {
         client->sendNumericReply("461", ERR_NEEDMOREPARAMS("JOIN"));
@@ -166,6 +186,7 @@ void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &
 
     for (size_t i = 0; i < channels.size(); ++i) {
         std::string channelName = channels[i];
+        std::string password = (i < passwords.size()) ? passwords[i] : "";
 
         if (!isValidChannelName(channelName)) {
             client->sendNumericReply("476", ERR_BADCHANMASK(channelName));
@@ -176,36 +197,59 @@ void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &
         if (!channel) {
             channel = new Channel(channelName, client);
             _server->addChannel(channel);
-        }
+            channel->addMember(client, true);
 
-        if (!channel->isMember(client)) {
+            std::string joinMessage = ":" + client->getNickname() + "!" + client->getUsername() +
+                                      "@" + client->getHostname() + " JOIN :" + channelName +
+                                      "\r\n";
+
+            std::string modeMessage = ":" + _server->getHostname() + " MODE " + channelName +
+                                      " +o " + client->getNickname() + "\r\n";
+            client->sendMessage(modeMessage);
+
+            std::map<Client *, bool> members = channel->getMembers();
+            for (std::map<Client *, bool>::iterator it = members.begin(); it != members.end();
+                 ++it) {
+                Client *member = it->first;
+                member->sendMessage(joinMessage);
+            }
+
+        } else {
+            if (channel->isInviteOnly()) {
+                client->sendNumericReply("473", ERR_INVITEONLYCHAN(channelName));
+                continue;
+            }
+            if (channel->getPassword() != "" && channel->getPassword() != password) {
+                client->sendNumericReply("475", ERR_BADCHANNELKEY(channelName));
+                continue;
+            }
+
+            if (channel->getUserLimit() > 0 &&
+                channel->getMembers().size() >= (size_t)channel->getUserLimit()) {
+                client->sendNumericReply("471", ERR_CHANNELISFULL(channelName));
+                continue;
+            }
+
             channel->addMember(client);
             client->joinChannel(channel);
-        }
 
-        std::string joinMessage = ":" + client->getNickname() + "!" + client->getUsername() + "@" +
-                                  client->getHostname() + " JOIN " + channelName + "\r\n";
-
-        std::map<Client *, bool> members = channel->getMembers();
-        for (std::map<Client *, bool>::iterator it = members.begin(); it != members.end(); ++it) {
-            Client *member = it->first;
-            member->sendMessage(joinMessage);
-        }
-
-        // Envoyer la liste des noms (RPL_NAMREPLY)
-        std::string memberList;
-        for (std::map<Client *, bool>::iterator it = members.begin(); it != members.end(); ++it) {
-            Client *member = it->first;
-            if (channel->isOperator(member)) {
-                memberList += "@";
-            } else {
-                memberList += "+";
+            std::string joinMessage = ":" + client->getNickname() + "!" + client->getUsername() +
+                                      "@" + client->getHostname() + " JOIN :" + channelName +
+                                      "\r\n";
+            std::map<Client *, bool> members = channel->getMembers();
+            for (std::map<Client *, bool>::iterator it = members.begin(); it != members.end();
+                 ++it) {
+                Client *member = it->first;
+                member->sendMessage(joinMessage);
             }
-            memberList += member->getNickname() + " ";
         }
 
-        client->sendNumericReply("353", "= " + channelName + " :" + memberList); // RPL_NAMREPLY
-        client->sendNumericReply("366", channelName + " :End of /NAMES list");   // RPL_ENDOFNAMES
+        // Envoyer RPL_NAMREPLY et RPL_ENDOFNAMES
+        std::string memberList = getMemberList(channel);
+        client->sendMessage(":" + _server->getHostname() + " 353 " + client->getNickname() + " = " +
+                            channelName + " :" + memberList + "\r\n");
+        client->sendMessage(":" + _server->getHostname() + " 366 " + client->getNickname() + " " +
+                            channelName + " :End of /NAMES list\r\n");
     }
 }
 
@@ -286,6 +330,7 @@ CommandHandler::CommandHandler(Server *server) : _server(server) {
     _commandMap["PRIVMSG"] = &CommandHandler::handlePrivmsg;
     _commandMap["QUIT"] = &CommandHandler::handleQuit;
     _commandMap["CAP"] = &CommandHandler::handleCap;
+    // _commandMap["WHO"] = &CommandHandler::handleWho;
 }
 
 void CommandHandler::handleCommand(Client *client, const std::string input) {
@@ -300,7 +345,7 @@ void CommandHandler::handleCommand(Client *client, const std::string input) {
         // if (command[1] == "USER")
         //     (this->*_commandMap[command[1]])(client, std::string(command[2] + command[3]));
         // else
-            (this->*_commandMap[command[1]])(client, command);
+        (this->*_commandMap[command[1]])(client, command);
     else {
 
         std::cout << client->getNickname() << " said : " << command[1];
