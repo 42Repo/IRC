@@ -29,6 +29,9 @@
 // 341
 #define RPL_INVITING(channel, nick) (channel + " " + nick)
 
+// 401
+#define ERR_NOSUCHNICK(nick) (nick + ": No such nick/channel")
+
 // 403
 #define ERR_NOSUCHCHANNEL(channel) (channel + " :No such channel")
 
