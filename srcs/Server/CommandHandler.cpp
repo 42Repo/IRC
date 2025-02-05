@@ -19,7 +19,7 @@ void CommandHandler::handlePass(Client *client, const std::string &input) {
         return;
     }
     if (_server->getPassword() != input) {
-        client->sendNumericReply("464", ERR_PASSWDMISMATCH);
+        client->sendNumericReply("464", ERR_PASSWDMISMATCH(client->getNickname()));
         return;
     }
     client->setAuthenticaded(true);
