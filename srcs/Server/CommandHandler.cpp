@@ -40,7 +40,7 @@ void CommandHandler::welcomeMsg(Client *client) {
 
 // TODO - Command - USER
 void CommandHandler::handleUser(Client *client, const std::vector<std::string> &input) {
-    std::istringstream iss(input[2] + input[3]);
+    std::istringstream iss(input[2] + " " + input[3]);
     std::string        user, mode, unused, realname;
 
     iss >> user >> mode >> unused;
@@ -296,6 +296,9 @@ static std::vector<std::string> commandParser(std::string input) {
     stream >> command[1];
 
     std::getline(stream >> std::ws, command[2], ':');
+    if (!command[2].empty() && command[2][command[2].size() - 1] == ' ') {
+        command[2].erase(command[2].size() - 1, 1);
+    }
     std::getline(stream, command[3]);
 
     if (!command[2].empty() && command[2][command[2].length() - 1] == '\n') {
