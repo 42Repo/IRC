@@ -14,15 +14,13 @@ void CommandHandler::handlePass(Client *client, const std::string &input) {
     }
     if (client->getIsAuthenticaded()) {
         client->sendNumericReply("462", ERR_ALREADYREGISTRED);
-
-        std::cout << ERR_ALREADYREGISTRED << std::endl;
         return;
     }
     if (_server->getPassword() != input) {
         client->sendNumericReply("464", ERR_PASSWDMISMATCH(client->getNickname()));
-
         return;
     }
+    
     client->setAuthenticaded(true);
     std::cout << client->getUsername() << " identified" << std::endl;
 }
@@ -89,11 +87,10 @@ static bool isValidNickname(const std::string &nick) {
 // TODO - Command - NICK
 void CommandHandler::handleNick(Client *client, const std::string &input) {
 
-    // if (!client->getIsAuthenticaded()) {
-    //     client->sendNumericReply("451", ERR_NOTREGISTERED);
-    //     return;
-    // }
-    // TODO : Ajouter ERR_NOTREGISTERED
+    if (!client->getIsAuthenticaded()) {
+        client->sendNumericReply("451", ERR_NOTREGISTERED(client->getNickname()));
+        return;
+    }
 
     if (input.length() == 0) {
         client->sendNumericReply("431", ERR_NONICKNAMEGIVEN);
@@ -172,7 +169,7 @@ void CommandHandler::handlePrivmsg(Client *client, const std::string &input) {
 
 // TODO - Command - QUIT
 void CommandHandler::handleQuit(Client *client, const std::string &input) {
-    std::cout << client->getNickname() << " called QUI" << std::endl;
+    std::cout << client->getNickname() << " called QUIT" << std::endl;
     (void)input;
 }
 

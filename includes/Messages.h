@@ -77,6 +77,9 @@
 // 443
 #define ERR_USERONCHANNEL(user, channel) (user + " " + channel + " :is already on channel")
 
+// 451
+#define ERR_NOTREGISTERED(nick) (nick + ":You have not registered")
+
 // 461
 #define ERR_NEEDMOREPARAMS(command) (command + std::string(" :Not enough parameters"))
 
@@ -84,7 +87,7 @@
 #define ERR_ALREADYREGISTRED ": Unauthorized command (already registered)"
 
 // 464
-#define ERR_PASSWDMISMATCH(nick) (nick + " :Password incorrect")
+#define ERR_PASSWDMISMATCH(nick) (nick + " :Password incorect")
 
 // 471
 #define ERR_CHANNELISFULL(channel) (channel + ":Cannot join channel (+l)")
