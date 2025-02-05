@@ -6,9 +6,9 @@
 #include <vector>
 
 // TODO - Command - PASS
-void CommandHandler::handlePass(Client *client, const std::string &input) {
+void CommandHandler::handlePass(Client *client, const std::vector<std::string> &input) {
 
-    if (input.length() == 0) {
+    if (input[2].length() == 0) {
         client->sendNumericReply("461", ERR_NEEDMOREPARAMS("PASS"));
         return;
     }
@@ -16,7 +16,7 @@ void CommandHandler::handlePass(Client *client, const std::string &input) {
         client->sendNumericReply("462", ERR_ALREADYREGISTRED);
         return;
     }
-    if (_server->getPassword() != input) {
+    if (_server->getPassword() != input[2]) {
         client->sendNumericReply("464", ERR_PASSWDMISMATCH(client->getNickname()));
         return;
     }
@@ -37,8 +37,8 @@ void CommandHandler::welcomeMsg(Client *client) {
 }
 
 // TODO - Command - USER
-void CommandHandler::handleUser(Client *client, const std::string &input) {
-    std::istringstream iss(input);
+void CommandHandler::handleUser(Client *client, const std::vector<std::string> &input) {
+    std::istringstream iss(input[2] + input[3]);
     std::string        user, mode, unused, realname;
 
     iss >> user >> mode >> unused;
@@ -84,38 +84,38 @@ static bool isValidNickname(const std::string &nick) {
 }
 
 // TODO - Command - NICK
-void CommandHandler::handleNick(Client *client, const std::string &input) {
+void CommandHandler::handleNick(Client *client, const std::vector<std::string> &input) {
 
     if (!client->getIsAuthenticaded()) {
         client->sendNumericReply("451", ERR_NOTREGISTERED(client->getNickname()));
         return;
     }
 
-    if (input.length() == 0) {
+    if (input[2].length() == 0) {
         client->sendNumericReply("431", ERR_NONICKNAMEGIVEN);
         return;
     }
 
-    if (!isValidNickname(input)) {
-        client->sendNumericReply("432", ERR_ERRONEUSNICKNAME(input));
+    if (!isValidNickname(input[2])) {
+        client->sendNumericReply("432", ERR_ERRONEUSNICKNAME(input[2]));
         return;
     }
 
     // Check if the nickname is already used
     std::vector<Client *> clients = _server->getClients();
     for (size_t i = 0; i < clients.size(); ++i) {
-        if (clients[i] != client && clients[i]->getNickname() == input) {
-            client->sendNumericReply("433", ERR_NICKNAMEINUSE(input));
+        if (clients[i] != client && clients[i]->getNickname() == input[2]) {
+            client->sendNumericReply("433", ERR_NICKNAMEINUSE(input[2]));
             return;
         }
     }
 
     std::string oldNick = client->getNickname();
-    client->setNickname(input);
+    client->setNickname(input[2]);
 
     if (client->getIsRegistered()) {
         std::string nickChangeMessage = ":" + oldNick + "!" + client->getUsername() + "@" +
-                                        client->getHostname() + " NICK :" + input + "\r\n";
+                                        client->getHostname() + " NICK :" + input[2] + "\r\n";
 
         for (size_t i = 0; i < clients.size(); ++i) {
             clients[i]->sendMessage(nickChangeMessage);
@@ -126,7 +126,7 @@ void CommandHandler::handleNick(Client *client, const std::string &input) {
         !client->getIsRegistered() && client->getIsAuthenticaded())
         welcomeMsg(client);
 
-    std::cout << "[" << client->getHostname() << "] Nickname set to " << input << std::endl;
+    std::cout << "[" << client->getHostname() << "] Nickname set to " << input[2] << std::endl;
 }
 
 static std::vector<std::string> splitString(const std::string &str, char delimiter) {
@@ -156,8 +156,8 @@ bool isValidChannelName(const std::string &name) {
 }
 
 // TODO - Command - JOIN
-void CommandHandler::handleJoin(Client *client, const std::string &input) {
-    std::vector<std::string> channels = splitString(input, ',');
+void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &input) {
+    std::vector<std::string> channels = splitString(input[2], ',');
 
     if (channels.empty()) {
         client->sendNumericReply("461", ERR_NEEDMOREPARAMS("JOIN"));
@@ -210,31 +210,31 @@ void CommandHandler::handleJoin(Client *client, const std::string &input) {
 }
 
 // TODO - Command - MODE
-void CommandHandler::handleMode(Client *client, const std::string &input) {
+void CommandHandler::handleMode(Client *client, const std::vector<std::string> &input) {
     std::cout << client->getNickname() << " called MODE" << std::endl;
     (void)input;
 }
 
 // TODO - Command - TOPIC
-void CommandHandler::handleTopic(Client *client, const std::string &input) {
+void CommandHandler::handleTopic(Client *client, const std::vector<std::string> &input) {
     std::cout << client->getNickname() << " called TOPIC" << std::endl;
     (void)input;
 }
 
 // TODO - Command - KICK
-void CommandHandler::handleKick(Client *client, const std::string &input) {
+void CommandHandler::handleKick(Client *client, const std::vector<std::string> &input) {
     std::cout << client->getNickname() << " called KICK" << std::endl;
     (void)input;
 }
 
 // TODO - Command - INVITE
-void CommandHandler::handleInvite(Client *client, const std::string &input) {
+void CommandHandler::handleInvite(Client *client, const std::vector<std::string> &input) {
     std::cout << client->getNickname() << " called INVITE" << std::endl;
     (void)input;
 }
 
 // TODO - Command - QUIT
-void CommandHandler::handleQuit(Client *client, const std::string &input) {
+void CommandHandler::handleQuit(Client *client, const std::vector<std::string> &input) {
     std::cout << client->getNickname() << " called QUIT" << std::endl;
     (void)input;
 }
@@ -260,15 +260,15 @@ static std::vector<std::string> commandParser(std::string input) {
     return command;
 }
 
-void CommandHandler::handleCap(Client *client, const std::string &input) {
-    if (input == "LS 302") {
+void CommandHandler::handleCap(Client *client, const std::vector<std::string> &input) {
+    if (input[2] == "LS 302") {
         client->sendNumericReply("CAP * LS :", "");
-    } else if (input.rfind("REQ", 0) == 0) {
+    } else if (input[2].rfind("REQ", 0) == 0) {
         client->sendNumericReply("CAP * ACK :", "");
-    } else if (input == "END") {
+    } else if (input[2] == "END") {
         // TODO : Handle CAP END
     } else {
-        std::cerr << "Unhandled CAP command: " << input << std::endl;
+        std::cerr << "Unhandled CAP command: " << input[2] << std::endl;
     }
 }
 
@@ -297,10 +297,10 @@ void CommandHandler::handleCommand(Client *client, const std::string input) {
     // (this->*_commandMap[command[1]])(client, command[2]);
     CommandHandlerFunctionMap::iterator it = _commandMap.find(command[1]);
     if (it != _commandMap.end())
-        if (command[1] == "USER")
-            (this->*_commandMap[command[1]])(client, std::string(command[2] + command[3]));
-        else
-            (this->*_commandMap[command[1]])(client, command[2]);
+        // if (command[1] == "USER")
+        //     (this->*_commandMap[command[1]])(client, std::string(command[2] + command[3]));
+        // else
+            (this->*_commandMap[command[1]])(client, command);
     else {
 
         std::cout << client->getNickname() << " said : " << command[1];
