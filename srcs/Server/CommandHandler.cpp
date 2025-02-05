@@ -20,7 +20,6 @@ void CommandHandler::handlePass(Client *client, const std::string &input) {
         client->sendNumericReply("464", ERR_PASSWDMISMATCH(client->getNickname()));
         return;
     }
-    
     client->setAuthenticaded(true);
     std::cout << client->getUsername() << " identified" << std::endl;
 }
@@ -114,15 +113,14 @@ void CommandHandler::handleNick(Client *client, const std::string &input) {
     std::string oldNick = client->getNickname();
     client->setNickname(input);
 
-    std::string nickChangeMessage = ":" + oldNick + "!" + client->getUsername() + "@" +
-                                    client->getHostname() + " NICK :" + input + "\r\n";
+    if (client->getIsRegistered()) {
+        std::string nickChangeMessage = ":" + oldNick + "!" + client->getUsername() + "@" +
+                                        client->getHostname() + " NICK :" + input + "\r\n";
 
-    for (size_t i = 0; i < clients.size(); ++i) {
-        if (clients[i] != client) {
+        for (size_t i = 0; i < clients.size(); ++i) {
             clients[i]->sendMessage(nickChangeMessage);
         }
     }
-    client->sendMessage(nickChangeMessage);
 
     if (!client->getUsername().empty() && client->getNickname() != "*" &&
         !client->getIsRegistered() && client->getIsAuthenticaded())
@@ -131,10 +129,84 @@ void CommandHandler::handleNick(Client *client, const std::string &input) {
     std::cout << "[" << client->getHostname() << "] Nickname set to " << input << std::endl;
 }
 
+static std::vector<std::string> splitString(const std::string &str, char delimiter) {
+    std::vector<std::string> tokens;
+    std::stringstream        ss(str);
+    std::string              token;
+
+    while (std::getline(ss, token, delimiter)) {
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}
+
+bool isValidChannelName(const std::string &name) {
+    if (name.empty() || name.size() > 50) {
+        return false;
+    }
+    if (name[0] != '#' && name[0] != '&') {
+        return false;
+    }
+    for (size_t i = 0; i < name.size(); ++i) {
+        if (name[i] == ' ' || name[i] == 7 || name[i] == ',')
+            return false;
+    }
+    return true;
+}
+
 // TODO - Command - JOIN
 void CommandHandler::handleJoin(Client *client, const std::string &input) {
-    std::cout << client->getNickname() << " called JOIN" << std::endl;
-    (void)input;
+    std::vector<std::string> channels = splitString(input, ',');
+
+    if (channels.empty()) {
+        client->sendNumericReply("461", ERR_NEEDMOREPARAMS("JOIN"));
+        return;
+    }
+
+    for (size_t i = 0; i < channels.size(); ++i) {
+        std::string channelName = channels[i];
+
+        if (!isValidChannelName(channelName)) {
+            client->sendNumericReply("476", ERR_BADCHANMASK(channelName));
+            continue;
+        }
+
+        Channel *channel = _server->getChannelByName(channelName);
+        if (!channel) {
+            channel = new Channel(channelName, client);
+            _server->addChannel(channel);
+        }
+
+        if (!channel->isMember(client)) {
+            channel->addMember(client);
+            client->joinChannel(channel);
+        }
+
+        std::string joinMessage = ":" + client->getNickname() + "!" + client->getUsername() + "@" +
+                                  client->getHostname() + " JOIN " + channelName + "\r\n";
+
+        std::map<Client *, bool> members = channel->getMembers();
+        for (std::map<Client *, bool>::iterator it = members.begin(); it != members.end(); ++it) {
+            Client *member = it->first;
+            member->sendMessage(joinMessage);
+        }
+
+        // Envoyer la liste des noms (RPL_NAMREPLY)
+        std::string memberList;
+        for (std::map<Client *, bool>::iterator it = members.begin(); it != members.end(); ++it) {
+            Client *member = it->first;
+            if (channel->isOperator(member)) {
+                memberList += "@";
+            } else {
+                memberList += "+";
+            }
+            memberList += member->getNickname() + " ";
+        }
+
+        client->sendNumericReply("353", "= " + channelName + " :" + memberList); // RPL_NAMREPLY
+        client->sendNumericReply("366", channelName + " :End of /NAMES list");   // RPL_ENDOFNAMES
+    }
 }
 
 // TODO - Command - MODE
@@ -160,8 +232,6 @@ void CommandHandler::handleInvite(Client *client, const std::string &input) {
     std::cout << client->getNickname() << " called INVITE" << std::endl;
     (void)input;
 }
-
-
 
 // TODO - Command - QUIT
 void CommandHandler::handleQuit(Client *client, const std::string &input) {

@@ -184,3 +184,21 @@ std::string Server::getHostname() {
     }
     return std::string(hostname);
 }
+
+Channel *Server::getChannelByName(const std::string &name) {
+    std::map<std::string, Channel *>::iterator it = _channels.find(name);
+    if (it != _channels.end()) {
+        return it->second;
+    }
+    return NULL;
+}
+
+void Server::addChannel(Channel *channel) { _channels[channel->getName()] = channel; }
+
+void Server::removeChannel(const std::string &name) {
+    std::map<std::string, Channel *>::iterator it = _channels.find(name);
+    if (it != _channels.end()) {
+        delete it->second;
+        _channels.erase(it);
+    }
+}

@@ -11,12 +11,16 @@ class Server {
     Server(int port, const std::string &password);
     ~Server();
 
-    void                  run();
-    void                  setupServerSocket();
-    std::string           getHostname();
-    std::string           getPassword() { return _password; };
-    void                  removeClient(Client *client);
-    std::vector<Client *> getClients() { return _clients; };
+    void                             run();
+    void                             setupServerSocket();
+    std::string                      getHostname();
+    std::string                      getPassword() { return _password; };
+    void                             removeClient(Client *client);
+    std::vector<Client *>            getClients() { return _clients; };
+    std::map<std::string, Channel *> getChannels() { return _channels; };
+    Channel                         *getChannelByName(const std::string &name);
+    void                             addChannel(Channel *channel);
+    void                             removeChannel(const std::string &name);
 
   private:
     Server();

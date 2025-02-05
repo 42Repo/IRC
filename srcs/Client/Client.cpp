@@ -88,3 +88,11 @@ void Client::removeFromMessageBuffer(size_t length) {
         _messageBuffer = _messageBuffer.substr(length);
     }
 }
+
+void Client::joinChannel(Channel *channel) { _channels[channel->getName()] = channel; }
+
+void Client::leaveChannel(Channel *channel) {
+    if (_channels.find(channel->getName()) != _channels.end()) {
+        _channels.erase(channel->getName());
+    }
+}

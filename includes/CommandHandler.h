@@ -28,6 +28,7 @@ class CommandHandler {
     void handlePrivmsg(Client *client, const std::string &input);
     void handleQuit(Client *client, const std::string &input);
     void handleCap(Client *client, const std::string &input);
+    void handleWho(Client *client, const std::string &input);
     void welcomeMsg(Client *client);
 
     // ajouter chaque commande

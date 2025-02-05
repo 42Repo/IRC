@@ -33,6 +33,8 @@ class Client {
     void setRealname(const std::string &realname) { _realname = realname; };
     void setUsername(const std::string &username) { _username = username; };
     void setHostname(const std::string &hostname) { _hostname = hostname; };
+    void joinChannel(Channel *channel);
+    void leaveChannel(Channel *channel);
 
   private:
     Client();
