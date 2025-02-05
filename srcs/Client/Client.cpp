@@ -22,7 +22,8 @@ Client::Client(int fd, Server *server)
       _messageBuffer(""),
       _isOperator(false),
       _channels(),
-      _status("") {
+      _status(""),
+      _isRegistered(false) {
 
     struct sockaddr_in clientAddress;
     socklen_t          clientAddressLength = sizeof(clientAddress);

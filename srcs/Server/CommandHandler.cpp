@@ -28,17 +28,114 @@ void CommandHandler::handlePass(Client *client, const std::string &input) {
 
 // TODO - Command - USER
 void CommandHandler::handleUser(Client *client, const std::string &input) {
-    std::cout << client->getNickname() << " called USER" << std::endl;
-    (void)input;
+    std::istringstream iss(input);
+    std::string        user, mode, unused, realname;
+
+    iss >> user >> mode >> unused;
+    std::getline(iss >> std::ws, realname);
+
+    if (realname.empty() || user.empty()) {
+        client->sendNumericReply("461", ERR_NEEDMOREPARAMS("USER"));
+        return;
+    }
+
+    if (client->getIsRegistered()) {
+        client->sendNumericReply("462", ERR_ALREADYREGISTRED);
+        return;
+    }
+
+    client->setUsername(user);
+    client->setRealname(realname);
+
+    if (!client->getNickname().empty() && client->getNickname() != "*" &&
+        !client->getIsRegistered() && client->getIsAuthenticaded()) {
+        client->setIsRegistered(true);
+
+        client->sendNumericReply("001", RPL_WELCOME(client->getNickname(), client->getUsername(),
+                                                    client->getHostname()));
+        client->sendNumericReply(
+            "002", RPL_YOURHOST(client->getNickname(), _server->getHostname(), "1.0"));
+        client->sendNumericReply("003", RPL_CREATED(client->getNickname(), "DATE"));
+        client->sendNumericReply(
+            "004", RPL_MYINFO(client->getNickname(), _server->getHostname(), "1.0", "", ""));
+    }
+    std::cout << client->getNickname() << " registered with username " << client->getUsername()
+              << " and realname " << client->getRealname() << std::endl;
+}
+
+static bool isValidNickname(const std::string &nick) {
+    if (nick.length() < 1 || nick.length() > 9) {
+        return false;
+    }
+    if (!std::isalpha(nick[0]) && nick[0] != '[' && nick[0] != '{' && nick[0] != '\\' &&
+        nick[0] != ']' && nick[0] != '}' && nick[0] != '|' && nick[0] != '_') {
+        return false;
+    }
+    for (size_t i = 1; i < nick.length(); ++i) {
+        if (!std::isalnum(nick[i]) && nick[i] != '-' && nick[i] != '[' && nick[i] != ']' &&
+            nick[i] != '{' && nick[i] != '}' && nick[i] != '\\' && nick[i] != '|' &&
+            nick[i] != '_') {
+            return false;
+        }
+    }
+    return true;
 }
 
 // TODO - Command - NICK
 void CommandHandler::handleNick(Client *client, const std::string &input) {
 
-    // std::cout << "valid NICK call !" << std::endl;
+    // if (!client->getIsAuthenticaded()) {
+    //     client->sendNumericReply("451", ERR_NOTREGISTERED);
+    //     return;
+    // }
+    // TODO : Ajouter ERR_NOTREGISTERED
 
-    std::cout << "[" << client->getNickname() << "] Renamed to " << input << " !" << std::endl;
+    if (input.length() == 0) {
+        client->sendNumericReply("431", ERR_NONICKNAMEGIVEN);
+        return;
+    }
+
+    if (!isValidNickname(input)) {
+        client->sendNumericReply("432", ERR_ERRONEUSNICKNAME(input));
+        return;
+    }
+
+    // Check if the nickname is already use
+    std::vector<Client *> clients = _server->getClients();
+    for (size_t i = 0; i < clients.size(); ++i) {
+        if (clients[i] != client && clients[i]->getNickname() == input) {
+            client->sendNumericReply("433", ERR_NICKNAMEINUSE(input));
+            return;
+        }
+    }
+
+    std::string oldNick = client->getNickname();
     client->setNickname(input);
+
+    std::string nickChangeMessage = ":" + oldNick + "!" + client->getUsername() + "@" +
+                                    client->getHostname() + " NICK :" + input + "\r\n";
+
+    for (size_t i = 0; i < clients.size(); ++i) {
+        if (clients[i] != client) {
+            clients[i]->sendMessage(nickChangeMessage);
+        }
+    }
+    client->sendMessage(nickChangeMessage);
+
+    if (!client->getUsername().empty() && client->getNickname() != "*" &&
+        !client->getIsRegistered() && client->getIsAuthenticaded()) {
+        client->setIsRegistered(true);
+
+        client->sendNumericReply("001", RPL_WELCOME(client->getNickname(), client->getUsername(),
+                                                    client->getHostname()));
+        client->sendNumericReply(
+            "002", RPL_YOURHOST(client->getNickname(), _server->getHostname(), "1.0"));
+        client->sendNumericReply("003", RPL_CREATED(client->getNickname(), "DATE"));
+        client->sendNumericReply(
+            "004", RPL_MYINFO(client->getNickname(), _server->getHostname(), "1.0", "", ""));
+    }
+
+    std::cout << "[" << client->getHostname() << "] Nickname set to " << input << std::endl;
 }
 
 // TODO - Command - JOIN
@@ -128,7 +225,10 @@ void CommandHandler::handleCommand(Client *client, const std::string input) {
     // (this->*_commandMap[command[1]])(client, command[2]);
     CommandHandlerFunctionMap::iterator it = _commandMap.find(command[1]);
     if (it != _commandMap.end())
-        (this->*_commandMap[command[1]])(client, command[2]);
+        if (command[1] == "USER")
+            (this->*_commandMap[command[1]])(client, std::string(command[2] + command[3]));
+        else
+            (this->*_commandMap[command[1]])(client, command[2]);
     else {
 
         std::cout << client->getNickname() << " said : " << command[1];

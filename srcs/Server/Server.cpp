@@ -132,9 +132,6 @@ void Server::run() {
             client_pfd.fd = clientSocket;
             client_pfd.events = POLLIN;
             _fds.push_back(client_pfd);
-            newClient->sendNumericReply("001", RPL_WELCOME(newClient->getNickname(),
-                                                           newClient->getUsername(),
-                                                           newClient->getHostname()));
 
             std::cout << "New client connected to the server" << std::endl;
         }

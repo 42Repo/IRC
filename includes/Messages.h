@@ -2,17 +2,17 @@
 
 // 001
 #define RPL_WELCOME(nickname, username, hostname)                                                  \
-    ("Welcome to the Internet Relay Network " + nickname + "!" + username + "@" + hostname)
+    (nickname + " :Welcome to the Internet Relay Network " + nickname + "!" + username + "@" + hostname)
 
 // 002
-#define RPL_YOURHOST(server, version) ("Your host is " + server + ", running version " + version)
+#define RPL_YOURHOST(nickname, server, version) (nickname + " :Your host is " + server + ", running version " + version)
 
 // 003
-#define RPL_CREATED(date) (std::string("This server was created ") + date)
+#define RPL_CREATED(nickname, date) (nickname + std::string(" :This server was created ") + date)
 
 // 004
-#define RPL_MYINFO(servername, version, modes, channels)                                           \
-    (servername + " " + version + " " + modes + " " + channels)
+#define RPL_MYINFO(nickname, servername, version, modes, channels)                                           \
+    (nickname + " :" + servername + " " + version + " " + modes + " " + channels)
 
 // 221
 #define RPL_UMODEIS(mode) (mode)

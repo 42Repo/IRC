@@ -26,6 +26,13 @@ class Client {
     void removeFromMessageBuffer(size_t length);
     bool getIsAuthenticaded() { return _isAuthenticated; };
     void setAuthenticaded(bool value) { _isAuthenticated = value; };
+    bool getIsRegistered() { return _isRegistered; };
+    void setIsRegistered(bool value) { _isRegistered = value; };
+    void setIsOperator(bool value) { _isOperator = value; };
+    bool getIsOperator() { return _isOperator; };
+    void setRealname(const std::string &realname) { _realname = realname; };
+    void setUsername(const std::string &username) { _username = username; };
+    void setHostname(const std::string &hostname) { _hostname = hostname; };
 
   private:
     Client();
@@ -43,4 +50,5 @@ class Client {
     bool                             _isOperator;
     std::map<std::string, Channel *> _channels;
     std::string                      _status;
+    bool                             _isRegistered;
 };
