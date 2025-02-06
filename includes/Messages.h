@@ -30,7 +30,7 @@
 #define RPL_INVITING(channel, nick) (channel + " " + nick)
 
 // 401
-#define ERR_NOSUCHNICK(nick) (nick + ": No such nick/channel")
+#define ERR_NOSUCHNICK(nick) (nick + " :No such nick/channel")
 
 // 403
 #define ERR_NOSUCHCHANNEL(channel) (channel + " :No such channel")
@@ -46,10 +46,10 @@
     (target + " :" + errcode + " recipients. " + message)
 
 // 411
-#define ERR_NORECIPIENT(command) ("No recipient given (" + command + ")")
+#define ERR_NORECIPIENT(command) (std::string("No recipient given (") + command + ")")
 
 // 412
-#define ERR_NOTEXTTOSEND (":No text to send")
+#define ERR_NOTEXTTOSEND(user) (user + " :No text to send")
 
 // 413
 #define ERR_NOTOPLEVEL(mask) (mask + " :No toplevel domain specified")
@@ -58,7 +58,7 @@
 #define ERR_WILDTOPLEVEL(mask) (mask + " :Wildcard in toplevel domain")
 
 // 431
-#define ERR_NONICKNAMEGIVEN ":No nickname given"
+#define ERR_NONICKNAMEGIVEN " :No nickname given"
 
 // 432
 #define ERR_ERRONEUSNICKNAME(nick) (nick + (" :Erroneous nickname"))
@@ -81,46 +81,46 @@
 #define ERR_USERONCHANNEL(user, channel) (user + " " + channel + " :is already on channel")
 
 // 451
-#define ERR_NOTREGISTERED(nick) (nick + ":You have not registered")
+#define ERR_NOTREGISTERED(nick) (nick + " :You have not registered")
 
 // 461
 #define ERR_NEEDMOREPARAMS(command) (command + std::string(" :Not enough parameters"))
 
 // 462
-#define ERR_ALREADYREGISTRED ": Unauthorized command (already registered)"
+#define ERR_ALREADYREGISTRED " :Unauthorized command (already registered)"
 
 // 464
 #define ERR_PASSWDMISMATCH(nick) (nick + " :Password incorect")
 
 // 471
-#define ERR_CHANNELISFULL(channel) (channel + ":Cannot join channel (+l)")
+#define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)")
 
 // 473
-#define ERR_INVITEONLYCHAN(channel) (channel + ":Cannot join channel (+i)")
+#define ERR_INVITEONLYCHAN(channel) (channel + " :Cannot join channel (+i)")
 
 // 474
-#define ERR_BANNEDFROMCHAN(channel) (channel + ":Cannot join channel (+b)")
+#define ERR_BANNEDFROMCHAN(channel) (channel + " :Cannot join channel (+b)")
 
 // 475
-#define ERR_BADCHANNELKEY(channel) (channel + ":Cannot join channel (+k)")
+#define ERR_BADCHANNELKEY(channel) (channel + " :Cannot join channel (+k)")
 
 // 476
-#define ERR_BADCHANMASK(channel) (channel + ":Bad Channel Mask")
+#define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask")
 
 // 477
-#define ERR_NOCHANMODES(channel) (channel + ":Channel doesn't support modes")
+#define ERR_NOCHANMODES(channel) (channel + " :Channel doesn't support modes")
 
 // 482
-#define ERR_CHANOPRIVSNEEDED(channel) (channel + ":You're not channel operator")
+#define ERR_CHANOPRIVSNEEDED(channel) (channel + " :You're not channel operator")
 
 // 484
-#define ERR_RESTRICTED ":You can't kill a server!"
+#define ERR_RESTRICTED " :You can't kill a server!"
 
 // 501
-#define ERR_UMODEUNKNOWNFLAG ":Unknown MODE flag"
+#define ERR_UMODEUNKNOWNFLAG " :Unknown MODE flag"
 
 // 502
-#define ERR_USERSDONTMATCH ":Cannot change mode for other users"
+#define ERR_USERSDONTMATCH " :Cannot change mode for other users"
 
 /*
     pass/user

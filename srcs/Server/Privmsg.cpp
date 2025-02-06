@@ -29,6 +29,7 @@ static void sendPrivChannelMsg(Server *server, Client *send, std::string channel
 		if(it->first->getNickname() != send->getNickname())
 			it->first->sendMessage(":" + send->getNickname() + " PRIVMSG " + channelName + " :"+ message + "\n\r");
     }
+	
 	(void) server;
 }
 
@@ -36,6 +37,16 @@ static void sendPrivChannelMsg(Server *server, Client *send, std::string channel
 void CommandHandler::handlePrivmsg(Client *client, const std::vector<std::string> &input) {
     std::cout << client->getNickname() << " called PRIVATEMSG" << std::endl;
 	std::cout << input[2] << std::endl;
+	if(input[2].size() == 0)
+	{
+		client->sendNumericReply("411", ERR_NORECIPIENT("PRIVMSG"));
+		return ;
+	}
+	if(input[3].size() == 0)
+	{
+		client->sendNumericReply("412", ERR_NOTEXTTOSEND(client->getNickname()));
+		return ;
+	}
 	if(input[2][0] == '#')
 		sendPrivChannelMsg(_server, client, input[2],input[3]);
 	else
