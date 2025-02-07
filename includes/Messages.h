@@ -2,16 +2,18 @@
 
 // 001
 #define RPL_WELCOME(nickname, username, hostname)                                                  \
-    (nickname + " :Welcome to the Internet Relay Network " + nickname + "!" + username + "@" + hostname)
+    (nickname + " :Welcome to the Internet Relay Network " + nickname + "!" + username + "@" +     \
+     hostname)
 
 // 002
-#define RPL_YOURHOST(nickname, server, version) (nickname + " :Your host is " + server + ", running version " + version)
+#define RPL_YOURHOST(nickname, server, version)                                                    \
+    (nickname + " :Your host is " + server + ", running version " + version)
 
 // 003
 #define RPL_CREATED(nickname, date) (nickname + std::string(" :This server was created ") + date)
 
 // 004
-#define RPL_MYINFO(nickname, servername, version, modes, channels)                                           \
+#define RPL_MYINFO(nickname, servername, version, modes, channels)                                 \
     (nickname + " :" + servername + " " + version + " " + modes + " " + channels)
 
 // 221
@@ -33,7 +35,7 @@
 #define ERR_NOSUCHNICK(nick) (nick + " :No such nick/channel")
 
 // 403
-#define ERR_NOSUCHCHANNEL(channel) (channel + " :No such channel")
+#define ERR_NOSUCHCHANNEL(nickname, channel) (nickname, " ", channel + " :No such channel")
 
 // 404
 #define ERR_CANNOTSENDTOCHAN(channel) (channel + " :Cannot send to channel")
