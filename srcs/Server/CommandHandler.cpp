@@ -319,9 +319,18 @@ void CommandHandler::handleCap(Client *client, const std::vector<std::string> &i
     }
 }
 
-CommandHandler::CommandHandler(Server *server) : _server(server) {
-    // ajouter chaque fonction a la map
+void CommandHandler::handlePing(Client *client, const std::vector<std::string> &input) {
+    if (input.size() < 3 || input[2].empty()) {
+        client->sendNumericReply("409", ":No origin specified");
+        return;
+    }
 
+    std::string pongResponse =
+        ":" + _server->getHostname() + " PONG " + _server->getHostname() + " :" + input[2] + "\r\n";
+    client->sendMessage(pongResponse);
+}
+
+CommandHandler::CommandHandler(Server *server) : _server(server) {
     _commandMap["PASS"] = &CommandHandler::handlePass;
     _commandMap["USER"] = &CommandHandler::handleUser;
     _commandMap["NICK"] = &CommandHandler::handleNick;
@@ -333,6 +342,7 @@ CommandHandler::CommandHandler(Server *server) : _server(server) {
     _commandMap["PRIVMSG"] = &CommandHandler::handlePrivmsg;
     _commandMap["QUIT"] = &CommandHandler::handleQuit;
     _commandMap["CAP"] = &CommandHandler::handleCap;
+    _commandMap["PING"] = &CommandHandler::handlePing;
     // _commandMap["WHO"] = &CommandHandler::handleWho;
 }
 
