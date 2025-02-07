@@ -3,6 +3,14 @@
 #include "Client.h"
 #include <iostream>
 #include <map>
+#include "Messages.h"
+#include <cstdlib>
+#include <cstring>
+#include <sstream>
+#include <string>
+#include <vector>
+
+class Server;
 class CommandHandler {
 
   public:

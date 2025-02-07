@@ -1,8 +1,5 @@
 #include "../../includes/CommandHandler.h"
-#include "../../includes/Messages.h"
 #include "../../includes/Server.h"
-#include <string>
-#include <vector>
 
 
 
@@ -17,19 +14,22 @@ static void sendPrivUserMsg(Server *server, Client *send, std::string receive, c
         }
     }
 	send->sendNumericReply("401", ERR_NOSUCHNICK(receive));
-	std::cout << "WRONG NICKNAME CHEF" << std::endl;
 }
 
 static void sendPrivChannelMsg(Server *server, Client *send, std::string channelName,const std::string &message)
 {
 	std::cout << send->getNickname() << " sent [" << message << "] to " << channelName <<std::endl;
 	Channel *channel =  server->getChannelByName(channelName);
+	if(!channel)
+	{
+		send->sendNumericReply("403", ERR_NOSUCHCHANNEL(send->getNickname(),channelName));
+		return;
+	}
 	std::map<Client*, bool> clients = channel->getMembers();
 	for (std::map<Client*, bool>::iterator it = clients.begin(); it != clients.end(); ++it) {
 		if(it->first->getNickname() != send->getNickname())
 			it->first->sendMessage(":" + send->getNickname() + " PRIVMSG " + channelName + " :"+ message + "\n\r");
     }
-	
 	(void) server;
 }
 

@@ -35,7 +35,7 @@
 #define ERR_NOSUCHNICK(nick) (nick + " :No such nick/channel")
 
 // 403
-#define ERR_NOSUCHCHANNEL(nickname, channel) (nickname, " ", channel + " :No such channel")
+#define ERR_NOSUCHCHANNEL(nickname, channel) (nickname + " " + channel + " :No such channel")
 
 // 404
 #define ERR_CANNOTSENDTOCHAN(channel) (channel + " :Cannot send to channel")
@@ -211,13 +211,13 @@
 
     privmsg
 
-    411 ERR_NORECIPIENT
-    412 ERR_NOTEXTTOSEND
+    OK 411 ERR_NORECIPIENT
+    OK 412 ERR_NOTEXTTOSEND
+    OK 401 ERR_NOSUCHNICK
+    OK 401 ERR_NOSUCHCHANNEL
     404 ERR_CANNOTSENDTOCHAN
     413 ERR_NOTOPLEVEL
     414 ERR_WILDTOPLEVEL
     407 ERR_TOOMANYTARGETS
-    401 ERR_NOSUCHNICK | dup
-    301 RPL_AWAY | dup
 
 */

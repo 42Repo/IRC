@@ -1,10 +1,11 @@
-#pragma once
-
-#include "Channel.h"
 #include "CommandHandler.h"
+#include "Channel.h"
 #include "Messages.h"
 #include <poll.h>
 #include <vector>
+
+
+// class CommandHandler;
 
 class Server {
   public:
