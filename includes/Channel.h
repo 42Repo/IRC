@@ -26,6 +26,7 @@ class Channel {
     void        removeChannelMode(char mode);
     bool        hasChannelMode(char mode) const;
     std::string getChannelModes() const;
+    std::string getUserModes(Client *client) const;
     void        addUserMode(Client *client, char mode);
     void        removeUserMode(Client *client, char mode);
     bool        hasUserMode(Client *client, char mode) const;

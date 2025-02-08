@@ -42,6 +42,17 @@ std::string Channel::getChannelModes() const {
     return modes;
 }
 
+std::string Channel::getUserModes(Client *client) const {
+    std::string modes;
+    if (isMember(client)) {
+        for (std::set<char>::const_iterator it = _userModes.at(client).begin();
+             it != _userModes.at(client).end(); ++it) {
+            modes += *it;
+        }
+    }
+    return modes;
+}
+
 void Channel::addUserMode(Client *client, char mode) {
     if (isMember(client)) {
         _userModes[client].insert(mode);

@@ -67,6 +67,7 @@ void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &
             channel = new Channel(channelName, client);
             _server->addChannel(channel);
             channel->addMember(client);
+            client->joinChannel(channel);
 
             std::string joinMessage = ":" + client->getNickname() + "!" + client->getUsername() +
                                       "@" + client->getHostname() + " JOIN :" + channelName +
