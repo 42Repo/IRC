@@ -1,8 +1,6 @@
 #include "../../includes/CommandHandler.h"
 #include "../../includes/Server.h"
 
-
-
 void CommandHandler::welcomeMsg(Client *client) {
     client->setIsRegistered(true);
 
@@ -13,6 +11,9 @@ void CommandHandler::welcomeMsg(Client *client) {
     client->sendNumericReply("003", RPL_CREATED(client->getNickname(), "DATE"));
     client->sendNumericReply(
         "004", RPL_MYINFO(client->getNickname(), _server->getHostname(), "1.0", "", ""));
+
+    std::string motd = ":asuc 422 Nyantad :MOTD File is missing\r\n";
+    client->sendMessage(motd);
 }
 
 static std::vector<std::string> commandParser(std::string input) {
