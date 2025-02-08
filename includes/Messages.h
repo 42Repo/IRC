@@ -2,127 +2,127 @@
 
 // 001
 #define RPL_WELCOME(nickname, username, hostname)                                                  \
-    (nickname + " :Welcome to the Internet Relay Network " + nickname + "!" + username + "@" +     \
+    (std::string("001 ") + nickname + " :Welcome to the Internet Relay Network " + nickname + "!" + username + "@" +     \
      hostname)
 
 // 002
 #define RPL_YOURHOST(nickname, server, version)                                                    \
-    (nickname + " :Your host is " + server + ", running version " + version)
+    (std::string("002 ") + nickname + " :Your host is " + server + ", running version " + version)
 
 // 003
-#define RPL_CREATED(nickname, date) (nickname + std::string(" :This server was created ") + date)
+#define RPL_CREATED(nickname, date) (std::string("003 ") + nickname + std::string(" :This server was created ") + date)
 
 // 004
 #define RPL_MYINFO(nickname, servername, version, modes, channels)                                 \
-    (nickname + " :" + servername + " " + version + " " + modes + " " + channels)
+    (std::string("004 ") + nickname + " :" + servername + " " + version + " " + modes + " " + channels)
 
 // 221
-#define RPL_UMODEIS(mode) (mode)
+#define RPL_UMODEIS(mode) (std::string("221 ") + mode)
 
 // 301
-#define RPL_AWAY(nick, message) (nick + " : " + message)
+#define RPL_AWAY(nick, message) (std::string("301 ") + nick + " : " + message)
 
 // 331
-#define RPL_NOTOPIC(channel) (channel + ":No topic is set")
+#define RPL_NOTOPIC(channel) (std::string("331 ") + channel + ":No topic is set")
 
 // 332
-#define RPL_TOPIC(channel, topic) (channel + " : " + topic)
+#define RPL_TOPIC(channel, topic) (std::string("332 ") + channel + " : " + topic)
 
 // 341
-#define RPL_INVITING(channel, nick) (channel + " " + nick)
+#define RPL_INVITING(channel, nick) (std::string("341 ") + channel + " " + nick)
 
 // 401
-#define ERR_NOSUCHNICK(nick) (nick + " :No such nick/channel")
+#define ERR_NOSUCHNICK(nick) (std::string("401 ") + nick + " :No such nick/channel")
 
 // 403
-#define ERR_NOSUCHCHANNEL(nickname, channel) (nickname + " " + channel + " :No such channel")
+#define ERR_NOSUCHCHANNEL(nickname, channel) (std::string("403 ") + nickname + " " + channel + " :No such channel")
 
 // 404
-#define ERR_CANNOTSENDTOCHAN(channel) (channel + " :Cannot send to channel")
+#define ERR_CANNOTSENDTOCHAN(channel) (std::string("404 ") + channel + " :Cannot send to channel")
 
 // 405
-#define ERR_TOOMANYCHANNELS(channel) (channel + " :You have joined too many channels")
+#define ERR_TOOMANYCHANNELS(channel) (std::string("405 ") + channel + " :You have joined too many channels")
 
 // 407
 #define ERR_TOOMANYTARGETS(target, errcode, message)                                               \
-    (target + " :" + errcode + " recipients. " + message)
+    (std::string("407 ") + target + " :" + errcode + " recipients. " + message)
 
 // 411
-#define ERR_NORECIPIENT(command) (std::string("No recipient given (") + command + ")")
+#define ERR_NORECIPIENT(command) (std::string("411 ") + std::string("No recipient given (") + command + ")")
 
 // 412
-#define ERR_NOTEXTTOSEND(user) (user + " :No text to send")
+#define ERR_NOTEXTTOSEND(user) (std::string("412 ") + user + " :No text to send")
 
 // 413
-#define ERR_NOTOPLEVEL(mask) (mask + " :No toplevel domain specified")
+#define ERR_NOTOPLEVEL(mask) (std::string("413 ") + mask + " :No toplevel domain specified")
 
 // 414
-#define ERR_WILDTOPLEVEL(mask) (mask + " :Wildcard in toplevel domain")
+#define ERR_WILDTOPLEVEL(mask) (std::string("414 ") + mask + " :Wildcard in toplevel domain")
 
 // 431
-#define ERR_NONICKNAMEGIVEN " :No nickname given"
+#define ERR_NONICKNAMEGIVEN (std::string("431") + " :No nickname given")
 
 // 432
-#define ERR_ERRONEUSNICKNAME(nick) (nick + (" :Erroneous nickname"))
+#define ERR_ERRONEUSNICKNAME(nick) (std::string("432 ") + nick + (" :Erroneous nickname"))
 
 // 433
-#define ERR_NICKNAMEINUSE(nick) (nick + (" :Nickname is already in use"))
+#define ERR_NICKNAMEINUSE(nick) (std::string("433 ") + nick + (" :Nickname is already in use"))
 
 // 436
 #define ERR_NICKCOLLISION(nick, user, host)                                                        \
-    (nick + " :Nickname collision KILL from " + user + "@" + host)
+    (std::string("436 ") + nick + " :Nickname collision KILL from " + user + "@" + host)
 
 // 437
 #define ERR_UNAVAILRESOURCE(nick_channel)                                                          \
-    (nick_channel + " :Nick/channel is temporarily unavailable")
+    (std::string("437 ") + nick_channel + " :Nick/channel is temporarily unavailable")
 
 // 442
-#define ERR_NOTONCHANNEL(channel) (channel + " :You're not on that channel")
+#define ERR_NOTONCHANNEL(channel) (std::string("442 ") + channel + " :You're not on that channel")
 
 // 443
-#define ERR_USERONCHANNEL(user, channel) (user + " " + channel + " :is already on channel")
+#define ERR_USERONCHANNEL(user, channel) (std::string("443 ") + user + " " + channel + " :is already on channel")
 
 // 451
-#define ERR_NOTREGISTERED(nick) (nick + " :You have not registered")
+#define ERR_NOTREGISTERED(nick) (std::string("451 ") + nick + " :You have not registered")
 
 // 461
-#define ERR_NEEDMOREPARAMS(command) (command + std::string(" :Not enough parameters"))
+#define ERR_NEEDMOREPARAMS(command) (std::string("461 ") + command + std::string(" :Not enough parameters"))
 
 // 462
-#define ERR_ALREADYREGISTRED " :Unauthorized command (already registered)"
+#define ERR_ALREADYREGISTRED(user) (std::string("462 ") + user + std::string(" :Unauthorized command (already registered)"))
 
 // 464
-#define ERR_PASSWDMISMATCH(nick) (nick + " :Password incorect")
+#define ERR_PASSWDMISMATCH(nick) (std::string("464 ") + nick + " :Password incorect")
 
 // 471
-#define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)")
+#define ERR_CHANNELISFULL(channel) (std::string("471 ") + channel + " :Cannot join channel (+l)")
 
 // 473
-#define ERR_INVITEONLYCHAN(channel) (channel + " :Cannot join channel (+i)")
+#define ERR_INVITEONLYCHAN(channel) (std::string("473 ") + channel + " :Cannot join channel (+i)")
 
 // 474
-#define ERR_BANNEDFROMCHAN(channel) (channel + " :Cannot join channel (+b)")
+#define ERR_BANNEDFROMCHAN(channel) (std::string("474 ") + channel + " :Cannot join channel (+b)")
 
 // 475
-#define ERR_BADCHANNELKEY(channel) (channel + " :Cannot join channel (+k)")
+#define ERR_BADCHANNELKEY(channel) (std::string("475 ") + channel + " :Cannot join channel (+k)")
 
 // 476
-#define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask")
+#define ERR_BADCHANMASK(channel) (std::string("476 ") + channel + " :Bad Channel Mask")
 
 // 477
-#define ERR_NOCHANMODES(channel) (channel + " :Channel doesn't support modes")
+#define ERR_NOCHANMODES(channel) (std::string("477 ") + channel + " :Channel doesn't support modes")
 
 // 482
-#define ERR_CHANOPRIVSNEEDED(channel) (channel + " :You're not channel operator")
+#define ERR_CHANOPRIVSNEEDED(channel) (std::string("482 ") + channel + " :You're not channel operator")
 
 // 484
-#define ERR_RESTRICTED " :You can't kill a server!"
+#define ERR_RESTRICTED(user) (std::string("484 ") + user + " :You can't kill a server!")
 
 // 501
-#define ERR_UMODEUNKNOWNFLAG " :Unknown MODE flag"
+#define ERR_UMODEUNKNOWNFLAG "501 :Unknown MODE flag"
 
 // 502
-#define ERR_USERSDONTMATCH " :Cannot change mode for other users"
+#define ERR_USERSDONTMATCH "502 :Cannot change mode for other users"
 
 /*
     pass/user

@@ -9,7 +9,7 @@ void CommandHandler::handlePass(Client *client, const std::vector<std::string> &
         return;
     }
     if (client->getIsAuthenticaded()) {
-        client->sendNumericReply("462", ERR_ALREADYREGISTRED);
+        client->sendNumericReply("462", ERR_ALREADYREGISTRED(client->getNickname()));
         return;
     }
     if (_server->getPassword() != input[2]) {

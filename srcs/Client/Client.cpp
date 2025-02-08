@@ -62,11 +62,12 @@ void Client::sendMessage(const std::string &msg) {
 
 void Client::sendNumericReply(const char *numericStr, const std::string params) {
     std::ostringstream replyStream;
-    replyStream << ":" << _server->getHostname() << " " << numericStr;
+    replyStream << ":" << _server->getHostname();
     // << " " << _nickname
     // for (size_t i = 0; i < params.size(); ++i) {
     //     replyStream << " " << params[i];
     // }
+    (void) numericStr;
     replyStream << " " << params;
     replyStream << "\r\n";
 
@@ -109,3 +110,5 @@ void Client::removeMode(char mode) {
         _userModes.erase(pos, 1);
     }
 }
+
+Server *Client::getServer() { return _server; }

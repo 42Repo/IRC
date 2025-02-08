@@ -30,6 +30,7 @@ class Client {
     void        setIsRegistered(bool value) { _isRegistered = value; };
     void        setIsOperator(bool value) { _isOperator = value; };
     bool        getIsOperator() { return _isOperator; };
+    Server      *getServer();
     void        setRealname(const std::string &realname) { _realname = realname; };
     void        setUsername(const std::string &username) { _username = username; };
     void        setHostname(const std::string &hostname) { _hostname = hostname; };

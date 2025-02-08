@@ -16,7 +16,7 @@ void CommandHandler::handleUser(Client *client, const std::vector<std::string> &
     }
 
     if (client->getIsRegistered()) {
-        client->sendNumericReply("462", ERR_ALREADYREGISTRED);
+        client->sendNumericReply("462", ERR_ALREADYREGISTRED(client->getNickname()));
         return;
     }
 
