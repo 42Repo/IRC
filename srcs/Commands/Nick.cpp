@@ -22,45 +22,41 @@ static bool isValidNickname(const std::string &nick) {
 // TODO - Command - NICK
 void CommandHandler::handleNick(Client *client, const std::vector<std::string> &input) {
 
-    if (!client->getIsAuthenticaded()) {
-        client->sendNumericReply("451", ERR_NOTREGISTERED(client->getNickname()));
-        return;
-    }
+    try {
+        if (!client->getIsAuthenticaded())
+            throw Error::IRCError(ERR_NOTREGISTERED(client->getNickname()).c_str());
 
-    if (input[2].length() == 0) {
-        client->sendNumericReply("431", ERR_NONICKNAMEGIVEN);
-        return;
-    }
+        if (input[2].length() == 0)
+            throw Error::IRCError(ERR_NONICKNAMEGIVEN.c_str());
 
-    if (!isValidNickname(input[2])) {
-        client->sendNumericReply("432", ERR_ERRONEUSNICKNAME(input[2]));
-        return;
-    }
+        if (!isValidNickname(input[2]))
+            throw Error::IRCError(ERR_ERRONEUSNICKNAME(input[2]).c_str());
 
-    // Check if the nickname is already used
-    std::vector<Client *> clients = _server->getClients();
-    for (size_t i = 0; i < clients.size(); ++i) {
-        if (clients[i] != client && clients[i]->getNickname() == input[2]) {
-            client->sendNumericReply("433", ERR_NICKNAMEINUSE(input[2]));
-            return;
-        }
-    }
-
-    std::string oldNick = client->getNickname();
-    client->setNickname(input[2]);
-
-    if (client->getIsRegistered()) {
-        std::string nickChangeMessage = ":" + oldNick + "!" + client->getUsername() + "@" +
-                                        client->getHostname() + " NICK :" + input[2] + "\r\n";
-
+        // Check if the nickname is already used
+        std::vector<Client *> clients = _server->getClients();
         for (size_t i = 0; i < clients.size(); ++i) {
-            clients[i]->sendMessage(nickChangeMessage);
+            if (clients[i] != client && clients[i]->getNickname() == input[2])
+                throw Error::IRCError(ERR_NICKNAMEINUSE(input[2]).c_str());
         }
+
+        std::string oldNick = client->getNickname();
+        client->setNickname(input[2]);
+
+        if (client->getIsRegistered()) {
+            std::string nickChangeMessage = ":" + oldNick + "!" + client->getUsername() + "@" +
+                                            client->getHostname() + " NICK :" + input[2] + "\r\n";
+
+            for (size_t i = 0; i < clients.size(); ++i) {
+                clients[i]->sendMessage(nickChangeMessage);
+            }
+        }
+
+        if (!client->getUsername().empty() && client->getNickname() != "*" &&
+            !client->getIsRegistered() && client->getIsAuthenticaded())
+            welcomeMsg(client);
+
+        std::cout << "[" << client->getHostname() << "] Nickname set to " << input[2] << std::endl;
+    } catch (const std::exception &e) {
+        Error(e.what(), client);
     }
-
-    if (!client->getUsername().empty() && client->getNickname() != "*" &&
-        !client->getIsRegistered() && client->getIsAuthenticaded())
-        welcomeMsg(client);
-
-    std::cout << "[" << client->getHostname() << "] Nickname set to " << input[2] << std::endl;
 }

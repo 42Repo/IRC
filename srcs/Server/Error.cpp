@@ -1,7 +1,6 @@
 #include "../../includes/Error.hpp"
 #include "../../includes/Server.h"
 #include <sstream>
-
 Error::Error(std::string errMessage, Client *client) {
     std::ostringstream replyStream;
     _server = client->getServer();

@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "Error.hpp"
 
 class Server;
 class CommandHandler {
