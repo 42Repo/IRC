@@ -22,7 +22,7 @@ DEP_DIR      := $(BUILD_DIR)/dep
 
 # Source and Object Files
 CMDSRC		 := srcs/Commands/CommandHandler.cpp srcs/Commands/Privmsg.cpp srcs/Commands/Invite.cpp srcs/Commands/Join.cpp srcs/Commands/Kick.cpp srcs/Commands/Mode.cpp srcs/Commands/Nick.cpp srcs/Commands/Pass.cpp srcs/Commands/Quit.cpp srcs/Commands/Topic.cpp srcs/Commands/User.cpp
-SRCS         := srcs/main.cpp srcs/Server/Server.cpp srcs/Client/Client.cpp srcs/Channel/Channel.cpp $(CMDSRC)
+SRCS         := srcs/main.cpp srcs/Server/Server.cpp srcs/Client/Client.cpp srcs/Channel/Channel.cpp srcs/Server/Error.cpp $(CMDSRC)
 OBJS         := $(addprefix $(OBJ_DIR)/,$(SRCS:.cpp=.o))
 DEPS         := $(addprefix $(DEP_DIR)/,$(SRCS:.cpp=.d))
 

@@ -1,15 +1,21 @@
+#include "Client.h"
 #include <exception>
 #include <string>
-#include "Client.h"
 
-class Error
-{
-	Error(std::string errMessage, Client *client);
-	~Error();
-	class IRCError : public std::exception{
-		virtual const char* what() const throw();
-	};
+class Error {
+  public:
+    Error(std::string errMessage, Client *client);
+    ~Error() {};
+    class IRCError : public std::exception {
+      public:
+        IRCError(const char *msg);
+        virtual ~IRCError() throw();
+        virtual const char *what() const throw();
 
-	private:
-		Server* _server;
+      private:
+        char *_msg;
+    };
+
+  private:
+    Server *_server;
 };
