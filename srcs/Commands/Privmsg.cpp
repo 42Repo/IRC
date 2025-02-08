@@ -23,8 +23,9 @@ static void sendPrivChannelMsg(Server *server, Client *send, std::string channel
     Channel *channel = server->getChannelByName(channelName);
     if (!channel)
         throw Error::IRCError(ERR_NOSUCHCHANNEL(send->getNickname(), channelName).c_str());
-    std::map<Client *, bool> clients = channel->getMembers();
-    for (std::map<Client *, bool>::iterator it = clients.begin(); it != clients.end(); ++it) {
+    std::map<Client *, std::set<char> > clients = channel->getMembers();
+    for (std::map<Client *, std::set<char> >::iterator it = clients.begin(); it != clients.end();
+         ++it) {
         if (it->first->getNickname() != send->getNickname())
             it->first->sendMessage(":" + send->getNickname() + " PRIVMSG " + channelName + " :" +
                                    message + "\n\r");
@@ -38,9 +39,9 @@ void CommandHandler::handlePrivmsg(Client *client, const std::vector<std::string
     std::cout << input[2] << std::endl;
     try {
         if (input[2].size() == 0)
-        	throw Error::IRCError(ERR_NORECIPIENT("PRIVMSG").c_str());
+            throw Error::IRCError(ERR_NORECIPIENT("PRIVMSG").c_str());
         if (input[3].size() == 0)
-        	throw Error::IRCError(ERR_NOTEXTTOSEND(client->getNickname()).c_str());
+            throw Error::IRCError(ERR_NOTEXTTOSEND(client->getNickname()).c_str());
         if (input[2][0] == '#')
             sendPrivChannelMsg(_server, client, input[2], input[3]);
         else

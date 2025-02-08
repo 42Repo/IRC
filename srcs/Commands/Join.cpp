@@ -29,11 +29,12 @@ bool isValidChannelName(const std::string &name) {
 
 // TODO - Command - JOIN
 std::string getMemberList(Channel *channel) {
-    std::string              memberList;
-    std::map<Client *, bool> members = channel->getMembers();
-    for (std::map<Client *, bool>::iterator it = members.begin(); it != members.end(); ++it) {
+    std::string                        memberList;
+    std::map<Client *, std::set<char> > members = channel->getMembers();
+    for (std::map<Client *, std::set<char> >::iterator it = members.begin(); it != members.end();
+         ++it) {
         Client *member = it->first;
-        if (channel->isOperator(member)) {
+        if (channel->hasUserMode(member, 'o')) {
             memberList += "@";
         }
         memberList += member->getNickname() + " ";
@@ -65,7 +66,7 @@ void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &
         if (!channel) {
             channel = new Channel(channelName, client);
             _server->addChannel(channel);
-            channel->addMember(client, true);
+            channel->addMember(client);
 
             std::string joinMessage = ":" + client->getNickname() + "!" + client->getUsername() +
                                       "@" + client->getHostname() + " JOIN :" + channelName +
@@ -75,15 +76,15 @@ void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &
                                       " +o " + client->getNickname() + "\r\n";
             client->sendMessage(modeMessage);
 
-            std::map<Client *, bool> members = channel->getMembers();
-            for (std::map<Client *, bool>::iterator it = members.begin(); it != members.end();
-                 ++it) {
+            std::map<Client *, std::set<char> > members = channel->getMembers();
+            for (std::map<Client *, std::set<char> >::iterator it = members.begin();
+                 it != members.end(); ++it) {
                 Client *member = it->first;
                 member->sendMessage(joinMessage);
             }
 
         } else {
-            if (channel->isInviteOnly()) {
+            if (channel->hasChannelMode('i')) {
                 client->sendNumericReply("473", ERR_INVITEONLYCHAN(channelName));
                 continue;
             }
@@ -104,9 +105,9 @@ void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &
             std::string joinMessage = ":" + client->getNickname() + "!" + client->getUsername() +
                                       "@" + client->getHostname() + " JOIN :" + channelName +
                                       "\r\n";
-            std::map<Client *, bool> members = channel->getMembers();
-            for (std::map<Client *, bool>::iterator it = members.begin(); it != members.end();
-                 ++it) {
+            std::map<Client *, std::set<char> > members = channel->getMembers();
+            for (std::map<Client *, std::set<char> >::iterator it = members.begin();
+                 it != members.end(); ++it) {
                 Client *member = it->first;
                 member->sendMessage(joinMessage);
             }

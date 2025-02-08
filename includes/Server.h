@@ -1,3 +1,5 @@
+#pragma once
+
 #include "CommandHandler.h"
 #include "Channel.h"
 #include "Messages.h"

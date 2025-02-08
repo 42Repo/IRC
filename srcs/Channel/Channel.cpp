@@ -1,34 +1,65 @@
 #include "../../includes/Channel.h"
 
 Channel::Channel(std::string name, Client *creator, std::string password, int userLimit,
-                 bool isInviteOnly, bool isTopicOperatorOnly, std::string modes)
+                 std::string topic)
     : _name(name),
-      _topic(""),
+      _topic(topic),
       _password(password),
-      _members(),
       _userLimit(userLimit),
-      _isInviteOnly(isInviteOnly),
-      _isTopicOperatorOnly(isTopicOperatorOnly),
-      _modes(modes) {
-    addMember(creator, true);
+      _channelModes(),
+      _userModes() {
+    addMember(creator);
+    addUserMode(creator, 'o');
 }
 
 Channel::~Channel() {}
-
-void Channel::removeMember(Client *client) {
-    if (_members.find(client) != _members.end()) {
-        _members.erase(client);
+void Channel::addMember(Client *client) {
+    if (!isMember(client)) {
+        _userModes[client] = std::set<char>();
+        if (client->getIsOperator())
+            _userModes[client].insert('o');
     }
 }
 
-void Channel::addMember(Client *client, bool isOperator) { _members[client] = isOperator; }
+void Channel::removeMember(Client *client) { _userModes.erase(client); }
 
-bool Channel::isOperator(Client *client) const {
-    std::map<Client *, bool>::const_iterator it = _members.find(client);
-    if (it != _members.end()) {
-        return it->second;
+bool Channel::isMember(Client *client) const { return _userModes.count(client) > 0; }
+
+void Channel::setTopic(const std::string &topic) { _topic = topic; }
+
+void Channel::addChannelMode(char mode) { _channelModes.insert(mode); }
+
+void Channel::removeChannelMode(char mode) { _channelModes.erase(mode); }
+
+bool Channel::hasChannelMode(char mode) const { return _channelModes.count(mode) > 0; }
+
+std::string Channel::getChannelModes() const {
+    std::string modes;
+    for (std::set<char>::const_iterator it = _channelModes.begin(); it != _channelModes.end();
+         ++it) {
+        modes += *it;
+    }
+    return modes;
+}
+
+void Channel::addUserMode(Client *client, char mode) {
+    if (isMember(client)) {
+        _userModes[client].insert(mode);
+    }
+}
+
+void Channel::removeUserMode(Client *client, char mode) {
+    if (isMember(client)) {
+        _userModes[client].erase(mode);
+        if (_userModes[client].empty()) {
+            _userModes.erase(client);
+        }
+    }
+}
+
+bool Channel::hasUserMode(Client *client, char mode) const {
+    if (isMember(client)) {
+        return _userModes.at(client).count(mode) > 0;
     }
     return false;
 }
-
-bool Channel::isMember(Client *client) const { return _members.find(client) != _members.end(); }

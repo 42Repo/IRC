@@ -67,7 +67,7 @@ void Client::sendNumericReply(const char *numericStr, const std::string params) 
     // for (size_t i = 0; i < params.size(); ++i) {
     //     replyStream << " " << params[i];
     // }
-    (void) numericStr;
+    (void)numericStr;
     replyStream << " " << params;
     replyStream << "\r\n";
 
@@ -98,17 +98,17 @@ void Client::leaveChannel(Channel *channel) {
     }
 }
 
-void Client::addMode(char mode) {
-    if (_userModes.find(mode) == std::string::npos) {
-        _userModes += mode;
-    }
-}
+// void Client::addMode(char mode) {
+//     if (_userModes.find(mode) == std::string::npos) {
+//         _userModes += mode;
+//     }
+// }
 
-void Client::removeMode(char mode) {
-    size_t pos = _userModes.find(mode);
-    if (pos != std::string::npos) {
-        _userModes.erase(pos, 1);
-    }
-}
+// void Client::removeMode(char mode) {
+//     size_t pos = _userModes.find(mode);
+//     if (pos != std::string::npos) {
+//         _userModes.erase(pos, 1);
+//     }
+// }
 
 Server *Client::getServer() { return _server; }

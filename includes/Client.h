@@ -11,7 +11,9 @@ class Client {
   public:
     Client(int fd, Server *server);
     ~Client();
-    void        sendMessage(const std::string &message);
+
+    std::map<std::string, Channel *> getChannels() const;
+    void                             sendMessage(const std::string &message);
     void        sendNumericReply(const char *numericStr, const std::string params);
     int         getFd() const;
     std::string getNickname() const;
@@ -19,7 +21,6 @@ class Client {
     std::string getRealname() const;
     std::string getHostname() const;
     std::string getMessageBuffer() const;
-    std::map<std::string, Channel *> getChannels() const;
     void        setNickname(const std::string &nickname) { _nickname = nickname; }
     void        appendToMessageBuffer(const std::string &data);
     void        clearMessageBuffer();
@@ -30,7 +31,7 @@ class Client {
     void        setIsRegistered(bool value) { _isRegistered = value; };
     void        setIsOperator(bool value) { _isOperator = value; };
     bool        getIsOperator() { return _isOperator; };
-    Server      *getServer();
+    Server     *getServer();
     void        setRealname(const std::string &realname) { _realname = realname; };
     void        setUsername(const std::string &username) { _username = username; };
     void        setHostname(const std::string &hostname) { _hostname = hostname; };
@@ -38,7 +39,7 @@ class Client {
     void        leaveChannel(Channel *channel);
     void        addMode(char mode);
     void        removeMode(char mode);
-    std::string getUserModes() const { return _userModes; };
+    // std::string getUserModes() const { return _userModes; };
 
   private:
     Client();
@@ -57,5 +58,5 @@ class Client {
     std::map<std::string, Channel *> _channels;
     std::string                      _status;
     bool                             _isRegistered;
-    std::string                      _userModes;
+    // std::string                      _userModes;
 };
