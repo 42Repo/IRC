@@ -202,3 +202,13 @@ void Server::removeChannel(const std::string &name) {
         _channels.erase(it);
     }
 }
+
+Client *Server::getClientByName(std::string client)
+{
+    for (size_t i = 0; i < _clients.size(); ++i) {
+        if (_clients[i]->getNickname() == client) {
+            return _clients[i];
+        }
+    }
+    return NULL;
+}

@@ -1,11 +1,10 @@
 #pragma once
 
-#include "CommandHandler.h"
 #include "Channel.h"
+#include "CommandHandler.h"
 #include "Messages.h"
 #include <poll.h>
 #include <vector>
-
 
 // class CommandHandler;
 
@@ -24,6 +23,7 @@ class Server {
     Channel                         *getChannelByName(const std::string &name);
     void                             addChannel(Channel *channel);
     void                             removeChannel(const std::string &name);
+    Client                          *getClientByName(std::string client);
 
   private:
     Server();
