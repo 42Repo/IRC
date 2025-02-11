@@ -1,5 +1,6 @@
 #include "../../includes/CommandHandler.h"
 #include "../../includes/Server.h"
+#include <exception>
 
 void CommandHandler::welcomeMsg(Client *client) {
     client->setIsRegistered(true);
@@ -91,7 +92,11 @@ void CommandHandler::handleCommand(Client *client, const std::string input) {
         // if (command[1] == "USER")
         //     (this->*_commandMap[command[1]])(client, std::string(command[2] + command[3]));
         // else
-        (this->*_commandMap[command[1]])(client, command);
+        try {
+            (this->*_commandMap[command[1]])(client, command);
+        } catch (const std::exception &e) {
+            Error(e.what(), client);
+        }
     else {
 
         std::cout << client->getNickname() << " said : " << command[1];

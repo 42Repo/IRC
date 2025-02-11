@@ -37,7 +37,6 @@ void CommandHandler::handlePrivmsg(Client *client, const std::vector<std::string
 
     std::cout << client->getNickname() << " called PRIVATEMSG" << std::endl;
     std::cout << input[2] << std::endl;
-    try {
         if (input[2].size() == 0)
             throw Error::IRCError(ERR_NORECIPIENT("PRIVMSG").c_str());
         if (input[3].size() == 0)
@@ -46,7 +45,4 @@ void CommandHandler::handlePrivmsg(Client *client, const std::vector<std::string
             sendPrivChannelMsg(_server, client, input[2], input[3]);
         else
             sendPrivUserMsg(_server, client, input[2], input[3]);
-    } catch (const std::exception &e) {
-        Error(e.what(), client);
-    }
 }

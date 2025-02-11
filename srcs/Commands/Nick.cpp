@@ -22,7 +22,6 @@ static bool isValidNickname(const std::string &nick) {
 // TODO - Command - NICK
 void CommandHandler::handleNick(Client *client, const std::vector<std::string> &input) {
 
-    try {
         if (!client->getIsAuthenticaded())
             throw Error::IRCError(ERR_NOTREGISTERED(client->getNickname()).c_str());
 
@@ -56,7 +55,4 @@ void CommandHandler::handleNick(Client *client, const std::vector<std::string> &
             welcomeMsg(client);
 
         std::cout << "[" << client->getHostname() << "] Nickname set to " << input[2] << std::endl;
-    } catch (const std::exception &e) {
-        Error(e.what(), client);
-    }
 }

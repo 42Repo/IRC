@@ -83,6 +83,8 @@
 // 437
 #define ERR_UNAVAILRESOURCE(nick_channel)                                                          \
     (std::string("437 ") + nick_channel + " :Nick/channel is temporarily unavailable")
+// 441
+#define ERR_USERNOTINCHANNEL(nick, channel) (std::string("441 ") + nick + " " + channel + " :They aren't on that channel")
 
 // 442
 #define ERR_NOTONCHANNEL(channel) (std::string("442 ") + channel + " :You're not on that channel")
@@ -128,8 +130,8 @@
 #define ERR_NOCHANMODES(channel) (std::string("477 ") + channel + " :Channel doesn't support modes")
 
 // 482
-#define ERR_CHANOPRIVSNEEDED(channel)                                                              \
-    (std::string("482 ") + channel + " :You're not channel operator")
+#define ERR_CHANOPRIVSNEEDED(nick, channel)                                                              \
+    (std::string("482 ") + nick + " " + channel + " :You're not channel operator")
 
 // 484
 #define ERR_RESTRICTED(user) (std::string("484 ") + user + " :You can't kill a server!")
