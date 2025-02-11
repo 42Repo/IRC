@@ -11,6 +11,7 @@ static std::vector<std::string> splitArgs(const std::string &str) {
     }
     return tokens;
 }
+//TODO - fix error messages (check the 4 errors)
 
 void CommandHandler::handleInvite(Client *client, const std::vector<std::string> &input) {
     std::cout << client->getNickname() << " called INVITE" << std::endl;
