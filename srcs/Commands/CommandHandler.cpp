@@ -89,9 +89,6 @@ void CommandHandler::handleCommand(Client *client, const std::string input) {
     // (this->*_commandMap[command[1]])(client, command[2]);
     CommandHandlerFunctionMap::iterator it = _commandMap.find(command[1]);
     if (it != _commandMap.end())
-        // if (command[1] == "USER")
-        //     (this->*_commandMap[command[1]])(client, std::string(command[2] + command[3]));
-        // else
         try {
             (this->*_commandMap[command[1]])(client, command);
         } catch (const std::exception &e) {
@@ -106,11 +103,3 @@ void CommandHandler::handleCommand(Client *client, const std::string input) {
         // std::cout << "nope" << std::endl;
     }
 }
-
-/*
-CommandHandler::handlejJoin(std::string arg)
-{
-}
-CommandHandler::
-
-*/

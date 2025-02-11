@@ -28,7 +28,6 @@ static void sendChannelKickMsg(Server *server, Client *send, std::string channel
                                            "@" + send->getHostname() + " KICK ") +
                                channel->getName() + " " + message);
     }
-    // :userAdmin!~admin@host KICK #mon-canal user42 :Trop de spam !
 }
 
 // TODO - Command - KICK
@@ -41,7 +40,6 @@ void CommandHandler::handleKick(Client *client, const std::vector<std::string> &
     Client  *target = server->getClientByName(args[1]);
     Channel *channel = server->getChannelByName(args[0]);
 
-    //: userAdmin!~admin@host KICK #mon-canal user42 :Trop de spam !
     if (!channel)
         throw Error::IRCError(ERR_NOSUCHCHANNEL(client->getNickname(), args[0]).c_str());
     if (!channel->isMember(client))
