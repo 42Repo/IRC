@@ -112,3 +112,8 @@ void Client::leaveChannel(Channel *channel) {
 // }
 
 Server *Client::getServer() { return _server; }
+
+void        Client::removeChannel(std::string channel)
+{
+    _channels.erase(channel);
+}

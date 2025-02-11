@@ -3,6 +3,8 @@
 #include "Client.h"
 #include <map>
 #include <set>
+#include <string>
+#include <vector>
 
 class Channel {
   public:
@@ -31,6 +33,9 @@ class Channel {
     void        removeUserMode(Client *client, char mode);
     bool        hasUserMode(Client *client, char mode) const;
     std::map<Client *, std::set<char> > getMembers() const { return _userModes; }
+    void                               addInvitedUser(std::string user);
+    void                               removeInvitedUSer(std::string user);
+    std::vector<std::string>           getInvitedUsers(void);
 
   private:
     std::string                        _name;
@@ -39,4 +44,5 @@ class Channel {
     int                                _userLimit;
     std::set<char>                     _channelModes;
     std::map<Client *, std::set<char> > _userModes;
+    std::vector<std::string>           _invitedUsers;
 };

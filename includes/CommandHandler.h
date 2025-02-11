@@ -1,15 +1,15 @@
 #pragma once
 
 #include "Client.h"
-#include <iostream>
-#include <map>
+#include "Error.hpp"
 #include "Messages.h"
 #include <cstdlib>
 #include <cstring>
+#include <iostream>
+#include <map>
 #include <sstream>
 #include <string>
 #include <vector>
-#include "Error.hpp"
 
 class Server;
 class CommandHandler {

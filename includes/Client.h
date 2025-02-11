@@ -39,6 +39,7 @@ class Client {
     void        leaveChannel(Channel *channel);
     void        addMode(char mode);
     void        removeMode(char mode);
+    void        removeChannel(std::string);
     // std::string getUserModes() const { return _userModes; };
 
   private:
