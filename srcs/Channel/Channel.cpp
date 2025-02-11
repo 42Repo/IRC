@@ -1,4 +1,5 @@
 #include "../../includes/Channel.h"
+#include <algorithm>
 
 Channel::Channel(std::string name, Client *creator, std::string password, int userLimit,
                  std::string topic)
@@ -82,3 +83,11 @@ bool Channel::isOperator(Client *client) const {
     }
     return false;
 }
+
+void Channel::addInvitedUser(std::string user){_invitedUsers.push_back(user);}
+
+void Channel::removeInvitedUSer(std::string user) {
+    _invitedUsers.erase(std::find(_invitedUsers.begin(), _invitedUsers.end(), user));
+}
+
+std::vector<std::string> Channel::getInvitedUsers(void) {return _invitedUsers;}

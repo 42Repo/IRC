@@ -34,7 +34,7 @@
 #define RPL_TOPIC(channel, topic) (std::string("332 ") + channel + " : " + topic)
 
 // 341
-#define RPL_INVITING(channel, nick) (std::string("341 ") + channel + " " + nick)
+#define RPL_INVITING(nick, channel, target) (std::string("341 ") + nick + " " + target + " :" + channel)
 
 // 401
 #define ERR_NOSUCHNICK(nick) (std::string("401 ") + nick + " :No such nick/channel")
