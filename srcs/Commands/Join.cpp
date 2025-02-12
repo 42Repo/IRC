@@ -73,16 +73,18 @@ void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &
                                       "@" + client->getHostname() + " JOIN :" + channelName +
                                       "\r\n";
 
-            std::string modeMessage = ":" + _server->getHostname() + " MODE " + channelName +
-                                      " +o " + client->getNickname() + "\r\n";
-            client->sendMessage(modeMessage);
-
             std::map<Client *, std::set<char> > members = channel->getMembers();
             for (std::map<Client *, std::set<char> >::iterator it = members.begin();
                  it != members.end(); ++it) {
                 Client *member = it->first;
                 member->sendMessage(joinMessage);
             }
+
+            channel->addChannelMode('t');
+            channel->addUserMode(client, 'o');
+            std::string modeMessage =
+                ":" + _server->getHostname() + " MODE " + channelName + " +t " + client->getNickname() + "\r\n";
+            client->sendMessage(modeMessage);
 
         } else {
             if (channel->hasChannelMode('i')) {
