@@ -37,7 +37,7 @@
 #define RPL_INVITING(nick, channel, target) (std::string("341 ") + nick + " " + target + " :" + channel)
 
 // 401
-#define ERR_NOSUCHNICK(nick) (std::string("401 ") + nick + " :No such nick/channel")
+#define ERR_NOSUCHNICK(nick, target) (std::string("401 ") + nick + " " + target + " :No such nick/channel")
 
 // 403
 #define ERR_NOSUCHCHANNEL(nickname, channel)                                                       \
@@ -87,11 +87,12 @@
 #define ERR_USERNOTINCHANNEL(nick, channel) (std::string("441 ") + nick + " " + channel + " :They aren't on that channel")
 
 // 442
-#define ERR_NOTONCHANNEL(channel) (std::string("442 ") + channel + " :You're not on that channel")
+#define ERR_NOTONCHANNEL(nick, channel) (std::string("442 ") + nick + " " + channel + " :You're not on that channel")
 
 // 443
-#define ERR_USERONCHANNEL(user, channel)                                                           \
-    (std::string("443 ") + user + " " + channel + " :is already on channel")
+#define ERR_USERONCHANNEL(user, target, channel)                                                           \
+    (std::string("443 ") + user + " " + target + " " + channel + " :is already on channel")
+//:irc.example.com 443 user42 victimUser #mon-canal :is already on channel
 
 // 451
 #define ERR_NOTREGISTERED(nick) (std::string("451 ") + nick + " :You have not registered")

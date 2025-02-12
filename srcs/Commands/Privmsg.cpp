@@ -14,7 +14,7 @@ static void sendPrivUserMsg(Server *server, Client *send, std::string receive,
             return;
         }
     }
-    throw Error::IRCError(ERR_NOSUCHNICK(receive).c_str());
+    throw Error::IRCError(ERR_NOSUCHNICK(send->getNickname() ,receive).c_str());
 }
 
 static void sendPrivChannelMsg(Server *server, Client *send, std::string channelName,

@@ -43,7 +43,7 @@ void CommandHandler::handleKick(Client *client, const std::vector<std::string> &
     if (!channel)
         throw Error::IRCError(ERR_NOSUCHCHANNEL(client->getNickname(), args[0]).c_str());
     if (!channel->isMember(client))
-        throw Error::IRCError(ERR_NOTONCHANNEL(client->getNickname()).c_str());
+        throw Error::IRCError(ERR_NOTONCHANNEL(client->getNickname(), args[0]).c_str());
     if (!channel->isMember(target))
         throw Error::IRCError(ERR_USERNOTINCHANNEL(client->getNickname(), args[0]).c_str());
     if (!channel->isOperator(client))

@@ -12,6 +12,7 @@ static std::vector<std::string> splitArgs(const std::string &str) {
     return tokens;
 }
 //TODO - fix error messages (check the 4 errors)
+//TODO - check num args
 
 void CommandHandler::handleInvite(Client *client, const std::vector<std::string> &input) {
     std::cout << client->getNickname() << " called INVITE" << std::endl;
@@ -21,15 +22,16 @@ void CommandHandler::handleInvite(Client *client, const std::vector<std::string>
     Server  *server = client->getServer();
     Client  *target = server->getClientByName(args[0]);
     Channel *channel = server->getChannelByName(args[1]);
-
+    if(args.size() < 2)
+        throw Error::IRCError(ERR_NEEDMOREPARAMS("INVITE").c_str());
+    if (!channel || !channel->isMember(client))
+        throw Error::IRCError(ERR_NOTONCHANNEL(client->getNickname(), args[1]).c_str());
     if (!channel->isOperator(client))
         throw Error::IRCError(ERR_CHANOPRIVSNEEDED(client->getNickname(), args[1]).c_str());
     if (!target)
-        throw Error::IRCError(ERR_NOSUCHNICK(client->getNickname()).c_str());
-    if (!channel->isMember(client))
-        throw Error::IRCError(ERR_NOTONCHANNEL(client->getNickname()).c_str());
+        throw Error::IRCError(ERR_NOSUCHNICK(client->getNickname(), args[0]).c_str());
     if (channel->isMember(target))
-        throw Error::IRCError(ERR_USERONCHANNEL(client->getNickname(), args[0]).c_str());
+        throw Error::IRCError(ERR_USERONCHANNEL(client->getNickname(), args[0], args[1]).c_str());
    
     channel->addInvitedUser(args[0]);
    
