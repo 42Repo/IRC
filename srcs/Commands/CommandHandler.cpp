@@ -43,9 +43,9 @@ static std::vector<std::string> commandParser(std::string input) {
 
 void CommandHandler::handleCap(Client *client, const std::vector<std::string> &input) {
     if (input[2] == "LS 302") {
-        client->sendNumericReply("CAP * LS :", "");
+        client->sendNumericReply("", "CAP * LS :");
     } else if (input[2].rfind("REQ", 0) == 0) {
-        client->sendNumericReply("CAP * ACK :", "");
+        client->sendNumericReply("", "CAP * ACK :");
     } else if (input[2] == "END") {
         // TODO : Handle CAP END
     } else {
