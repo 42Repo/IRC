@@ -31,7 +31,7 @@
 #define RPL_NOTOPIC(channel) (std::string("331 ") + channel + ":No topic is set")
 
 // 332
-#define RPL_TOPIC(channel, topic) (std::string("332 ") + channel + " : " + topic)
+#define RPL_TOPIC(nick, channel, topic) (std::string("332 ") + nick + " " + channel + " :" + topic)
 
 // 341
 #define RPL_INVITING(nick, channel, target) (std::string("341 ") + nick + " " + target + " :" + channel)
