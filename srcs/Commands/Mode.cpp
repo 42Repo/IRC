@@ -2,6 +2,8 @@
 #include "../../includes/Error.hpp"
 #include "../../includes/Server.h"
 
+// TODO - MODE(wip)
+
 void CommandHandler::handleMode(Client *client, const std::vector<std::string> &input) {
     try {
         if (input.size() < 3 || input[2].empty()) {

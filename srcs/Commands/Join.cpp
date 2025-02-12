@@ -27,7 +27,6 @@ bool isValidChannelName(const std::string &name) {
     return true;
 }
 
-// TODO (WIP) - Command - JOIN
 std::string getMemberList(Channel *channel) {
     std::string                        memberList;
     std::map<Client *, std::set<char> > members = channel->getMembers();

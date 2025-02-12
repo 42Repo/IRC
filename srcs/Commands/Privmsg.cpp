@@ -32,7 +32,6 @@ static void sendPrivChannelMsg(Server *server, Client *send, std::string channel
     }
 }
 
-// TODO - Command - PRIVMSG
 void CommandHandler::handlePrivmsg(Client *client, const std::vector<std::string> &input) {
 
     std::cout << client->getNickname() << " called PRIVATEMSG" << std::endl;

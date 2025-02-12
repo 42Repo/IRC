@@ -30,7 +30,6 @@ static void sendChannelKickMsg(Server *server, Client *send, std::string channel
     }
 }
 
-// TODO - Command - KICK
 void CommandHandler::handleKick(Client *client, const std::vector<std::string> &input) {
 
     std::cout << client->getNickname() << " called KICK" << std::endl;

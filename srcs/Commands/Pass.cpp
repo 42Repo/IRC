@@ -1,7 +1,6 @@
 #include "../../includes/CommandHandler.h"
 #include "../../includes/Server.h"
 
-// TODO - Command - PASS
 void CommandHandler::handlePass(Client *client, const std::vector<std::string> &input) {
 
     if (input[2].length() == 0) {

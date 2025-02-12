@@ -2,6 +2,12 @@
 #include <iostream>
 #include <sstream>
 
+// TODO - mode du serveur (??)
+// TODO - check perms
+// TODO - motd file
+// TODO - fix memory leaks
+// TODO - create a bot
+
 bool isValidPort(int port) { return port >= 1024 && port <= 65535; }
 
 bool isValidPassword(const std::string &password) {

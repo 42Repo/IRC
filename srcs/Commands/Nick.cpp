@@ -19,7 +19,6 @@ static bool isValidNickname(const std::string &nick) {
     return true;
 }
 
-// TODO - Command - NICK
 void CommandHandler::handleNick(Client *client, const std::vector<std::string> &input) {
 
         if (!client->getIsAuthenticaded())

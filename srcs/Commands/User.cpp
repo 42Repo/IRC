@@ -1,7 +1,6 @@
 #include "../../includes/CommandHandler.h"
 #include "../../includes/Server.h"
 
-// TODO - Command - USER
 
 void CommandHandler::handleUser(Client *client, const std::vector<std::string> &input) {
     std::istringstream iss(input[2] + " " + input[3]);
