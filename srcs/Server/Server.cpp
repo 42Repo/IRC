@@ -23,8 +23,19 @@ Server::Server(int port, const std::string &password)
 }
 
 Server::~Server() {
-    for (size_t i = 0; i < _fds.size(); ++i) {
-        close(_fds[i].fd);
+    for (size_t i = 0; i < _clients.size(); ++i) {
+        delete _clients[i];
+    }
+    _clients.clear();
+
+    for (std::map<std::string, Channel *>::iterator it = _channels.begin(); it != _channels.end();
+         ++it) {
+        delete it->second;
+    }
+    _channels.clear();
+
+    if (_server_fd != -1) {
+        close(_server_fd);
     }
 }
 
@@ -81,14 +92,10 @@ static Client *getClientByFd(std::vector<Client *> clients, int fd) {
 }
 
 void Server::removeClient(Client *client) {
-    std::map<std::string, Channel *> channels = client->getChannels();
-    for (std::map<std::string, Channel *>::iterator it = channels.begin(); it != channels.end();
-         ++it) {
-        Channel *channel = it->second;
-        channel->removeMember(client);
+    std::vector<Client *>::iterator it = std::find(_clients.begin(), _clients.end(), client);
+    if (it != _clients.end()) {
+        _clients.erase(it);
     }
-
-    _clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
 
     for (size_t i = 0; i < _fds.size(); ++i) {
         if (_fds[i].fd == client->getFd()) {
@@ -99,6 +106,7 @@ void Server::removeClient(Client *client) {
     }
 
     delete client;
+    client = NULL;
 }
 
 void Server::run() {
@@ -154,16 +162,25 @@ void Server::run() {
                                 currentClient->getMessageBuffer().substr(0, crlfPos);
                             currentClient->removeFromMessageBuffer(crlfPos + 2);
                             _commandHandler.handleCommand(currentClient, message);
+                            currentClient = getClientByFd(_clients, _fds[i].fd);
+                            if (!currentClient)
+                                break;
                         }
                     } else if (bytesRead == 0) {
-                        std::cout << "Client "
-                                  << (currentClient->getNickname() != "*"
-                                          ? currentClient->getNickname()
-                                          : "unknown")
-                                  << " disconnected" << std::endl;
+                        std::string clientNickname = currentClient->getNickname();
+                        if (clientNickname == "*") {
+                            clientNickname = "unknown";
+                        }
 
+                        std::cout << "Client " << clientNickname << " disconnected" << std::endl;
+
+                        std::map<std::string, Channel *> channels = currentClient->getChannels();
+                        for (std::map<std::string, Channel *>::iterator it = channels.begin();
+                             it != channels.end(); ++it) {
+                            Channel *channel = it->second;
+                            channel->removeMember(currentClient);
+                        }
                         removeClient(currentClient);
-
                         --i;
                     } else {
                         std::cerr << "Error receiving data from client "
@@ -172,6 +189,28 @@ void Server::run() {
                                           : "unknown")
                                   << ": " << strerror(errno) << std::endl;
                     }
+                }
+            }
+            if (_fds[i].revents & POLLHUP) {
+                Client *currentClient = getClientByFd(_clients, _fds[i].fd);
+                if (currentClient) {
+                    std::string clientNickname = currentClient->getNickname();
+                    if (clientNickname == "*") {
+                        clientNickname = "unknown";
+                    }
+
+                    std::cout << "Client " << clientNickname << " disconnected (POLLHUP)"
+                              << std::endl;
+
+                    std::map<std::string, Channel *> channels = currentClient->getChannels();
+                    for (std::map<std::string, Channel *>::iterator it = channels.begin();
+                         it != channels.end(); ++it) {
+                        Channel *channel = it->second;
+                        channel->removeMember(currentClient);
+                    }
+
+                    removeClient(currentClient);
+                    --i;
                 }
             }
         }
@@ -199,6 +238,13 @@ void Server::addChannel(Channel *channel) { _channels[channel->getName()] = chan
 void Server::removeChannel(const std::string &name) {
     std::map<std::string, Channel *>::iterator it = _channels.find(name);
     if (it != _channels.end()) {
+        Channel                           *channel = it->second;
+        std::map<Client *, std::set<char> > members = channel->getMembers();
+        for (std::map<Client *, std::set<char> >::iterator it = members.begin(); it != members.end();
+             ++it) {
+            Client *member = it->first;
+            member->removeChannel(name);
+        }
         delete it->second;
         _channels.erase(it);
     }

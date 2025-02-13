@@ -1,4 +1,5 @@
 #include "../../includes/Channel.h"
+#include "../../includes/Server.h"
 #include <algorithm>
 
 Channel::Channel(std::string name, Client *creator, std::string password, int userLimit,
@@ -13,7 +14,11 @@ Channel::Channel(std::string name, Client *creator, std::string password, int us
     addUserMode(creator, 'o');
 }
 
-Channel::~Channel() {}
+Channel::~Channel() {
+    _userModes.clear();
+    _invitedUsers.clear();
+}
+
 void Channel::addMember(Client *client) {
     if (!isMember(client)) {
         _userModes[client] = std::set<char>();
@@ -22,7 +27,15 @@ void Channel::addMember(Client *client) {
     }
 }
 
-void Channel::removeMember(Client *client) { _userModes.erase(client); }
+void Channel::removeMember(Client *client) {
+    if (isMember(client)) {
+        _userModes.erase(client);
+
+        if (_userModes.empty()) {
+            client->getServer()->removeChannel(this->_name);
+        }
+    }
+}
 
 bool Channel::isMember(Client *client) const { return _userModes.count(client) > 0; }
 
@@ -84,10 +97,10 @@ bool Channel::isOperator(Client *client) const {
     return false;
 }
 
-void Channel::addInvitedUser(std::string user){_invitedUsers.push_back(user);}
+void Channel::addInvitedUser(std::string user) { _invitedUsers.push_back(user); }
 
 void Channel::removeInvitedUSer(std::string user) {
     _invitedUsers.erase(std::find(_invitedUsers.begin(), _invitedUsers.end(), user));
 }
 
-std::vector<std::string> Channel::getInvitedUsers(void) {return _invitedUsers;}
+std::vector<std::string> Channel::getInvitedUsers(void) { return _invitedUsers; }

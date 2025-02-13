@@ -24,21 +24,25 @@ static int isSharingChannel(Client *client, Client *target) {
 
 void CommandHandler::handleQuit(Client *client, const std::vector<std::string> &input) {
     std::cout << client->getNickname() << " called QUIT" << std::endl;
-    (void)input;
     Server               *server = client->getServer();
     std::vector<Client *> clients = server->getClients();
+
     for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it) {
-        if ((*it)->getNickname() != client->getNickname() && isSharingChannel(client, *it))
+        if ((*it) != client && isSharingChannel(client, *it)) {
             (*it)->sendMessage(":" + client->getNickname() + "!" + client->getUsername() + "@" +
                                client->getHostname() + " QUIT :" + input[3] + "\n\r");
+        }
     }
-    
+
     std::map<std::string, Channel *> channels = server->getChannels();
-    for (std::map<std::string, Channel *>::iterator it = channels.begin(); it != channels.end(); ++it) {
-        if(it->second->isMember(client))
-        it->second->removeMember(client);
-}
-client->~Client();
+    for (std::map<std::string, Channel *>::iterator it = channels.begin(); it != channels.end();
+         ++it) {
+        if (it->second->isMember(client)) {
+            it->second->removeMember(client);
+            client->removeChannel(it->first);
+        }
+    }
+    server->removeClient(client);
 }
 
 //: UserNick!~ident@host QUIT :Quit message
