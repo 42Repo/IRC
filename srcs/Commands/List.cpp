@@ -2,4 +2,5 @@
 
 void CommandHandler::handleList(Client *client, const std::vector<std::string> &input) {
     (void)input;
+    (void) client;
 }
