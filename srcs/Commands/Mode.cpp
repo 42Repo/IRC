@@ -2,8 +2,6 @@
 #include "../../includes/Error.hpp"
 #include "../../includes/Server.h"
 
-// TODO - MODE(wip)
-
 void CommandHandler::handleMode(Client *client, const std::vector<std::string> &input) {
     try {
         if (input.size() < 3 || input[2].empty()) {
@@ -16,6 +14,7 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
         std::string target = input[2];
         std::string modeString = "";
         std::string argument = "";
+        std::string first_arg = "";
 
         // Separer la cible et les modes/arguments
         size_t spacePos = target.find(' ');
@@ -134,8 +133,9 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
                     break;
 
                 case 'k':
+                    first_arg = argument.substr(0, argument.find(' '));
+                    argument = argument.substr(argument.find(' ') + 1);
                     if (channel->isOperator(client)) {
-
                         if (adding) {
                             channel->addChannelMode('k');
                             if (argument.empty()) // Si il n'y a pas d'argument alors que +k alors
@@ -149,7 +149,7 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
                         std::string modeMessage =
                             ":" + client->getNickname() + "!" + client->getUsername() + "@" +
                             client->getHostname() + " MODE " + channel->getName() + " " +
-                            (adding ? "+k" : "-k") + "\r\n";
+                            (adding ? "+k" : "-k") + " " + first_arg + "\r\n";
                         std::map<Client *, std::set<char> > members = channel->getMembers();
                         for (std::map<Client *, std::set<char> >::iterator it = members.begin();
                              it != members.end(); ++it) {
@@ -164,18 +164,20 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
                     break;
 
                 case 'o':
+                    first_arg = argument.substr(0, argument.find(' '));
+                    argument = argument.substr(argument.find(' ') + 1);
+                    std::cout << "argument : " << first_arg << std::endl;
                     if (channel->isOperator(client)) {
                         // MODE #channel +o nickname
 
-                        if (argument.empty()) {
+                        if (first_arg.empty()) {
                             throw Error::IRCError(ERR_NEEDMOREPARAMS("MODE").c_str());
                         }
 
                         Client               *targetClient = NULL;
-                        std::vector<Client *> clients =
-                            _server->getClients();
+                        std::vector<Client *> clients = _server->getClients();
                         for (size_t i = 0; i < clients.size(); ++i) {
-                            if (clients[i]->getNickname() == argument) {
+                            if (clients[i]->getNickname() == first_arg) {
                                 targetClient = clients[i];
                                 break;
                             }
@@ -193,7 +195,7 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
                                 std::string modeMessage =
                                     ":" + client->getNickname() + "!" + client->getUsername() +
                                     "@" + client->getHostname() + " MODE " + channel->getName() +
-                                    " " + (adding ? "+o" : "-o") + " " + argument + "\r\n";
+                                    " " + (adding ? "+o" : "-o") + " " + first_arg + "\r\n";
                                 std::map<Client *, std::set<char> > members = channel->getMembers();
                                 for (std::map<Client *, std::set<char> >::iterator it =
                                          members.begin();
@@ -203,11 +205,11 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
                                 }
                             } else
                                 throw Error::IRCError(
-                                    ERR_NOTONCHANNEL(client->getNickname(), argument)
+                                    ERR_NOTONCHANNEL(client->getNickname(), first_arg)
                                         .c_str()); // Si le client n'est pas dans le channel
                         } else
-                            throw Error::IRCError(
-                                ERR_NOSUCHNICK(client->getNickname(), argument).c_str()); // Si il n'existe pas
+                            throw Error::IRCError(ERR_NOSUCHNICK(client->getNickname(), first_arg)
+                                                      .c_str()); // Si il n'existe pas
 
                     } else {
                         throw Error::IRCError(
@@ -217,13 +219,14 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
                     break;
 
                 case 'l':
+                    first_arg = argument.substr(0, argument.find(' '));
+                    argument = argument.substr(argument.find(' ') + 1);
                     if (channel->isOperator(client)) {
                         if (adding) {
                             channel->addChannelMode('l');
-                            if (argument.empty()) // Si il n'y a pas d'argument alors que +k alors
-                                                  // erreur
+                            if (first_arg.empty()) // Si il n'y a pas d'argument alors que +k alors
                                 throw Error::IRCError(ERR_NEEDMOREPARAMS("MODE").c_str());
-                            int limit = std::atoi(argument.c_str());
+                            int limit = std::atoi(first_arg.c_str());
                             if (limit > 0)
                                 channel->setUserLimit(limit);
                             else
@@ -237,7 +240,7 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
                         std::string modeMessage =
                             ":" + client->getNickname() + "!" + client->getUsername() + "@" +
                             client->getHostname() + " MODE " + channel->getName() + " " +
-                            (adding ? "+l" : "-l") + "\r\n";
+                            (adding ? "+l" : "-l") + " " + first_arg + "\r\n";
                         std::map<Client *, std::set<char> > members = channel->getMembers();
                         for (std::map<Client *, std::set<char> >::iterator it = members.begin();
                              it != members.end(); ++it) {
