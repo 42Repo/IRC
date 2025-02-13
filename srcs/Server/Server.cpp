@@ -243,8 +243,8 @@ void Server::removeChannel(const std::string &name) {
     std::map<std::string, Channel *>::iterator it = _channels.find(name);
     if (it != _channels.end()) {
         Channel                           *channel = it->second;
-        std::map<Client *, std::set<char>> members = channel->getMembers();
-        for (std::map<Client *, std::set<char>>::iterator it = members.begin(); it != members.end();
+        std::map<Client *, std::set<char> > members = channel->getMembers();
+        for (std::map<Client *, std::set<char> >::iterator it = members.begin(); it != members.end();
              ++it) {
             Client *member = it->first;
             member->removeChannel(name);
