@@ -27,6 +27,15 @@
 // 324
 #define RPL_CHANNELMODEIS(channel, mode) (std::string("324 ") + channel + " " + mode)
 
+// 321
+#define RPL_LISTSTART(nick) (std::string("321 " + nick + " Channel Users Topic"))
+
+// 322
+#define RPL_LIST(nick, channel, num, topic) (std::string("322 " + nick + " " + channel + " " + num + " :" + topic))
+
+// 323
+#define RPL_LISTEND(nick) (std::string("323 " + nick + " :End of /LIST"))
+
 // 331
 #define RPL_NOTOPIC(channel) (std::string("331 ") + channel + ":No topic is set")
 
