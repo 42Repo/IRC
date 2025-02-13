@@ -78,7 +78,8 @@ CommandHandler::CommandHandler(Server *server) : _server(server) {
     _commandMap["QUIT"] = &CommandHandler::handleQuit;
     _commandMap["CAP"] = &CommandHandler::handleCap;
     _commandMap["PING"] = &CommandHandler::handlePing;
-    // _commandMap["WHO"] = &CommandHandler::handleWho;
+    _commandMap["WHO"] = &CommandHandler::handleWho;
+    // _commandMap["LIST"] = &CommandHandler::handleList;
 }
 
 void CommandHandler::handleCommand(Client *client, const std::string input) {

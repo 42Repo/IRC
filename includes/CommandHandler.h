@@ -40,6 +40,7 @@ class CommandHandler {
     void handleWho(Client *client, const std::vector<std::string> &input);
     void handleUserMode(Client *client, const std::vector<std::string> &input);
     void handlePing(Client *client, const std::vector<std::string> &input);
+    void handleList(Client *client, const std::vector<std::string> &input);
     void welcomeMsg(Client *client);
 
     // ajouter chaque commande

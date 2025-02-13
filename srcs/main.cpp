@@ -7,6 +7,7 @@
 // TODO - check perms
 // TODO - fix memory leaks
 // TODO - create a bot
+// TODO - list COMMANDS
 
 Server *g_server = NULL;
 
