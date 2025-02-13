@@ -14,13 +14,8 @@ Server *g_server = NULL;
 bool isValidPort(int port) { return port >= 1024 && port <= 65535; }
 
 bool isValidPassword(const std::string &password) {
-    if (password.empty()) {
+    if (password.empty() || password.length() > 128)
         return false;
-    }
-    if (password.length() > 128) {
-        return false;
-    }
-
     return true;
 }
 
