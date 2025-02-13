@@ -11,15 +11,15 @@
 
 Server *g_server = NULL;
 
-bool isValidPort(int port) { return port >= 1024 && port <= 65535; }
+static bool isValidPort(int port) { return port >= 1024 && port <= 65535; }
 
-bool isValidPassword(const std::string &password) {
+static bool isValidPassword(const std::string &password) {
     if (password.empty() || password.length() > 128)
         return false;
     return true;
 }
 
-int stringToInt(const std::string &str) {
+static int stringToInt(const std::string &str) {
     std::istringstream iss(str);
     int                num;
     if (!(iss >> num)) {
@@ -32,14 +32,14 @@ int stringToInt(const std::string &str) {
     return num;
 }
 
-void handle_sigint(int sig) {
+static void handle_sigint(int sig) {
     (void)sig;
     if (g_server) {
         g_server->setShutdownFlag(true);
     }
 }
 
-int setSignal(void) {
+static int setSignal(void) {
     struct sigaction sa;
     sa.sa_handler = handle_sigint; // Définition du handler
     sigemptyset(&sa.sa_mask);      // Pas de masquage de signaux supplémentaires
@@ -51,7 +51,7 @@ int setSignal(void) {
         return EXIT_FAILURE;
     }
     return 0;
-};
+}
 
 int main(int argc, char **argv) {
 
@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
         }
 
         Server server(port, password);
-        
+
         g_server = &server;
         setSignal();
 
