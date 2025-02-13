@@ -1,13 +1,14 @@
 #include "../includes/Server.h"
+#include <csignal>
 #include <iostream>
 #include <sstream>
-#include <csignal>
 
 // TODO - mode du serveur (??)
 // TODO - check perms
 // TODO - fix memory leaks
 // TODO - create a bot
 
+Server *g_server = NULL;
 
 bool isValidPort(int port) { return port >= 1024 && port <= 65535; }
 
@@ -35,23 +36,21 @@ int stringToInt(const std::string &str) {
     return num;
 }
 
-void handle_sigint(int sig)
-{
-    std::cout << "ctrl c called" << std::endl;
-    (void) sig;
-    exit(0);
+void handle_sigint(int sig) {
+    (void)sig;
+    if (g_server) {
+        g_server->setShutdownFlag(true);
+    }
 }
 
-int setSignal(void)
-{
+int setSignal(void) {
     struct sigaction sa;
     sa.sa_handler = handle_sigint; // Définition du handler
     sigemptyset(&sa.sa_mask);      // Pas de masquage de signaux supplémentaires
     sa.sa_flags = 0;               // Options par défaut
 
     // Appliquer la gestion du signal SIGINT
-    if (sigaction(SIGINT, &sa, NULL) == -1)
-    {
+    if (sigaction(SIGINT, &sa, NULL) == -1) {
         // std::/("sigaction");
         return EXIT_FAILURE;
     }
@@ -60,7 +59,6 @@ int setSignal(void)
 
 int main(int argc, char **argv) {
 
-    setSignal();
     if (argc != 3) {
         std::cout << "Usage: ./ircserv [port] [password]" << std::endl;
         return 1;
@@ -82,6 +80,10 @@ int main(int argc, char **argv) {
         }
 
         Server server(port, password);
+        
+        g_server = &server;
+        setSignal();
+
         server.run();
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << std::endl;

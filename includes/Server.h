@@ -3,10 +3,9 @@
 #include "Channel.h"
 #include "CommandHandler.h"
 #include "Messages.h"
+#include <csignal>
 #include <poll.h>
 #include <vector>
-
-// class CommandHandler;
 
 class Server {
   public:
@@ -24,6 +23,8 @@ class Server {
     void                             addChannel(Channel *channel);
     void                             removeChannel(const std::string &name);
     Client                          *getClientByName(std::string client);
+    void                             setShutdownFlag(bool value) { _shutdown = value; }
+
   private:
     Server();
     Server(const Server &server);
@@ -37,4 +38,5 @@ class Server {
     std::vector<pollfd>              _fds;
     time_t                           _creationTime;
     CommandHandler                   _commandHandler;
+    volatile sig_atomic_t            _shutdown;
 };

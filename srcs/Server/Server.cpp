@@ -111,11 +111,15 @@ void Server::removeClient(Client *client) {
 
 void Server::run() {
     std::cout << "Server running. Listening on port " << _port << std::endl;
+    _shutdown = false;
 
-    while (true) {
+    while (!_shutdown) {
         int pollResult = poll(_fds.data(), _fds.size(), -1);
 
         if (pollResult == -1) {
+            if (errno == EINTR) {
+                continue;
+            }
             throw std::runtime_error("Error in poll: " + std::string(strerror(errno)));
         }
 
@@ -239,8 +243,8 @@ void Server::removeChannel(const std::string &name) {
     std::map<std::string, Channel *>::iterator it = _channels.find(name);
     if (it != _channels.end()) {
         Channel                           *channel = it->second;
-        std::map<Client *, std::set<char> > members = channel->getMembers();
-        for (std::map<Client *, std::set<char> >::iterator it = members.begin(); it != members.end();
+        std::map<Client *, std::set<char>> members = channel->getMembers();
+        for (std::map<Client *, std::set<char>>::iterator it = members.begin(); it != members.end();
              ++it) {
             Client *member = it->first;
             member->removeChannel(name);
