@@ -131,6 +131,7 @@ void Server::run() {
             pollfd client_pfd;
             client_pfd.fd = clientSocket;
             client_pfd.events = POLLIN;
+            client_pfd.revents = 0;
             _fds.push_back(client_pfd);
 
             std::cout << "New client connected to the server" << std::endl;
@@ -203,8 +204,7 @@ void Server::removeChannel(const std::string &name) {
     }
 }
 
-Client *Server::getClientByName(std::string client)
-{
+Client *Server::getClientByName(std::string client) {
     for (size_t i = 0; i < _clients.size(); ++i) {
         if (_clients[i]->getNickname() == client) {
             return _clients[i];
