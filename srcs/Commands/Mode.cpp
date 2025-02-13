@@ -1,5 +1,5 @@
 #include "../../includes/CommandHandler.h"
-#include "../../includes/Error.hpp"
+#include "../../includes/Error.h"
 #include "../../includes/Server.h"
 
 void CommandHandler::handleMode(Client *client, const std::vector<std::string> &input) {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client.h"
-#include "Error.hpp"
+#include "Error.h"
 #include "Messages.h"
 #include <cstdlib>
 #include <cstring>

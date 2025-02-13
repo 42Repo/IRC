@@ -40,7 +40,12 @@ Client::Client(int fd, Server *server)
     }
 }
 
-Client::~Client() { close(_fd); }
+Client::~Client() {
+    if (_fd != -1) { // Check if _fd is valid
+        close(_fd);
+    }
+    _channels.clear();
+}
 
 int Client::getFd() const { return _fd; }
 
@@ -113,7 +118,4 @@ void Client::leaveChannel(Channel *channel) {
 
 Server *Client::getServer() { return _server; }
 
-void        Client::removeChannel(std::string channel)
-{
-    _channels.erase(channel);
-}
+void Client::removeChannel(std::string channel) { _channels.erase(channel); }

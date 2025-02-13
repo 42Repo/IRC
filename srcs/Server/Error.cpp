@@ -1,4 +1,4 @@
-#include "../../includes/Error.hpp"
+#include "../../includes/Error.h"
 #include "../../includes/Server.h"
 #include <sstream>
 Error::Error(std::string errMessage, Client *client) {
