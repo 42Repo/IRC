@@ -4,7 +4,6 @@
 
 // TODO - mode du serveur (??)
 // TODO - check perms
-// TODO - motd file
 // TODO - fix memory leaks
 // TODO - create a bot
 

@@ -36,6 +36,15 @@
 // 341
 #define RPL_INVITING(nick, channel, target) (std::string("341 ") + nick + " " + target + " :" + channel)
 
+//372
+#define RPL_MOTD(nick) (std::string("372 ") + nick + " :made by asuc & mbuchs")
+
+//375
+#define RPL_MOTDSTART(nick) (std::string("375 ") + nick + " :Have a nice correction :)")
+
+//376
+#define RPL_MOTDEND(nick) (std::string("376 ") + nick + " :pls give us 125")
+
 // 401
 #define ERR_NOSUCHNICK(nick, target) (std::string("401 ") + nick + " " + target + " :No such nick/channel")
 

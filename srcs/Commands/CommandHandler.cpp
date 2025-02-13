@@ -13,8 +13,9 @@ void CommandHandler::welcomeMsg(Client *client) {
     client->sendNumericReply(
         "004", RPL_MYINFO(client->getNickname(), _server->getHostname(), "1.0", "", ""));
 
-    std::string motd = ":asuc 422 Nyantad :MOTD File is missing\r\n";
-    client->sendMessage(motd);
+    client->sendNumericReply("375", RPL_MOTDSTART(client->getNickname()));
+    client->sendNumericReply("372", RPL_MOTD(client->getNickname()));
+    client->sendNumericReply("376", RPL_MOTDEND(client->getNickname()));
 }
 
 static std::vector<std::string> commandParser(std::string input) {
