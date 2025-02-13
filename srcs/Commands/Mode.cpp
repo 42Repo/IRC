@@ -176,9 +176,9 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
 
                         Client               *targetClient = NULL;
                         std::vector<Client *> clients = _server->getClients();
-                        for (size_t i = 0; i < clients.size(); ++i) {
-                            if (clients[i]->getNickname() == first_arg) {
-                                targetClient = clients[i];
+                        for (size_t j = 0; j < clients.size(); ++j) {
+                            if (clients[j]->getNickname() == first_arg) {
+                                targetClient = clients[j];
                                 break;
                             }
                         }

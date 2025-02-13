@@ -1,6 +1,7 @@
 #include "../../includes/Error.h"
 #include "../../includes/Server.h"
 #include <sstream>
+
 Error::Error(std::string errMessage, Client *client) {
     std::ostringstream replyStream;
     _server = client->getServer();
@@ -14,7 +15,8 @@ Error::Error(std::string errMessage, Client *client) {
 Error::IRCError::IRCError(const char *msg) {
     _msg = new char[strlen(msg) + 1]; // Allocation dynamique
     strcpy(_msg, msg);
-};
-Error::IRCError::~IRCError() throw() { delete[] _msg; };
+}
 
-const char *Error::IRCError::what() const throw() { return _msg; };
+Error::IRCError::~IRCError() throw() { delete[] _msg; }
+
+const char *Error::IRCError::what() const throw() { return _msg; }

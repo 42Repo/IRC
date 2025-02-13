@@ -65,9 +65,10 @@ void Server::setupServerSocket() {
     memset(&serverAddress, 0, sizeof(serverAddress));
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = INADDR_ANY;
-    serverAddress.sin_port = htons(_port);
+    serverAddress.sin_port = htons(static_cast<uint16_t>(_port));
 
-    if (bind(_server_fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) == -1) {
+    if (bind(_server_fd, reinterpret_cast<struct sockaddr *>(&serverAddress),
+             sizeof(serverAddress)) == -1) {
         throw std::runtime_error("Failed to bind server socket to port");
     }
 
@@ -84,7 +85,7 @@ void Server::setupServerSocket() {
 }
 
 static Client *getClientByFd(std::vector<Client *> clients, int fd) {
-    for (int i = 0; i < (int)clients.size(); i++) {
+    for (size_t i = 0; i < clients.size(); i++) {
         if (clients[i]->getFd() == fd)
             return clients[i];
     }
@@ -97,10 +98,10 @@ void Server::removeClient(Client *client) {
         _clients.erase(it);
     }
 
-    for (size_t i = 0; i < _fds.size(); ++i) {
-        if (_fds[i].fd == client->getFd()) {
-            close(_fds[i].fd);
-            _fds.erase(_fds.begin() + i);
+    for (std::vector<pollfd>::iterator it2 = _fds.begin(); it2 != _fds.end(); ++it2) {
+        if (it2->fd == client->getFd()) {
+            close(it2->fd);
+            _fds.erase(it2);
             break;
         }
     }
@@ -127,7 +128,8 @@ void Server::run() {
             struct sockaddr_in clientAddress;
             socklen_t          clientAddressLength = sizeof(clientAddress);
             int                clientSocket =
-                accept(_server_fd, (struct sockaddr *)&clientAddress, &clientAddressLength);
+                accept(_server_fd, reinterpret_cast<struct sockaddr *>(&clientAddress),
+                       &clientAddressLength);
 
             if (clientSocket == -1) {
                 std::cerr << "Failed to accept incoming connection: " << strerror(errno)
@@ -153,11 +155,12 @@ void Server::run() {
             if (_fds[i].revents & POLLIN) {
                 Client *currentClient = getClientByFd(_clients, _fds[i].fd);
                 if (currentClient) {
-                    char buffer[1024];
-                    int  bytesRead = read(_fds[i].fd, buffer, sizeof(buffer));
+                    char    buffer[1024];
+                    ssize_t bytesRead = read(_fds[i].fd, buffer, sizeof(buffer));
 
                     if (bytesRead > 0) {
-                        currentClient->appendToMessageBuffer(std::string(buffer, bytesRead));
+                        currentClient->appendToMessageBuffer(
+                            std::string(buffer, static_cast<size_t>(bytesRead)));
 
                         size_t crlfPos;
                         while ((crlfPos = currentClient->getMessageBuffer().find("\r\n")) !=
@@ -244,9 +247,9 @@ void Server::removeChannel(const std::string &name) {
     if (it != _channels.end()) {
         Channel                           *channel = it->second;
         std::map<Client *, std::set<char> > members = channel->getMembers();
-        for (std::map<Client *, std::set<char> >::iterator it = members.begin(); it != members.end();
-             ++it) {
-            Client *member = it->first;
+        for (std::map<Client *, std::set<char> >::iterator it2 = members.begin();
+             it2 != members.end(); ++it2) {
+            Client *member = it2->first;
             member->removeChannel(name);
         }
         delete it->second;

@@ -12,7 +12,7 @@ static std::vector<std::string> splitString(const std::string &str, char delimit
     return tokens;
 }
 
-bool isValidChannelName(const std::string &name) {
+static bool isValidChannelName(const std::string &name) {
     if (name.empty() || name.size() > 50) {
         return false;
     }
@@ -26,7 +26,7 @@ bool isValidChannelName(const std::string &name) {
     return true;
 }
 
-std::string getMemberList(Channel *channel) {
+static std::string getMemberList(Channel *channel) {
     std::string                        memberList;
     std::map<Client *, std::set<char> > members = channel->getMembers();
     for (std::map<Client *, std::set<char> >::iterator it = members.begin(); it != members.end();
@@ -85,7 +85,7 @@ void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &
         }
 
         if (channel->getUserLimit() > 0 &&
-            channel->getMembers().size() >= (size_t)channel->getUserLimit()) {
+            channel->getMembers().size() >= static_cast<size_t>(channel->getUserLimit())) {
             throw Error::IRCError(ERR_CHANNELISFULL(channelName).c_str());
         }
 

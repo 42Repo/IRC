@@ -27,10 +27,11 @@ Client::Client(int fd, Server *server)
 
     struct sockaddr_in clientAddress;
     socklen_t          clientAddressLength = sizeof(clientAddress);
-    if (getpeername(_fd, (struct sockaddr *)&clientAddress, &clientAddressLength) == 0) {
+    if (getpeername(_fd, reinterpret_cast<struct sockaddr *>(&clientAddress),
+                    &clientAddressLength) == 0) {
         char hostname[NI_MAXHOST];
-        if (getnameinfo((struct sockaddr *)&clientAddress, clientAddressLength, hostname,
-                        NI_MAXHOST, NULL, 0, NI_NAMEREQD) == 0) {
+        if (getnameinfo(reinterpret_cast<struct sockaddr *>(&clientAddress), clientAddressLength,
+                        hostname, NI_MAXHOST, NULL, 0, NI_NAMEREQD) == 0) {
             _hostname = hostname;
         } else {
             _hostname = inet_ntoa(clientAddress.sin_addr);
