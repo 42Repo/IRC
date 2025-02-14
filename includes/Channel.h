@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Client.h"
+#include <ctime>
 #include <map>
 #include <set>
 #include <string>
@@ -36,13 +37,16 @@ class Channel {
     void                               addInvitedUser(std::string user);
     void                               removeInvitedUSer(std::string user);
     std::vector<std::string>           getInvitedUsers(void);
+    time_t                             getTimestamp();
+    void                               setTimestamp(time_t timestamp);
 
   private:
-    std::string                        _name;
-    std::string                        _topic;
-    std::string                        _password;
-    int                                _userLimit;
-    std::set<char>                     _channelModes;
+    std::string                         _name;
+    std::string                         _topic;
+    std::string                         _password;
+    int                                 _userLimit;
+    std::set<char>                      _channelModes;
     std::map<Client *, std::set<char> > _userModes;
-    std::vector<std::string>           _invitedUsers;
+    std::vector<std::string>            _invitedUsers;
+    time_t                              _timestamp;
 };

@@ -9,7 +9,8 @@ Channel::Channel(std::string name, Client *creator, std::string password, int us
       _password(password),
       _userLimit(userLimit),
       _channelModes(),
-      _userModes() {
+      _userModes(),
+      _timestamp(0) {
     addMember(creator);
     addUserMode(creator, 'o');
 }
@@ -104,3 +105,7 @@ void Channel::removeInvitedUSer(std::string user) {
 }
 
 std::vector<std::string> Channel::getInvitedUsers(void) { return _invitedUsers; }
+
+time_t Channel::getTimestamp() { return _timestamp; }
+
+void Channel::setTimestamp(time_t timestamp) { _timestamp = timestamp; }
