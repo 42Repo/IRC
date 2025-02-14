@@ -24,9 +24,6 @@
 // 301
 #define RPL_AWAY(nick, message) (std::string("301 ") + nick + " : " + message)
 
-// 324
-#define RPL_CHANNELMODEIS(channel, mode) (std::string("324 ") + channel + " " + mode)
-
 // 321
 #define RPL_LISTSTART(nick) (std::string("321 " + nick + " Channel Users Topic"))
 
@@ -36,11 +33,17 @@
 // 323
 #define RPL_LISTEND(nick) (std::string("323 " + nick + " :End of /LIST"))
 
+// 324
+#define RPL_CHANNELMODEIS(channel, mode) (std::string("324 ") + channel + " " + mode)
+
 // 331
 #define RPL_NOTOPIC(channel) (std::string("331 ") + channel + ":No topic is set")
 
 // 332
 #define RPL_TOPIC(nick, channel, topic) (std::string("332 ") + nick + " " + channel + " :" + topic)
+
+// 333
+#define RPL_TOPICTIME(nick, channel, timestamp) (std::string("333 ") + nick + " " + channel + timestamp)
 
 // 341
 #define RPL_INVITING(nick, channel, target) (std::string("341 ") + nick + " " + target + " :" + channel)

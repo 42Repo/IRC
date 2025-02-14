@@ -9,7 +9,8 @@ Channel::Channel(std::string name, Client *creator, std::string password, int us
       _password(password),
       _userLimit(userLimit),
       _channelModes(),
-      _userModes() {
+      _userModes(),
+      _timestamp(0) {
     addMember(creator);
     addUserMode(creator, 'o');
 }
