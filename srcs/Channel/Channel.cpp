@@ -104,3 +104,6 @@ void Channel::removeInvitedUSer(std::string user) {
 }
 
 std::vector<std::string> Channel::getInvitedUsers(void) { return _invitedUsers; }
+
+int  Channel::getTimestamp(){return _timestamp;};
+void Channel::setTimestamp(int timestamp) { _timestamp = timestamp; }

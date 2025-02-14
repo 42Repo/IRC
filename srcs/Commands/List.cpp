@@ -12,6 +12,7 @@ static std::string intToStr(int num) {
 
 void CommandHandler::handleList(Client *client, const std::vector<std::string> &input) {
 
+    (void) input;
     Server                          *server = client->getServer();
     std::map<std::string, Channel *> channels = server->getChannels();
 

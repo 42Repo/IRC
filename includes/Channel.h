@@ -36,6 +36,8 @@ class Channel {
     void                               addInvitedUser(std::string user);
     void                               removeInvitedUSer(std::string user);
     std::vector<std::string>           getInvitedUsers(void);
+    int                                getTimestamp();
+    void                               setTimestamp(int timestamp);
 
   private:
     std::string                        _name;
@@ -45,4 +47,5 @@ class Channel {
     std::set<char>                     _channelModes;
     std::map<Client *, std::set<char> > _userModes;
     std::vector<std::string>           _invitedUsers;
+    int                                _timestamp;
 };
