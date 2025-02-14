@@ -66,14 +66,10 @@ void Client::sendMessage(const std::string &msg) {
     }
 }
 
-void Client::sendNumericReply(const char *numericStr, const std::string params) {
+void Client::sendNumericReply(const std::string params) {
     std::ostringstream replyStream;
     replyStream << ":" << _server->getHostname();
-    // << " " << _nickname
-    // for (size_t i = 0; i < params.size(); ++i) {
-    //     replyStream << " " << params[i];
-    // }
-    (void)numericStr;
+
     replyStream << " " << params;
     replyStream << "\r\n";
 

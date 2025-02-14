@@ -12,9 +12,8 @@ class Client {
     Client(int fd, Server *server);
     ~Client();
 
-    std::map<std::string, Channel *> getChannels() const;
-    void                             sendMessage(const std::string &message);
-    void        sendNumericReply(const char *numericStr, const std::string params);
+    void        sendMessage(const std::string &message);
+    void        sendNumericReply(const std::string params);
     int         getFd() const;
     std::string getNickname() const;
     std::string getUsername() const;
@@ -40,6 +39,7 @@ class Client {
     void        addMode(char mode);
     void        removeMode(char mode);
     void        removeChannel(std::string);
+    std::map<std::string, Channel *> getChannels() const;
     // std::string getUserModes() const { return _userModes; };
 
   private:

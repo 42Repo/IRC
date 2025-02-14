@@ -1,7 +1,6 @@
 #include "../../includes/CommandHandler.h"
 #include "../../includes/Server.h"
 
-
 void CommandHandler::handleUser(Client *client, const std::vector<std::string> &input) {
     std::istringstream iss(input[2] + " " + input[3]);
     std::string        user, mode, unused, realname;
@@ -10,12 +9,12 @@ void CommandHandler::handleUser(Client *client, const std::vector<std::string> &
     std::getline(iss >> std::ws, realname);
 
     if (realname.empty() || user.empty()) {
-        client->sendNumericReply("461", ERR_NEEDMOREPARAMS("USER"));
+        client->sendNumericReply(ERR_NEEDMOREPARAMS("USER"));
         return;
     }
 
     if (client->getIsRegistered()) {
-        client->sendNumericReply("462", ERR_ALREADYREGISTRED(client->getNickname()));
+        client->sendNumericReply(ERR_ALREADYREGISTRED(client->getNickname()));
         return;
     }
 

@@ -26,8 +26,7 @@ void CommandHandler::handleTopic(Client *client, const std::vector<std::string> 
                             "@" + client->getHostname() + " TOPIC " + input[2] + " :" +
                             channel->getTopic() + "\r\n");
     } else {
-        client->sendNumericReply("332",
-                                 RPL_TOPIC(client->getNickname(), input[2], channel->getTopic()));
+        client->sendNumericReply(RPL_TOPIC(client->getNickname(), input[2], channel->getTopic()));
     }
     // 333	Infos sur la dernière modification du sujet (RPL_TOPICWHOTIME).
 }

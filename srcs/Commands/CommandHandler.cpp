@@ -6,16 +6,15 @@ void CommandHandler::welcomeMsg(Client *client) {
     client->setIsRegistered(true);
 
     client->sendNumericReply(
-        "001", RPL_WELCOME(client->getNickname(), client->getUsername(), client->getHostname()));
-    client->sendNumericReply("002",
-                             RPL_YOURHOST(client->getNickname(), _server->getHostname(), "1.0"));
-    client->sendNumericReply("003", RPL_CREATED(client->getNickname(), "DATE"));
+        RPL_WELCOME(client->getNickname(), client->getUsername(), client->getHostname()));
+    client->sendNumericReply(RPL_YOURHOST(client->getNickname(), _server->getHostname(), "1.0"));
+    client->sendNumericReply(RPL_CREATED(client->getNickname(), "DATE"));
     client->sendNumericReply(
-        "004", RPL_MYINFO(client->getNickname(), _server->getHostname(), "1.0", "", ""));
+        RPL_MYINFO(client->getNickname(), _server->getHostname(), "1.0", "", ""));
 
-    client->sendNumericReply("375", RPL_MOTDSTART(client->getNickname()));
-    client->sendNumericReply("372", RPL_MOTD(client->getNickname()));
-    client->sendNumericReply("376", RPL_MOTDEND(client->getNickname()));
+    client->sendNumericReply(RPL_MOTDSTART(client->getNickname()));
+    client->sendNumericReply(RPL_MOTD(client->getNickname()));
+    client->sendNumericReply(RPL_MOTDEND(client->getNickname()));
 }
 
 static std::vector<std::string> commandParser(std::string input) {
@@ -44,9 +43,9 @@ static std::vector<std::string> commandParser(std::string input) {
 
 void CommandHandler::handleCap(Client *client, const std::vector<std::string> &input) {
     if (input[2] == "LS 302") {
-        client->sendNumericReply("", "CAP * LS :");
+        client->sendNumericReply("CAP * LS :");
     } else if (input[2].rfind("REQ", 0) == 0) {
-        client->sendNumericReply("", "CAP * ACK :");
+        client->sendNumericReply("CAP * ACK :");
     } else if (input[2] == "END") {
         // TODO : Handle CAP END
     } else {
@@ -56,7 +55,7 @@ void CommandHandler::handleCap(Client *client, const std::vector<std::string> &i
 
 void CommandHandler::handlePing(Client *client, const std::vector<std::string> &input) {
     if (input.size() < 3 || input[2].empty()) {
-        client->sendNumericReply("409", ":No origin specified");
+        client->sendNumericReply(" 409 :No origin specified");
         return;
     }
 

@@ -20,12 +20,12 @@ void CommandHandler::handleInvite(Client *client, const std::vector<std::string>
     Server  *server = client->getServer();
     Client  *target = server->getClientByName(args[0]);
     Channel *channel = server->getChannelByName(args[1]);
-    if(args.size() < 2)
+    if (args.size() < 2)
         throw Error::IRCError(ERR_NEEDMOREPARAMS("INVITE").c_str());
-     
+
     channel->addInvitedUser(args[0]);
-   
-    client->sendNumericReply("341", RPL_INVITING(client->getNickname(),args[1], args[0]));
+
+    client->sendNumericReply(RPL_INVITING(client->getNickname(), args[1], args[0]));
 
     target->sendMessage(std::string(":") + client->getUsername() + "!" + client->getNickname() +
                         "@" + client->getHostname() + " INVITE " + target->getNickname() + " :" +

@@ -51,9 +51,9 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
                     }
                     serverModesString = channel->getChannelModes();
                     if (!userModesString.empty() || !serverModesString.empty()) {
-                        client->sendNumericReply("324", "324 " + client->getNickname() + " " +
-                                                            channel->getName() + " " + "+" +
-                                                            serverModesString + userModesString);
+                        client->sendNumericReply("324 " + client->getNickname() + " " +
+                                                 channel->getName() + " " + "+" +
+                                                 serverModesString + userModesString);
                     }
                 }
                 return;
@@ -256,15 +256,14 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
                     break;
 
                 default:
-                    client->sendNumericReply("472",
-                                             ERR_UNKNOWNMODE(modeChar, client->getNickname()));
+                    client->sendNumericReply(ERR_UNKNOWNMODE(modeChar, client->getNickname()));
                     break;
                 }
             }
 
         } else { // Cible = utilisateur (modes utilisateur)
                  // Pour l'instant on ne gere pas
-            client->sendNumericReply("472", ERR_UNKNOWNMODE(modeString, client->getNickname()));
+            client->sendNumericReply(ERR_UNKNOWNMODE(modeString, client->getNickname()));
             return;
         }
     } catch (const std::exception &e) {

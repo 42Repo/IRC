@@ -15,12 +15,12 @@ void CommandHandler::handleList(Client *client, const std::vector<std::string> &
     std::map<std::string, Channel *> channels = server->getChannels();
 
     (void)input;
-    client->sendNumericReply("321", RPL_LISTSTART(client->getNickname()));
+    client->sendNumericReply(RPL_LISTSTART(client->getNickname()));
     for (std::map<std::string, Channel *>::iterator it = channels.begin(); it != channels.end();
          ++it) {
-        client->sendNumericReply("322", RPL_LIST(client->getNickname(), it->second->getName(),
-                                                 intToStr(it->second->getMembers().size()),
-                                                 it->second->getTopic()));
+        client->sendNumericReply(RPL_LIST(client->getNickname(), it->second->getName(),
+                                          intToStr(it->second->getMembers().size()),
+                                          it->second->getTopic()));
     }
-    client->sendNumericReply("323", RPL_LISTEND(client->getNickname()));
+    client->sendNumericReply(RPL_LISTEND(client->getNickname()));
 }
