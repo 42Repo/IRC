@@ -28,7 +28,8 @@
 #define RPL_LISTSTART(nick) (std::string("321 " + nick + " Channel Users Topic"))
 
 // 322
-#define RPL_LIST(nick, channel, num, topic) (std::string("322 " + nick + " " + channel + " " + num + " :" + topic))
+#define RPL_LIST(nick, channel, num, topic)                                                        \
+    (std::string("322 " + nick + " " + channel + " " + num + " :" + topic))
 
 // 323
 #define RPL_LISTEND(nick) (std::string("323 " + nick + " :End of /LIST"))
@@ -43,22 +44,25 @@
 #define RPL_TOPIC(nick, channel, topic) (std::string("332 ") + nick + " " + channel + " :" + topic)
 
 // 333
-#define RPL_TOPICTIME(nick, channel, timestamp) (std::string("333 ") + nick + " " + channel + timestamp)
+#define RPL_TOPICTIME(nick, channel, admin, timestamp)                                             \
+    (std::string("333 ") + nick + " " + channel + " " + admin + " " + timestamp)
 
 // 341
-#define RPL_INVITING(nick, channel, target) (std::string("341 ") + nick + " " + target + " :" + channel)
+#define RPL_INVITING(nick, channel, target)                                                        \
+    (std::string("341 ") + nick + " " + target + " :" + channel)
 
-//372
+// 372
 #define RPL_MOTD(nick) (std::string("372 ") + nick + " :made by asuc & mbuchs")
 
-//375
+// 375
 #define RPL_MOTDSTART(nick) (std::string("375 ") + nick + " :Have a nice correction :)")
 
-//376
+// 376
 #define RPL_MOTDEND(nick) (std::string("376 ") + nick + " :pls give us 125")
 
 // 401
-#define ERR_NOSUCHNICK(nick, target) (std::string("401 ") + nick + " " + target + " :No such nick/channel")
+#define ERR_NOSUCHNICK(nick, target)                                                               \
+    (std::string("401 ") + nick + " " + target + " :No such nick/channel")
 
 // 403
 #define ERR_NOSUCHCHANNEL(nickname, channel)                                                       \
@@ -105,15 +109,17 @@
 #define ERR_UNAVAILRESOURCE(nick_channel)                                                          \
     (std::string("437 ") + nick_channel + " :Nick/channel is temporarily unavailable")
 // 441
-#define ERR_USERNOTINCHANNEL(nick, channel) (std::string("441 ") + nick + " " + channel + " :They aren't on that channel")
+#define ERR_USERNOTINCHANNEL(nick, channel)                                                        \
+    (std::string("441 ") + nick + " " + channel + " :They aren't on that channel")
 
 // 442
-#define ERR_NOTONCHANNEL(nick, channel) (std::string("442 ") + nick + " " + channel + " :You're not on that channel")
+#define ERR_NOTONCHANNEL(nick, channel)                                                            \
+    (std::string("442 ") + nick + " " + channel + " :You're not on that channel")
 
 // 443
-#define ERR_USERONCHANNEL(user, target, channel)                                                           \
+#define ERR_USERONCHANNEL(user, target, channel)                                                   \
     (std::string("443 ") + user + " " + target + " " + channel + " :is already on channel")
-//:irc.example.com 443 user42 victimUser #mon-canal :is already on channel
+//: irc.example.com 443 user42 victimUser #mon-canal :is already on channel
 
 // 451
 #define ERR_NOTREGISTERED(nick) (std::string("451 ") + nick + " :You have not registered")
@@ -152,7 +158,7 @@
 #define ERR_NOCHANMODES(channel) (std::string("477 ") + channel + " :Channel doesn't support modes")
 
 // 482
-#define ERR_CHANOPRIVSNEEDED(nick, channel)                                                              \
+#define ERR_CHANOPRIVSNEEDED(nick, channel)                                                        \
     (std::string("482 ") + nick + " " + channel + " :You're not channel operator")
 
 // 484

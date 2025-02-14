@@ -4,7 +4,7 @@
 #include <sys/select.h>
 #include <sys/time.h>
 
-// TODO - Add RPL 333
+std::string intToStr(size_t num);
 
 void CommandHandler::handleTopic(Client *client, const std::vector<std::string> &input) {
     std::cout << client->getNickname() << " called TOPIC" << std::endl;
@@ -14,7 +14,6 @@ void CommandHandler::handleTopic(Client *client, const std::vector<std::string> 
         throw Error::IRCError(ERR_NEEDMOREPARAMS("INVITE").c_str());
     Server  *server = client->getServer();
     Channel *channel = server->getChannelByName(input[2]);
-    // std::cout << "[" << input[3] << "]" << std::endl;
     if (!channel)
         throw Error::IRCError(ERR_NOSUCHCHANNEL(client->getNickname(), input[1]).c_str());
     if (!channel->isMember(client))
@@ -26,20 +25,15 @@ void CommandHandler::handleTopic(Client *client, const std::vector<std::string> 
                 ERR_CHANOPRIVSNEEDED(client->getNickname(), channel->getName()).c_str());
         channel->setTimestamp(tv.tv_sec);
         channel->setTopic(input[3]);
+        channel->setTopicSetter(client->getNickname());
         client->sendMessage(std::string(":") + client->getNickname() + "!" + client->getUsername() +
                             "@" + client->getHostname() + " TOPIC " + input[2] + " :" +
                             channel->getTopic() + "\r\n");
     } else {
         client->sendNumericReply(RPL_TOPIC(client->getNickname(), input[2], channel->getTopic()));
 
-        client->sendNumericReply(
-            RPL_TOPICTIME(client->getNickname(), input[2], channel->getTopic()));
+        client->sendNumericReply(RPL_TOPICTIME(client->getNickname(), input[2],
+                                               channel->getTopicSetter(),
+                                               intToStr(channel->getTimestamp())));
     }
-    // 333	Infos sur la dernière modification du sujet (RPL_TOPICWHOTIME).
 }
-
-// :irc.example.com 332 user42 #gaming :Bienvenue sur le canal de discussion !
-
-//: user42!~user@host TOPIC #gaming :Nouvelle discussion sur les jeux rétro !
-/*
- */

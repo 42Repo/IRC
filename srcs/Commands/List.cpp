@@ -3,7 +3,9 @@
 #include <sstream>
 #include <string>
 
-static std::string intToStr(size_t num) {
+
+
+std::string intToStr(size_t num) {
     std::ostringstream oss;
     oss << num;
     return oss.str();

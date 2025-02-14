@@ -39,7 +39,8 @@ class Channel {
     std::vector<std::string>           getInvitedUsers(void);
     time_t                             getTimestamp();
     void                               setTimestamp(time_t timestamp);
-
+      void                              setTopicSetter(std::string setter) { _topicSetter = setter; };
+      std::string                       getTopicSetter(void){ return _topicSetter; };
   private:
     std::string                         _name;
     std::string                         _topic;
@@ -49,4 +50,5 @@ class Channel {
     std::map<Client *, std::set<char> > _userModes;
     std::vector<std::string>            _invitedUsers;
     time_t                              _timestamp;
+    std::string                         _topicSetter;
 };
