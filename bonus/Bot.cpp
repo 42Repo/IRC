@@ -5,6 +5,31 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <vector>
+#include <sstream>
+
+static std::vector<std::string> commandParser(std::string input) {
+    std::vector<std::string> command(4);
+
+    std::istringstream stream(input);
+
+    if (input[0] == ':') {
+        std::getline(stream, command[0], ' ');
+        command[0] = command[0].substr(1);
+    }
+
+    stream >> command[1];
+
+    std::getline(stream >> std::ws, command[2], ':');
+    if (!command[2].empty() && command[2][command[2].size() - 1] == ' ') {
+        command[2].erase(command[2].size() - 1, 1);
+    }
+    std::getline(stream, command[3]);
+
+    if (!command[2].empty() && command[2][command[2].length() - 1] == '\n') {
+        command[2].erase(command[2].length() - 1);
+    }
+    return command;
+}
 
 void Bot::sendMessage(const std::string &msg) {
 	std::string sentMsg = msg + "\r\n";
@@ -50,6 +75,7 @@ void Bot::joinServer() {
 	loginToServ();
 }
 
+
 void Bot::loginToServ() {
 
 	std::cout << "PASS " + _password <<std::endl;
@@ -64,7 +90,7 @@ void Bot::loginToServ() {
 
 		if (bytesRead > 0) {
 			buffer[bytesRead] = '\0'; // Assurer une fin de chaîne correcte
-			answer(buffer);
+			answer(commandParser(buffer));
 			std::cout << buffer << std::endl;
 		} else if (bytesRead == 0) {
 			std::cout << "Server closed connexion" << std::endl;
@@ -80,26 +106,36 @@ void Bot::loginToServ() {
 
 //TODO - splitServerMessage
 //TODO - send privmsg to user
-//TODO - manage channel join
+//TODO - manage channel join (on /invite)
 
-// std::vector<std::string> splitServerMessage(std::string message){	
-// 	std::vector<std::string> split;
-// 	for(size_t i = 0; i < message.size(); ++i) {
-// 		if (message[i] == ' ') {
-// 			split.push_back(message.substr(0, i));
-// 			message = message.substr(i + 1);
-// 			i = 0;
-// 		}
-// 	}
-// 	return split;
 
-void Bot::answer(std::string message)
+void Bot::answer(std::vector<std::string> message)
 {
-	if (message.find("PING") != std::string::npos)
+	if(message[3].length() > 0)
+		message[3].erase(message[3].length() -1, 1);
+	// std::cout << "bah [" << message[3] <<  "]"<< std::endl;
+
+	// for(unsigned long i = 0; i < message[3].length(); i++)
+	// {
+	// 	std::cout << message[3][i] << std::endl;
+	// }
+	if (message[1] == "INVITE")
 	{
-		std::string pong = " PRIVMSG bernard_ :PONG";
-		sendMessage(pong);
+		sendMessage("JOIN " + message[3]);
+		
 	}
+	if(message[1] == "JOIN"){
+
+		sendMessage("MODE " + message[3]);
+		sendMessage("WHO " + message[3]);
+	}
+	else if(message[1] == "PRIVMSG")
+	{
+		sendMessage("PRIVMSG " + message[2] + " :BERNARDO IS HERE NIARK NIARK");
+	}
+
+
+		// sendMessage("PRIVMSG " + message[3] + " :BERNARDO IS HERE NIARK NIARK");
 }
 
 void Bot::setName(std::string name) { _name = name; }
