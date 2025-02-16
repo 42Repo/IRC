@@ -40,7 +40,7 @@ Server::~Server() {
 }
 
 static void setNonBlocking(int fd) {
-    int flags = fcntl(fd, F_GETFL, 0);
+    int flags = fcntl(fd, F_SETFL, O_NONBLOCK);
     if (flags == -1) {
         throw std::runtime_error("Failed to get socket flags: " + std::string(strerror(errno)));
     }

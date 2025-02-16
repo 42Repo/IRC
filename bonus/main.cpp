@@ -1,12 +1,6 @@
-#include "../includes/Server.h"
+#include "Bot.h"
 #include <csignal>
-#include <iostream>
 #include <sstream>
-
-// TODO - check perms (JOIN)
-// TODO - create a bot
-
-Server *g_server = NULL;
 
 static bool isValidPort(int port) { return port >= 1024 && port <= 65535; }
 
@@ -29,11 +23,9 @@ static int stringToInt(const std::string &str) {
     return num;
 }
 
-static void handle_sigint(int sig) {
+void handle_sigint(int sig) {
     (void)sig;
-    if (g_server) {
-        g_server->setShutdownFlag(true);
-    }
+    std::cout << "omg sig" << std::endl;
 }
 
 static int setSignal(void) {
@@ -51,14 +43,13 @@ static int setSignal(void) {
 }
 
 int main(int argc, char **argv) {
-
-    if (argc != 3) {
-        std::cout << "Usage: ./ircserv [port] [password]" << std::endl;
+    if (argc != 5) {
+        std::cout << "Usage: ./bot [adress] [port] [password] [name]" << std::endl;
         return 1;
     }
 
     try {
-        int port = stringToInt(argv[1]);
+        int port = stringToInt(argv[2]);
         if (!isValidPort(port)) {
             std::ostringstream oss;
             oss << port;
@@ -66,22 +57,21 @@ int main(int argc, char **argv) {
                                      ". Port must be between 1024 and 65535.");
         }
 
-        std::string password = argv[2];
+        std::string password = argv[3];
         if (!isValidPassword(password)) {
             throw std::runtime_error("Invalid password. Password cannot be empty and must be no "
                                      "longer than 128 characters.");
         }
 
-        Server server(port, password);
+        Bot bot(argv[4], stringToInt(argv[2]), argv[1], argv[3]);
 
-        g_server = &server;
-        setSignal();
-
-        server.run();
+		
+        bot.joinServer();
     } catch (const std::exception &e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+		std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
+	setSignal();
 
     return 0;
 }

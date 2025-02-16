@@ -13,7 +13,7 @@ FG_CYAN     := $(shell printf "\033[36m")
 FG_WHITE    := $(shell printf "\033[37m")
 
 # Project Settings
-TARGET       := ircserv
+TARGET       := bot
 CXX          := c++
 CXXFLAGS     := -Wall -Werror -Wextra -std=c++98
 BUILD_DIR    := .build
@@ -21,8 +21,7 @@ OBJ_DIR      := $(BUILD_DIR)/obj
 DEP_DIR      := $(BUILD_DIR)/dep
 
 # Source and Object Files
-CMDSRC		 := srcs/Commands/CommandHandler.cpp srcs/Commands/Privmsg.cpp srcs/Commands/Invite.cpp srcs/Commands/Join.cpp srcs/Commands/Kick.cpp srcs/Commands/Mode.cpp srcs/Commands/Nick.cpp srcs/Commands/Pass.cpp srcs/Commands/Quit.cpp srcs/Commands/Topic.cpp srcs/Commands/User.cpp srcs/Commands/Who.cpp srcs/Commands/List.cpp
-SRCS         := srcs/main.cpp srcs/Server/Server.cpp srcs/Client/Client.cpp srcs/Channel/Channel.cpp srcs/Server/Error.cpp $(CMDSRC)
+SRCS         := main.cpp Bot.cpp
 OBJS         := $(addprefix $(OBJ_DIR)/,$(SRCS:.cpp=.o))
 DEPS         := $(addprefix $(DEP_DIR)/,$(SRCS:.cpp=.d))
 
@@ -73,15 +72,12 @@ $(TARGET): $(OBJS)
 # Clean Targets
 clean:
 	@rm -rf $(BUILD_DIR)
-	@rm -fr bonus/$(BUILD_DIR)
 	@printf "$(FG_RED)Cleaned object and dependency files.$(RESET)\n"
+
 fclean: clean
 	@rm -f $(TARGET)
 	@printf "$(FG_RED)Removed executable $(FG_CYAN)$(TARGET)$(RESET)\n"
-	@$(MAKE) fclean -C bonus
-re: fclean all
 
-bonus: all
-	@$(MAKE) -C bonus
+re: fclean all
 
 .PHONY: all clean fclean re debug
