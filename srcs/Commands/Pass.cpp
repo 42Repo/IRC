@@ -16,5 +16,4 @@ void CommandHandler::handlePass(Client *client, const std::vector<std::string> &
         return;
     }
     client->setAuthenticaded(true);
-    std::cout << client->getUsername() << " identified" << std::endl;
 }

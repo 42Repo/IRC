@@ -13,7 +13,6 @@ static std::vector<std::string> splitArgs(const std::string &str) {
 }
 
 void CommandHandler::handleInvite(Client *client, const std::vector<std::string> &input) {
-    std::cout << client->getNickname() << " called INVITE" << std::endl;
     (void)input;
     std::vector<std::string> args = splitArgs(input[2]);
 

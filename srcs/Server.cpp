@@ -155,8 +155,6 @@ void Server::run() { // TODO : refactor this function
             client_pfd.events = POLLIN;
             client_pfd.revents = 0;
             _fds.push_back(client_pfd);
-
-            std::cout << "New client connected to the server" << std::endl;
         }
 
         for (size_t i = 1; i < _fds.size(); ++i) {
@@ -186,8 +184,6 @@ void Server::run() { // TODO : refactor this function
                         if (clientNickname == "*") {
                             clientNickname = "unknown";
                         }
-
-                        std::cout << "Client " << clientNickname << " disconnected" << std::endl;
 
                         std::map<std::string, Channel *> channels = currentClient->getChannels();
                         for (std::map<std::string, Channel *>::iterator it = channels.begin();

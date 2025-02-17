@@ -15,7 +15,6 @@ static int isSharingChannel(Client *client, Client *target) {
 }
 
 void CommandHandler::handleQuit(Client *client, const std::vector<std::string> &input) {
-    std::cout << client->getNickname() << " called QUIT" << std::endl;
     Server               *server = client->getServer();
     std::vector<Client *> clients = server->getClients();
 

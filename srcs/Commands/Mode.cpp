@@ -54,7 +54,6 @@ static void handleModeTopicRestricted(Client *client, Channel *channel, bool add
         if (channel->hasChannelMode('t')) {
             return;
         }
-        std::cout << "Adding topic restricted mode" << std::endl;
         channel->addChannelMode('t');
     } else {
         if (!channel->hasChannelMode('t')) {

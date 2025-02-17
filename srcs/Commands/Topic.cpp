@@ -11,7 +11,6 @@ static std::string intToStr(size_t num) {
 }
 
 void CommandHandler::handleTopic(Client *client, const std::vector<std::string> &input) {
-    std::cout << client->getNickname() << " called TOPIC" << std::endl;
     struct timeval tv;
     gettimeofday(&tv, NULL);
     if (input[2].length() < 1)

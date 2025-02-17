@@ -52,6 +52,4 @@ void CommandHandler::handleNick(Client *client, const std::vector<std::string> &
     if (!client->getUsername().empty() && client->getNickname() != "*" &&
         !client->getIsRegistered() && client->getIsAuthenticaded())
         welcomeMsg(client);
-
-    std::cout << "[" << client->getHostname() << "] Nickname set to " << input[2] << std::endl;
 }

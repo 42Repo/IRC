@@ -23,7 +23,4 @@ void CommandHandler::handleUser(Client *client, const std::vector<std::string> &
     if (!client->getNickname().empty() && client->getNickname() != "*" &&
         !client->getIsRegistered() && client->getIsAuthenticaded())
         welcomeMsg(client);
-
-    std::cout << client->getNickname() << " registered with username " << client->getUsername()
-              << " and realname " << client->getRealname() << std::endl;
 }

@@ -1,7 +1,5 @@
 #include <CommandHandler.h>
 #include <Server.h>
-#include <iostream>
-#include <ostream>
 #include <vector>
 
 static std::vector<std::string> splitArgs(const std::string &str) {
@@ -17,7 +15,6 @@ static std::vector<std::string> splitArgs(const std::string &str) {
 
 static void sendChannelKickMsg(Server *server, Client *send, std::string channelName,
                                const std::string &message) {
-    std::cout << send->getNickname() << " sent [" << message << "] to " << channelName << std::endl;
     Channel *channel = server->getChannelByName(channelName);
     if (!channel)
         throw Error::IRCError(ERR_NOSUCHCHANNEL(send->getNickname(), channelName).c_str());
@@ -32,7 +29,6 @@ static void sendChannelKickMsg(Server *server, Client *send, std::string channel
 
 void CommandHandler::handleKick(Client *client, const std::vector<std::string> &input) {
 
-    std::cout << client->getNickname() << " called KICK" << std::endl;
     std::vector<std::string> args = splitArgs(input[2]);
 
     Server  *server = client->getServer();
@@ -56,6 +52,4 @@ void CommandHandler::handleKick(Client *client, const std::vector<std::string> &
                                     "@" + client->getHostname() + " KICK ") +
                         channel->getName() + " " + target->getNickname() + " :" + input[3] +
                         "\r\n");
-    std::cout << "[" << client->getNickname() << "] Kicked [" << target->getNickname() << "] from ["
-              << channel->getName() << "]" << std::endl;
 }

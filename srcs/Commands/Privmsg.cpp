@@ -7,7 +7,6 @@ static void sendPrivUserMsg(Server *server, Client *send, std::string receive,
     std::vector<Client *> clients = server->getClients();
     for (size_t i = 0; i < clients.size(); ++i) {
         if (clients[i]->getNickname() == receive) {
-            std::cout << "message envoyé a " << clients[i]->getNickname() << std::endl;
             clients[i]->sendMessage(":" + send->getNickname() + " PRIVMSG " +
                                     clients[i]->getNickname() + " :" + message + "\n\r");
             return;
@@ -18,7 +17,6 @@ static void sendPrivUserMsg(Server *server, Client *send, std::string receive,
 
 static void sendPrivChannelMsg(Server *server, Client *send, std::string channelName,
                                const std::string &message) {
-    std::cout << send->getNickname() << " sent [" << message << "] to " << channelName << std::endl;
     Channel *channel = server->getChannelByName(channelName);
     if (!channel)
         throw Error::IRCError(ERR_NOSUCHCHANNEL(send->getNickname(), channelName).c_str());
@@ -33,8 +31,6 @@ static void sendPrivChannelMsg(Server *server, Client *send, std::string channel
 
 void CommandHandler::handlePrivmsg(Client *client, const std::vector<std::string> &input) {
 
-    std::cout << client->getNickname() << " called PRIVATEMSG" << std::endl;
-    std::cout << input[2] << std::endl;
     if (input[2].size() == 0)
         throw Error::IRCError(ERR_NORECIPIENT("PRIVMSG").c_str());
     if (input[3].size() == 0)
