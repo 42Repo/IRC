@@ -166,7 +166,6 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
                 case 'o':
                     first_arg = argument.substr(0, argument.find(' '));
                     argument = argument.substr(argument.find(' ') + 1);
-                    std::cout << "argument : " << first_arg << std::endl;
                     if (channel->isOperator(client)) {
                         // MODE #channel +o nickname
 

@@ -4,7 +4,11 @@
 #include <sys/select.h>
 #include <sys/time.h>
 
-std::string intToStr(size_t num);
+static std::string intToStr(size_t num) {
+    std::ostringstream oss;
+    oss << num;
+    return oss.str();
+}
 
 void CommandHandler::handleTopic(Client *client, const std::vector<std::string> &input) {
     std::cout << client->getNickname() << " called TOPIC" << std::endl;
@@ -32,8 +36,8 @@ void CommandHandler::handleTopic(Client *client, const std::vector<std::string> 
     } else {
         client->sendNumericReply(RPL_TOPIC(client->getNickname(), input[2], channel->getTopic()));
 
-        client->sendNumericReply(RPL_TOPICTIME(client->getNickname(), input[2],
-                                               channel->getTopicSetter(),
-                                               intToStr(channel->getTimestamp())));
+        client->sendNumericReply(
+            RPL_TOPICTIME(client->getNickname(), input[2], channel->getTopicSetter(),
+                          intToStr(static_cast<size_t>(channel->getTimestamp()))));
     }
 }

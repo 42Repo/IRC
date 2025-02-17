@@ -3,9 +3,7 @@
 #include <sstream>
 #include <string>
 
-
-
-std::string intToStr(size_t num) {
+static std::string intToStr(size_t num) {
     std::ostringstream oss;
     oss << num;
     return oss.str();
@@ -13,9 +11,10 @@ std::string intToStr(size_t num) {
 
 void CommandHandler::handleList(Client *client, const std::vector<std::string> &input) {
 
-    (void) input;
     Server                          *server = client->getServer();
     std::map<std::string, Channel *> channels = server->getChannels();
+
+    (void)input;
 
     client->sendNumericReply(RPL_LISTSTART(client->getNickname()));
     for (std::map<std::string, Channel *>::iterator it = channels.begin(); it != channels.end();

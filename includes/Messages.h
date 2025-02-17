@@ -24,6 +24,9 @@
 // 301
 #define RPL_AWAY(nick, message) (std::string("301 ") + nick + " : " + message)
 
+// 315
+#define RPL_ENDOFWHO(nick, mask) (std::string("315 ") + nick + " " + mask + " :End of /WHO list.")
+
 // 321
 #define RPL_LISTSTART(nick) (std::string("321 " + nick + " Channel Users Topic"))
 
@@ -50,6 +53,12 @@
 // 341
 #define RPL_INVITING(nick, channel, target)                                                        \
     (std::string("341 ") + nick + " " + target + " :" + channel)
+
+// 352
+#define RPL_WHOREPLY(nick, channel, username, hostname, servername, nickname, flags, hopcount,     \
+                     realname)                                                                     \
+    (std::string("352 ") + nick + " " + channel + " " + username + " " + hostname + " " +          \
+     servername + " " + nickname + " " + flags + " " + hopcount + " " + realname)
 
 // 372
 #define RPL_MOTD(nick) (std::string("372 ") + nick + " :made by asuc & mbuchs")

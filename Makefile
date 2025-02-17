@@ -15,7 +15,7 @@ FG_WHITE    := $(shell printf "\033[37m")
 # Project Settings
 TARGET       := ircserv
 CXX          := c++
-CXXFLAGS     := -Wall -Werror -Wextra -std=c++98
+CXXFLAGS     := -Wall -Werror -Wextra -std=c++98  -g
 BUILD_DIR    := .build
 OBJ_DIR      := $(BUILD_DIR)/obj
 DEP_DIR      := $(BUILD_DIR)/dep
@@ -75,10 +75,12 @@ clean:
 	@rm -rf $(BUILD_DIR)
 	@rm -fr bonus/$(BUILD_DIR)
 	@printf "$(FG_RED)Cleaned object and dependency files.$(RESET)\n"
+
 fclean: clean
 	@rm -f $(TARGET)
 	@printf "$(FG_RED)Removed executable $(FG_CYAN)$(TARGET)$(RESET)\n"
 	@$(MAKE) fclean -C bonus
+
 re: fclean all
 
 bonus: all
