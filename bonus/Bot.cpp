@@ -183,7 +183,3 @@ void Bot::answer(std::vector<std::string> message) {
         sendMessage("PRIVMSG " + message[2] + " :" + parseGeminiAnswer(answer));
     }
 }
-
-void Bot::setName(std::string name) { _name = name; }
-
-std::string Bot::getName() { return _name; }

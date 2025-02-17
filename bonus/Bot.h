@@ -34,8 +34,6 @@ class Bot {
     void        joinServer();
     void        loginToServ();
     void        sendMessage(const std::string &msg);
-    void        setName(std::string name);
-    std::string getName();
     void        answer(std::vector<std::string> message);
     std::string getLLMReply(std::string message);
     bool        isAlreadyJoined(std::string channel);
