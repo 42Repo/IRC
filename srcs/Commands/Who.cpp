@@ -21,7 +21,7 @@ static std::vector<std::string> splitString(const std::string &str, char delimit
 // Builds the flags string : (H, G, *, @)
 static std::string buildFlags(Client *client, Channel *channel) {
     std::string flags = "H";
-    // if (client->getIsAway()) {
+    // if (client->getIsAway()) { // TODO if we want
     //     flags += "G";
     // }
     if (client->getIsOperator()) {
@@ -33,11 +33,12 @@ static std::string buildFlags(Client *client, Channel *channel) {
     return flags;
 }
 
-static void sendWhoReply(Client *sender, Client *target, const std::string &channelName, const std::string &flags) {
-    sender->sendNumericReply(
-        RPL_WHOREPLY(sender->getNickname(), channelName, target->getUsername(),
-                     target->getHostname(), sender->getServer()->getHostname(),
-                     target->getNickname(), flags, "0", target->getRealname()));
+static void sendWhoReply(Client *sender, Client *target, const std::string &channelName,
+                         const std::string &flags) {
+    sender->sendNumericReply(RPL_WHOREPLY(sender->getNickname(), channelName, target->getUsername(),
+                                          target->getHostname(), sender->getServer()->getHostname(),
+                                          target->getNickname(), flags, "0",
+                                          target->getRealname()));
 }
 
 static void processWhoAll(Client *client, bool onlyOperators, Server *server) {
@@ -51,7 +52,8 @@ static void processWhoAll(Client *client, bool onlyOperators, Server *server) {
     }
 }
 
-static void processWhoChannel(Client *client, const std::string &channelName, bool onlyOperators, Server *server) {
+static void processWhoChannel(Client *client, const std::string &channelName, bool onlyOperators,
+                              Server *server) {
     Channel *channel = server->getChannelByName(channelName);
     if (!channel) {
         throw Error::IRCError(ERR_NOSUCHCHANNEL(client->getNickname(), channelName).c_str());
@@ -62,8 +64,9 @@ static void processWhoChannel(Client *client, const std::string &channelName, bo
         return;
     }
 
-     std::map<Client *, std::set<char> > members = channel->getMembers();
-    for (std::map<Client *, std::set<char> >::iterator it = members.begin(); it != members.end(); ++it) {
+    std::map<Client *, std::set<char> > members = channel->getMembers();
+    for (std::map<Client *, std::set<char> >::iterator it = members.begin(); it != members.end();
+         ++it) {
         Client *member = it->first;
         if (onlyOperators && !channel->isOperator(member)) {
             continue;
@@ -73,9 +76,10 @@ static void processWhoChannel(Client *client, const std::string &channelName, bo
     }
 }
 
-static void processWhoMask(Client *client, const std::string &mask, bool onlyOperators, Server *server) {
+static void processWhoMask(Client *client, const std::string &mask, bool onlyOperators,
+                           Server *server) {
     std::vector<Client *> clients = server->getClients();
-   for (size_t i = 0; i < clients.size(); ++i) {
+    for (size_t i = 0; i < clients.size(); ++i) {
 
         if ((matchesMask(clients[i]->getNickname(), mask) ||
              matchesMask(clients[i]->getUsername(), mask) ||
@@ -88,13 +92,12 @@ static void processWhoMask(Client *client, const std::string &mask, bool onlyOpe
     }
 }
 
-
 void CommandHandler::handleWho(Client *client, const std::vector<std::string> &input) {
     std::vector<std::string> params = splitString(input[2], ' ');
     std::string              mask = params.empty() ? "" : params[0];
     bool                     onlyOperators = (params.size() > 1) && (params[1] == "o");
 
-     try {
+    try {
         if (mask.empty() || mask == "*" || mask == "0") {
             processWhoAll(client, onlyOperators, _server);
         } else if (mask[0] == '#' || mask[0] == '&') {
@@ -103,8 +106,9 @@ void CommandHandler::handleWho(Client *client, const std::vector<std::string> &i
             processWhoMask(client, mask, onlyOperators, _server);
         }
     } catch (const std::exception &e) {
-          client->sendNumericReply(RPL_ENDOFWHO(client->getNickname(), mask)); //send ENDOFWHO even if error
-          throw Error::IRCError(e.what());
+        client->sendNumericReply(
+            RPL_ENDOFWHO(client->getNickname(), mask)); // send ENDOFWHO even if error
+        throw Error::IRCError(e.what());
     }
 
     client->sendNumericReply(RPL_ENDOFWHO(client->getNickname(), mask));

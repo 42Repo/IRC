@@ -1,15 +1,11 @@
 #include "../../includes/Client.h"
 #include "../../includes/Server.h"
 #include <arpa/inet.h>
-#include <errno.h>
 #include <fcntl.h>
-#include <iostream>
 #include <netdb.h>
 #include <sstream>
-#include <stdexcept>
 #include <string.h>
 #include <unistd.h>
-#include <vector>
 
 Client::Client(int fd, Server *server)
     : _fd(fd),
@@ -100,6 +96,7 @@ void Client::leaveChannel(Channel *channel) {
     }
 }
 
+// TODO : a enlever ou faire
 // void Client::addMode(char mode) {
 //     if (_userModes.find(mode) == std::string::npos) {
 //         _userModes += mode;

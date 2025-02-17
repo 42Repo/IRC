@@ -83,24 +83,13 @@ CommandHandler::CommandHandler(Server *server) : _server(server) {
 
 void CommandHandler::handleCommand(Client *client, const std::string input) {
 
-    std::vector<std::string> command = commandParser(input);
-    // std::cout << "Client" << client->getFd() << " : " << input << std::endl;
-    // std::cout << "hostname : " << client->getHostname() << std::endl;
-    // client->sendMessage("You said: " + input + "\r\n");
-    // (this->*_commandMap[command[1]])(client, command[2]);
+    std::vector<std::string>            command = commandParser(input);
     CommandHandlerFunctionMap::iterator it = _commandMap.find(command[1]);
-    if (it != _commandMap.end())
+    if (it != _commandMap.end()) {
         try {
             (this->*_commandMap[command[1]])(client, command);
         } catch (const std::exception &e) {
             Error(e.what(), client);
         }
-    else {
-
-        std::cout << client->getNickname() << " said : " << command[1];
-        if (command[2] != "")
-            std::cout << " " << command[2];
-        std::cout << std::endl;
-        // std::cout << "nope" << std::endl;
     }
 }

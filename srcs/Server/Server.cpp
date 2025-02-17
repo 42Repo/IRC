@@ -118,7 +118,7 @@ void Server::removeClient(Client *client) {
     client = NULL;
 }
 
-void Server::run() {
+void Server::run() { // TODO : refactor this function
     std::cout << "Server running. Listening on port " << _port << std::endl;
     _shutdown = false;
 

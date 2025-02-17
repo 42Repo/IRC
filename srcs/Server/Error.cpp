@@ -13,7 +13,7 @@ Error::Error(std::string errMessage, Client *client) {
 }
 
 Error::IRCError::IRCError(const char *msg) {
-    _msg = new char[strlen(msg) + 1]; // Allocation dynamique
+    _msg = new char[strlen(msg) + 1];
     strcpy(_msg, msg);
 }
 

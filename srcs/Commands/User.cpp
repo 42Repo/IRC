@@ -1,5 +1,4 @@
 #include "../../includes/CommandHandler.h"
-#include "../../includes/Server.h"
 
 void CommandHandler::handleUser(Client *client, const std::vector<std::string> &input) {
     std::istringstream iss(input[2] + " " + input[3]);

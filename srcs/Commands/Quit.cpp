@@ -6,14 +6,6 @@ static int isSharingChannel(Client *client, Client *target) {
     std::map<std::string, Channel *> clientChannels = client->getChannels();
     std::map<std::string, Channel *> targetChannels = target->getChannels();
 
-    // for (std::map<std::string, Channel *>::iterator it = clientChannels.begin();
-    //      it != clientChannels.end(); ++it) {
-    //     for (std::map<std::string, Channel *>::iterator it1 = targetChannels.begin();
-    //          it1 != targetChannels.end(); ++it1) {
-    //         if (it == it1)
-    //             return 1;
-    //     }
-    // }
     for (std::map<std::string, Channel *>::iterator it = clientChannels.begin();
          it != clientChannels.end(); ++it) {
         if (targetChannels[it->first] == it->second)
@@ -44,5 +36,3 @@ void CommandHandler::handleQuit(Client *client, const std::vector<std::string> &
     }
     server->removeClient(client);
 }
-
-//: UserNick!~ident@host QUIT :Quit message
