@@ -1,6 +1,6 @@
-#include "../../includes/CommandHandler.h"
-#include "../../includes/Error.h"
-#include "../../includes/Server.h"
+#include <CommandHandler.h>
+#include <Error.h>
+#include <Server.h>
 #include <fnmatch.h>
 
 static bool matchesMask(const std::string &str, const std::string &mask) {

@@ -1,6 +1,6 @@
-#include "../../includes/CommandHandler.h"
-#include "../../includes/Error.h"
-#include "../../includes/Server.h"
+#include <CommandHandler.h>
+#include <Error.h>
+#include <Server.h>
 #include <sstream>
 
 static void parseModeInput(const std::string &input, std::string &target, std::string &modeString,

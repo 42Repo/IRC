@@ -1,4 +1,4 @@
-#include "../includes/Server.h"
+#include <Server.h>
 #include <csignal>
 #include <iostream>
 #include <sstream>

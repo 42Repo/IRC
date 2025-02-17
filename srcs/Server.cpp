@@ -1,4 +1,4 @@
-#include "../../includes/Server.h"
+#include <Server.h>
 #include <algorithm>
 #include <ctime>
 #include <errno.h>

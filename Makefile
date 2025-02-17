@@ -15,14 +15,15 @@ FG_WHITE    := $(shell printf "\033[37m")
 # Project Settings
 TARGET       := ircserv
 CXX          := c++
-CXXFLAGS     := -Wall -Werror -Wextra -std=c++98  -g
+INC_DIR      := includes
+CXXFLAGS     := -Wall -Werror -Wextra -std=c++98 -I$(INC_DIR)
 BUILD_DIR    := .build
 OBJ_DIR      := $(BUILD_DIR)/obj
 DEP_DIR      := $(BUILD_DIR)/dep
 
 # Source and Object Files
 CMDSRC		 := srcs/Commands/CommandHandler.cpp srcs/Commands/Privmsg.cpp srcs/Commands/Invite.cpp srcs/Commands/Join.cpp srcs/Commands/Kick.cpp srcs/Commands/Mode.cpp srcs/Commands/Nick.cpp srcs/Commands/Pass.cpp srcs/Commands/Quit.cpp srcs/Commands/Topic.cpp srcs/Commands/User.cpp srcs/Commands/Who.cpp srcs/Commands/List.cpp
-SRCS         := srcs/main.cpp srcs/Server/Server.cpp srcs/Client/Client.cpp srcs/Channel/Channel.cpp srcs/Server/Error.cpp $(CMDSRC)
+SRCS         := srcs/main.cpp srcs/Server.cpp srcs/Client.cpp srcs/Channel.cpp srcs/Error.cpp $(CMDSRC)
 OBJS         := $(addprefix $(OBJ_DIR)/,$(SRCS:.cpp=.o))
 DEPS         := $(addprefix $(DEP_DIR)/,$(SRCS:.cpp=.d))
 

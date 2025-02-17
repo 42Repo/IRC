@@ -1,5 +1,5 @@
-#include "../../includes/CommandHandler.h"
-#include "../../includes/Server.h"
+#include <CommandHandler.h>
+#include <Server.h>
 #include <algorithm>
 
 static std::vector<std::string> splitString(const std::string &str, char delimiter) {

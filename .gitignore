@@ -34,3 +34,5 @@ ircserv
 vgcore.*
 bot
 .env
+.cache
+compile_commands.json

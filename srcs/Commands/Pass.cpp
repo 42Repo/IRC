@@ -1,5 +1,5 @@
-#include "../../includes/CommandHandler.h"
-#include "../../includes/Server.h"
+#include <CommandHandler.h>
+#include <Server.h>
 
 void CommandHandler::handlePass(Client *client, const std::vector<std::string> &input) {
 

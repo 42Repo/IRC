@@ -1,5 +1,5 @@
-#include "../../includes/CommandHandler.h"
-#include "../../includes/Server.h"
+#include <CommandHandler.h>
+#include <Server.h>
 
 static bool isValidNickname(const std::string &nick) {
     if (nick.length() < 1 || nick.length() > 9) {

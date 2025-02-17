@@ -1,5 +1,5 @@
-#include "../../includes/Client.h"
-#include "../../includes/Server.h"
+#include <Client.h>
+#include <Server.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <netdb.h>

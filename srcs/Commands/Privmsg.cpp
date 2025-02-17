@@ -1,6 +1,6 @@
-#include "../../includes/CommandHandler.h"
-#include "../../includes/Error.h"
-#include "../../includes/Server.h"
+#include <CommandHandler.h>
+#include <Error.h>
+#include <Server.h>
 
 static void sendPrivUserMsg(Server *server, Client *send, std::string receive,
                             const std::string &message) {

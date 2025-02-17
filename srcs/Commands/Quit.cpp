@@ -1,5 +1,5 @@
-#include "../../includes/CommandHandler.h"
-#include "../../includes/Server.h"
+#include <CommandHandler.h>
+#include <Server.h>
 #include <vector>
 
 static int isSharingChannel(Client *client, Client *target) {

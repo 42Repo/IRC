@@ -1,6 +1,5 @@
-#include "../../includes/Channel.h"
-#include "../../includes/Server.h"
-#include <algorithm>
+#include <Channel.h>
+#include <Server.h>
 
 Channel::Channel(std::string name, Client *creator, std::string password, int userLimit,
                  std::string topic)

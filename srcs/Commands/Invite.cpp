@@ -1,5 +1,5 @@
-#include "../../includes/CommandHandler.h"
-#include "../../includes/Server.h"
+#include <CommandHandler.h>
+#include <Server.h>
 
 static std::vector<std::string> splitArgs(const std::string &str) {
     std::vector<std::string> tokens;
