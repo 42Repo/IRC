@@ -50,6 +50,14 @@ static void setNonBlocking(int fd) {
     }
 }
 
+std::string Server::getPassword() { return _password; }
+
+std::vector<Client *> Server::getClients() { return _clients; }
+
+std::map<std::string, Channel *> Server::getChannels() { return _channels; }
+
+void Server::setShutdownFlag(bool value) { _shutdown = value; }
+
 void Server::setupServerSocket() {
     _server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (_server_fd == -1) {

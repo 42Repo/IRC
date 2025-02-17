@@ -15,15 +15,15 @@ class Server {
     void                             run();
     void                             setupServerSocket();
     std::string                      getHostname();
-    std::string                      getPassword() { return _password; };
+    std::string                      getPassword();
     void                             removeClient(Client *client);
-    std::vector<Client *>            getClients() { return _clients; };
-    std::map<std::string, Channel *> getChannels() { return _channels; };
+    std::vector<Client *>            getClients();
+    std::map<std::string, Channel *> getChannels();
     Channel                         *getChannelByName(const std::string &name);
     void                             addChannel(Channel *channel);
     void                             removeChannel(const std::string &name);
     Client                          *getClientByName(std::string client);
-    void                             setShutdownFlag(bool value) { _shutdown = value; }
+    void                             setShutdownFlag(bool value);
 
   private:
     Server();

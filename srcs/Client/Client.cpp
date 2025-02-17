@@ -116,3 +116,21 @@ void Client::leaveChannel(Channel *channel) {
 Server *Client::getServer() { return _server; }
 
 void Client::removeChannel(std::string channel) { _channels.erase(channel); }
+
+void Client::setNickname(const std::string &nickname) { _nickname = nickname; }
+
+void Client::setRealname(const std::string &realname) { _realname = realname; }
+
+void Client::setUsername(const std::string &username) { _username = username; }
+
+void Client::setIsRegistered(bool value) { _isRegistered = value; }
+
+bool Client::getIsRegistered() { return _isRegistered; }
+
+void Client::setIsOperator(bool value) { _isOperator = value; }
+
+bool Client::getIsOperator() { return _isOperator; }
+
+bool Client::getIsAuthenticaded() { return _isAuthenticated; }
+
+void Client::setAuthenticaded(bool value) { _isAuthenticated = value; }

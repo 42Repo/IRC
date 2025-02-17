@@ -1,5 +1,6 @@
 #include "../../includes/CommandHandler.h"
 #include "../../includes/Server.h"
+#include <algorithm>
 
 static std::vector<std::string> splitString(const std::string &str, char delimiter) {
     std::vector<std::string> tokens;
@@ -77,7 +78,11 @@ void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &
         client->sendMessage(modeMessage);
 
     } else {
-        if (channel->hasChannelMode('i')) {
+        std::vector<std::string> invitedUsers = channel->getInvitedUsers();
+        bool                     isInvited = std::find(invitedUsers.begin(), invitedUsers.end(),
+                                                       client->getNickname()) != invitedUsers.end();
+
+        if (channel->hasChannelMode('i') && !channel->isOperator(client) && !isInvited) {
             throw Error::IRCError(ERR_INVITEONLYCHAN(channelName).c_str());
         }
         if (channel->hasChannelMode('k') && channel->getPassword() != password) {

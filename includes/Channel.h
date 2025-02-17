@@ -17,30 +17,30 @@ class Channel {
     void removeMember(Client *client);
     bool isMember(Client *client) const;
 
-    std::string getName() const { return _name; }
-    std::string getTopic() const { return _topic; }
-    void        setTopic(const std::string &topic);
-    std::string getPassword() const { return _password; }
-    int         getUserLimit() const { return _userLimit; }
-    bool        isOperator(Client *client) const;
-    void        setUserLimit(int limit) { _userLimit = limit; }
-    void        setPassword(const std::string &password) { _password = password; }
-    void        addChannelMode(char mode);
-    void        removeChannelMode(char mode);
-    bool        hasChannelMode(char mode) const;
-    std::string getChannelModes() const;
-    std::string getUserModes(Client *client) const;
-    void        addUserMode(Client *client, char mode);
-    void        removeUserMode(Client *client, char mode);
-    bool        hasUserMode(Client *client, char mode) const;
-    std::map<Client *, std::set<char> > getMembers() const { return _userModes; }
-    void                               addInvitedUser(std::string user);
-    void                               removeInvitedUSer(std::string user);
-    std::vector<std::string>           getInvitedUsers(void);
-    time_t                             getTimestamp();
-    void                               setTimestamp(time_t timestamp);
-      void                              setTopicSetter(std::string setter) { _topicSetter = setter; };
-      std::string                       getTopicSetter(void){ return _topicSetter; };
+    std::string                         getName() const;
+    std::string                         getTopic() const;
+    void                                setTopic(const std::string &topic);
+    std::string                         getPassword() const;
+    void                                setPassword(const std::string &password);
+    int                                 getUserLimit() const;
+    void                                setUserLimit(int limit);
+    bool                                isOperator(Client *client) const;
+    void                                addChannelMode(char mode);
+    void                                removeChannelMode(char mode);
+    bool                                hasChannelMode(char mode) const;
+    std::string                         getChannelModes() const;
+    std::string                         getUserModes(Client *client) const;
+    void                                addUserMode(Client *client, char mode);
+    void                                removeUserMode(Client *client, char mode);
+    bool                                hasUserMode(Client *client, char mode) const;
+    void                                setTopicSetter(std::string setter);
+    std::string                         getTopicSetter();
+    void                                addInvitedUser(std::string user);
+    std::vector<std::string>            getInvitedUsers();
+    time_t                              getTimestamp();
+    void                                setTimestamp(time_t timestamp);
+    std::map<Client *, std::set<char> > getMembers() const;
+
   private:
     std::string                         _name;
     std::string                         _topic;
