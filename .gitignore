@@ -33,3 +33,4 @@
 ircserv
 vgcore.*
 bot
+.env

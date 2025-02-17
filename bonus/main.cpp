@@ -43,8 +43,8 @@ static int setSignal(void) {
 }
 
 int main(int argc, char **argv) {
-    if (argc != 5) {
-        std::cout << "Usage: ./bot [adress] [port] [password] [name]" << std::endl;
+    if (argc != 6) {
+        std::cout << "Usage: ./bot [adress] [port] [password] [name] [Gemini API Key]" << std::endl;
         return 1;
     }
 
@@ -63,15 +63,13 @@ int main(int argc, char **argv) {
                                      "longer than 128 characters.");
         }
 
-        Bot bot(argv[4], stringToInt(argv[2]), argv[1], argv[3]);
-
-		
+        Bot bot(argv[4], stringToInt(argv[2]), argv[1], argv[3], argv[5]);
         bot.joinServer();
     } catch (const std::exception &e) {
-		std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
-	setSignal();
+    setSignal();
 
     return 0;
 }

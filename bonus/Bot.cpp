@@ -1,11 +1,4 @@
 #include "Bot.h"
-#include <arpa/inet.h>
-#include <cstring>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <vector>
-#include <sstream>
 
 static std::vector<std::string> commandParser(std::string input) {
     std::vector<std::string> command(4);
@@ -32,21 +25,39 @@ static std::vector<std::string> commandParser(std::string input) {
 }
 
 void Bot::sendMessage(const std::string &msg) {
-	std::string sentMsg = msg + "\r\n";
-    ssize_t bytesSent = send(_fd, sentMsg.c_str(), sentMsg.length(), 0);
+    std::string sentMsg = msg + "\r\n";
+    ssize_t     bytesSent = send(_fd, sentMsg.c_str(), sentMsg.length(), 0);
     if (bytesSent == -1) {
         // Handle error (e.g., log it, close the connection)
         // TODO: Implement error handling
     }
 }
 
-Bot::Bot(std::string name, int port, std::string servAdress, std::string password)
+Bot::Bot(std::string name, int port, std::string servAdress, std::string password,
+         std::string api_key)
     : _name(name),
       _port(port),
       _servAddress(servAdress),
-      _password(password) {}
+      _password(password),
+      _api_key(api_key) {}
 
 Bot::~Bot() {}
+
+static std::string parseGeminiAnswer(std::string answer) {
+    std::string        parsedAnswer;
+    std::istringstream iss(answer);
+    std::string        line;
+    while (std::getline(iss, line)) {
+        if (line.find("text") != std::string::npos) {
+            parsedAnswer = line.substr(10, line.length() - 11);
+            parsedAnswer.erase(0, 11);
+            break;
+        }
+    }
+    if (parsedAnswer.empty())
+        return "I'm drinking a coffee ☕, try again later !";
+    return parsedAnswer;
+}
 
 void Bot::joinServer() {
 
@@ -72,70 +83,105 @@ void Bot::joinServer() {
     _pollfd.fd = _fd;
     _pollfd.events = POLLIN;
     _pollfd.revents = 0;
-	loginToServ();
+    loginToServ();
 }
-
 
 void Bot::loginToServ() {
 
-	std::cout << "PASS " + _password <<std::endl;
-	sendMessage("PASS " + _password);
-	sendMessage("NICK " + _name);
-	sendMessage("USER " + _name + " 0 * :bot");
-	
-	char buffer[1024];
-	while (true) {
-		std::memset(buffer, 0, sizeof(buffer));
-		ssize_t bytesRead = recv(_fd, buffer, sizeof(buffer) - 1, 0);
+    std::cout << "PASS " + _password << std::endl;
+    sendMessage("PASS " + _password);
+    sendMessage("NICK " + _name);
+    sendMessage("USER " + _name + " 0 * :bot");
 
-		if (bytesRead > 0) {
-			buffer[bytesRead] = '\0'; // Assurer une fin de chaîne correcte
-			answer(commandParser(buffer));
-			std::cout << buffer << std::endl;
-		} else if (bytesRead == 0) {
-			std::cout << "Server closed connexion" << std::endl;
-			break;
-		} else {
-			std::cout << "Error"  << std::endl;
-			break;
-		}
-	}
-	
+    char buffer[1024];
+    while (true) {
+        std::memset(buffer, 0, sizeof(buffer));
+        ssize_t bytesRead = recv(_fd, buffer, sizeof(buffer) - 1, 0);
+
+        if (bytesRead > 0) {
+            buffer[bytesRead] = '\0'; // Assurer une fin de chaîne correcte
+            answer(commandParser(buffer));
+            std::cout << buffer << std::endl;
+        } else if (bytesRead == 0) {
+            std::cout << "Server closed connexion" << std::endl;
+            break;
+        } else {
+            std::cout << "Error" << std::endl;
+            break;
+        }
+    }
 }
 
+static bool startsWith(const std::string &str, const std::string &prefix) {
+    return str.compare(0, prefix.length(), prefix) == 0;
+}
 
-//TODO - splitServerMessage
-//TODO - send privmsg to user
-//TODO - manage channel join (on /invite)
+static bool endsWith(const std::string &str, const std::string &suffix) {
+    return str.compare(str.length() - suffix.length(), suffix.length(), suffix) == 0;
+}
 
+size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
+    ((std::string *)userp)->append((char *)contents, size * nmemb);
+    return size * nmemb;
+}
 
-void Bot::answer(std::vector<std::string> message)
-{
-	if(message[3].length() > 0)
-		message[3].erase(message[3].length() -1, 1);
-	// std::cout << "bah [" << message[3] <<  "]"<< std::endl;
+std::string Bot::getLLMReply(std::string message) {
+    CURL       *curl;
+    CURLcode    res;
+    std::string readBuffer;
+    std::string jsonData = GEMINI_MSG(_name, message);
+    curl = curl_easy_init();
+    if (curl) {
+        struct curl_slist *headers = NULL;
+        headers = curl_slist_append(headers, "Content-Type: application/json");
 
-	// for(unsigned long i = 0; i < message[3].length(); i++)
-	// {
-	// 	std::cout << message[3][i] << std::endl;
-	// }
-	if (message[1] == "INVITE")
-	{
-		sendMessage("JOIN " + message[3]);
-		
-	}
-	if(message[1] == "JOIN"){
+        curl_easy_setopt(curl, CURLOPT_URL, GEMINI_URL(_api_key).c_str());
+        curl_easy_setopt(curl, CURLOPT_POST, 1L);
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonData.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
-		sendMessage("MODE " + message[3]);
-		sendMessage("WHO " + message[3]);
-	}
-	else if(message[1] == "PRIVMSG")
-	{
-		sendMessage("PRIVMSG " + message[2] + " :BERNARDO IS HERE NIARK NIARK");
-	}
+        res = curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
+        curl_slist_free_all(headers);
+        if (res != CURLE_OK)
+            return NULL;
+    }
+    return readBuffer;
+}
 
+bool Bot::isAlreadyJoined(std::string channel) {
+    for (std::vector<std::string>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
+        if (*it == channel)
+            return true;
+    }
+    return false;
+}
 
-		// sendMessage("PRIVMSG " + message[3] + " :BERNARDO IS HERE NIARK NIARK");
+void Bot::answer(std::vector<std::string> message) {
+
+    if (message[3].length() > 0 && endsWith(message[3], "\r"))
+        message[3].erase(message[3].length() - 1, 1);
+
+    if (message[1] == "INVITE") {
+        if (isAlreadyJoined(message[3])) {
+            sendMessage("PRIVMSG " + message[3] + " :Im already here !");
+            return;
+        }
+        sendMessage("JOIN " + message[3]);
+        sendMessage("PRIVMSG " + message[3] + " :Hey, I'm " + _name +
+                    "! Send [!tellme] and ask me anything!");
+        _channels.push_back(message[3]);
+    }
+    if (message[1] == "JOIN") {
+        sendMessage("MODE " + message[3]);
+        sendMessage("WHO " + message[3]);
+    } else if (message[1] == "PRIVMSG" && message[3].length() > 0 &&
+               startsWith(message[3], "!tellme")) {
+        std::string answer = getLLMReply(message[3]);
+        sendMessage("PRIVMSG " + message[2] + " :" + parseGeminiAnswer(answer));
+    }
 }
 
 void Bot::setName(std::string name) { _name = name; }
