@@ -44,12 +44,11 @@ void CommandHandler::handleKick(Client *client, const std::vector<std::string> &
     if (!channel->isOperator(client))
         throw Error::IRCError(ERR_CHANOPRIVSNEEDED(client->getNickname(), args[0]).c_str());
 
-    channel->removeMember(target);
-    target->removeChannel(channel->getName());
 
     sendChannelKickMsg(_server, client, args[0], target->getNickname() + " :" + input[3] + "\r\n");
     target->sendMessage(std::string(":" + client->getUsername() + "!" + client->getNickname() +
                                     "@" + client->getHostname() + " KICK ") +
                         channel->getName() + " " + target->getNickname() + " :" + input[3] +
                         "\r\n");
+    channel->removeMember(target);
 }
