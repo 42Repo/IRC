@@ -6,7 +6,6 @@
 static void parseModeInput(const std::string &input, std::string &target, std::string &modeString,
                            std::string &argument) {
     std::istringstream iss(input);
-    std::string        temp;
 
     iss >> target;
     iss >> modeString;
@@ -161,7 +160,6 @@ static void handleModeLimit(Client *client, Channel *channel, bool adding, std::
 }
 
 static void displayChannelModes(Client *client, Channel *channel) {
-    std::map<Client *, std::set<char> > members = channel->getMembers();
     std::string                        userModesString;
     std::string                        serverModesString;
     userModesString = channel->getUserModes(client);

@@ -6,7 +6,7 @@
 // TODO - check perms (JOIN)
 // TODO - create a bot
 
-Server *g_server = NULL;
+static Server *g_server = NULL;
 
 static bool isValidPort(int port) { return port >= 1024 && port <= 65535; }
 

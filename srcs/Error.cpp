@@ -12,6 +12,8 @@ Error::Error(std::string errMessage, Client *client) {
     client->sendMessage(replyStream.str());
 }
 
+Error::~Error() {}
+
 Error::IRCError::IRCError(const char *msg) {
     _msg = new char[strlen(msg) + 1];
     strcpy(_msg, msg);

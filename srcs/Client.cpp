@@ -38,7 +38,7 @@ Client::Client(int fd, Server *server)
 }
 
 Client::~Client() {
-    if (_fd != -1) { // Check if _fd is valid
+    if (_fd != -1) {
         close(_fd);
     }
     _channels.clear();
@@ -57,7 +57,6 @@ std::string Client::getHostname() const { return _hostname; }
 void Client::sendMessage(const std::string &msg) {
     ssize_t bytesSent = send(this->_fd, msg.c_str(), msg.length(), 0);
     if (bytesSent == -1) {
-        // Handle error (e.g., log it, close the connection)
         // TODO: Implement error handling
     }
 }

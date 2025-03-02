@@ -36,3 +36,5 @@ bot
 .env
 .cache
 compile_commands.json
+caca
+cppcheck_suppressions.txt

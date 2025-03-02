@@ -7,7 +7,7 @@
 class Error {
   public:
     Error(std::string errMessage, Client *client);
-    ~Error() {};
+    ~Error();
     class IRCError : public std::exception {
       public:
         IRCError(const char *msg);

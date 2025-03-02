@@ -31,9 +31,9 @@ DEPS         := $(addprefix $(DEP_DIR)/,$(SRCS:.cpp=.d))
 all: $(TARGET)
 
 # Debug Target
-debug: CXXFLAGS += -gdwarf-4 -Wunused -Wconversion -Wfloat-equal -Wnon-virtual-dtor \
-                   -Wpointer-arith -Wstrict-aliasing=2 -Wunreachable-code -Wnull-dereference \
-                   -Wnonnull -Wpedantic -Wcast-align -Wcast-qual -Wctor-dtor-privacy \
+debug: CXXFLAGS += -gdwarf-4 -Wunused -Wconversion -Wfloat-equal -Wnon-virtual-dtor -ffunction-sections -fdata-sections \
+                   -Wpointer-arith -Wstrict-aliasing=2 -Wunreachable-code -Wnull-dereference -Wno-disabled-macro-expansion \
+                   -Wnonnull -Wpedantic -Wcast-align -Wcast-qual -Wctor-dtor-privacy -Wno-unsafe-buffer-usage \
                    -Wdisabled-optimization -Wformat=2 -Winit-self -Wmissing-declarations \
                    -Wmissing-include-dirs -Wold-style-cast -Woverloaded-virtual \
                    -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo \
