@@ -40,8 +40,6 @@ std::string Channel::getTopicSetter() { return _topicSetter; }
 void Channel::addMember(Client *client) {
     if (!isMember(client)) {
         _userModes[client] = std::set<char>();
-        if (client->getIsOperator())
-            _userModes[client].insert('o');
     }
 }
 

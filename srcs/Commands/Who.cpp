@@ -18,15 +18,8 @@ static std::vector<std::string> splitString(const std::string &str, char delimit
     return tokens;
 }
 
-// Builds the flags string : (H, G, *, @)
 static std::string buildFlags(Client *client, Channel *channel) {
     std::string flags = "H";
-    // if (client->getIsAway()) { // TODO if we want
-    //     flags += "G";
-    // }
-    if (client->getIsOperator()) {
-        flags += "*";
-    }
     if (channel && channel->isOperator(client)) {
         flags += "@";
     }
@@ -41,12 +34,9 @@ static void sendWhoReply(Client *sender, Client *target, const std::string &chan
                                           target->getRealname()));
 }
 
-static void processWhoAll(Client *client, bool onlyOperators, Server *server) {
+static void processWhoAll(Client *client, Server *server) {
     std::vector<Client *> clients = server->getClients();
     for (size_t i = 0; i < clients.size(); ++i) {
-        if (onlyOperators && !clients[i]->getIsOperator()) {
-            continue;
-        }
         std::string flags = buildFlags(clients[i], NULL);
         sendWhoReply(client, clients[i], "*", flags);
     }
@@ -76,16 +66,14 @@ static void processWhoChannel(Client *client, const std::string &channelName, bo
     }
 }
 
-static void processWhoMask(Client *client, const std::string &mask, bool onlyOperators,
+static void processWhoMask(Client *client, const std::string &mask,
                            Server *server) {
     std::vector<Client *> clients = server->getClients();
     for (size_t i = 0; i < clients.size(); ++i) {
 
         if ((matchesMask(clients[i]->getNickname(), mask) ||
              matchesMask(clients[i]->getUsername(), mask) ||
-             matchesMask(clients[i]->getHostname(), mask)) &&
-            !(onlyOperators && !clients[i]->getIsOperator())) {
-
+             matchesMask(clients[i]->getHostname(), mask))) {
             std::string flags = buildFlags(clients[i], NULL);
             sendWhoReply(client, clients[i], "*", flags);
         }
@@ -99,11 +87,11 @@ void CommandHandler::handleWho(Client *client, const std::vector<std::string> &i
 
     try {
         if (mask.empty() || mask == "*" || mask == "0") {
-            processWhoAll(client, onlyOperators, _server);
+            processWhoAll(client, _server);
         } else if (mask[0] == '#' || mask[0] == '&') {
             processWhoChannel(client, mask, onlyOperators, _server);
         } else {
-            processWhoMask(client, mask, onlyOperators, _server);
+            processWhoMask(client, mask, _server);
         }
     } catch (const std::exception &e) {
         client->sendNumericReply(

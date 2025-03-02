@@ -2,7 +2,6 @@
 
 #include <map>
 #include <string>
-#include <vector>
 
 class Server;
 class Channel;
@@ -28,16 +27,10 @@ class Client {
     void                             setAuthenticaded(bool value);
     bool                             getIsRegistered();
     void                             setIsRegistered(bool value);
-    void                             setIsOperator(bool value);
-    bool                             getIsOperator();
     Server                          *getServer();
     void                             setRealname(const std::string &realname);
     void                             setUsername(const std::string &username);
-    void                             setHostname(const std::string &hostname);
     void                             joinChannel(Channel *channel);
-    void                             leaveChannel(Channel *channel);
-    void                             addMode(char mode);
-    void                             removeMode(char mode);
     void                             removeChannel(std::string);
     std::map<std::string, Channel *> getChannels() const;
     // std::string getUserModes() const { return _userModes; };
@@ -55,9 +48,7 @@ class Client {
     std::string                      _hostname;
     bool                             _isAuthenticated;
     std::string                      _messageBuffer;
-    bool                             _isOperator;
     std::map<std::string, Channel *> _channels;
-    std::string                      _status;
     bool                             _isRegistered;
     // std::string                      _userModes;
 };

@@ -16,9 +16,7 @@ Client::Client(int fd, Server *server)
       _hostname(""),
       _isAuthenticated(false),
       _messageBuffer(""),
-      _isOperator(false),
       _channels(),
-      _status(""),
       _isRegistered(false) {
 
     struct sockaddr_in clientAddress;
@@ -89,26 +87,6 @@ void Client::removeFromMessageBuffer(size_t length) {
 
 void Client::joinChannel(Channel *channel) { _channels[channel->getName()] = channel; }
 
-void Client::leaveChannel(Channel *channel) {
-    if (_channels.find(channel->getName()) != _channels.end()) {
-        _channels.erase(channel->getName());
-    }
-}
-
-// TODO : a enlever ou faire
-// void Client::addMode(char mode) {
-//     if (_userModes.find(mode) == std::string::npos) {
-//         _userModes += mode;
-//     }
-// }
-
-// void Client::removeMode(char mode) {
-//     size_t pos = _userModes.find(mode);
-//     if (pos != std::string::npos) {
-//         _userModes.erase(pos, 1);
-//     }
-// }
-
 Server *Client::getServer() { return _server; }
 
 void Client::removeChannel(std::string channel) { _channels.erase(channel); }
@@ -122,10 +100,6 @@ void Client::setUsername(const std::string &username) { _username = username; }
 void Client::setIsRegistered(bool value) { _isRegistered = value; }
 
 bool Client::getIsRegistered() { return _isRegistered; }
-
-void Client::setIsOperator(bool value) { _isOperator = value; }
-
-bool Client::getIsOperator() { return _isOperator; }
 
 bool Client::getIsAuthenticaded() { return _isAuthenticated; }
 
