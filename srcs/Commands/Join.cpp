@@ -107,7 +107,6 @@ void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &
         }
     }
 
-    // Envoyer RPL_NAMREPLY et RPL_ENDOFNAMES
     std::string memberList = getMemberList(channel);
     client->sendMessage(":" + _server->getHostname() + " 353 " + client->getNickname() + " = " +
                         channelName + " :" + memberList + "\r\n");

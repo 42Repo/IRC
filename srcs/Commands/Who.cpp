@@ -95,7 +95,7 @@ void CommandHandler::handleWho(Client *client, const std::vector<std::string> &i
         }
     } catch (const std::exception &e) {
         client->sendNumericReply(
-            RPL_ENDOFWHO(client->getNickname(), mask)); // send ENDOFWHO even if error
+            RPL_ENDOFWHO(client->getNickname(), mask));
         throw Error::IRCError(e.what());
     }
 

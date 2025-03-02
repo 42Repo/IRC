@@ -30,7 +30,6 @@ void CommandHandler::handleNick(Client *client, const std::vector<std::string> &
     if (!isValidNickname(input[2]))
         throw Error::IRCError(ERR_ERRONEUSNICKNAME(input[2]).c_str());
 
-    // Check if the nickname is already used
     std::vector<Client *> clients = _server->getClients();
     for (size_t i = 0; i < clients.size(); ++i) {
         if (clients[i] != client && clients[i]->getNickname() == input[2])

@@ -47,7 +47,6 @@ void CommandHandler::handleCap(Client *client, const std::vector<std::string> &i
     } else if (input[2].rfind("REQ", 0) == 0) {
         client->sendNumericReply("CAP * ACK :");
     } else if (input[2] == "END") {
-        // TODO : Handle CAP END
     } else {
         std::cerr << "Unhandled CAP command: " << input[2] << std::endl;
     }

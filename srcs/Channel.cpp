@@ -105,7 +105,6 @@ bool Channel::hasUserMode(Client *client, char mode) const {
     return false;
 }
 
-// isOperator
 bool Channel::isOperator(Client *client) const {
     if (isMember(client)) {
         return _userModes.at(client).count('o') > 0;

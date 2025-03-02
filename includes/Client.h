@@ -33,7 +33,6 @@ class Client {
     void                             joinChannel(Channel *channel);
     void                             removeChannel(std::string);
     std::map<std::string, Channel *> getChannels() const;
-    // std::string getUserModes() const { return _userModes; };
 
   private:
     Client();
@@ -50,5 +49,4 @@ class Client {
     std::string                      _messageBuffer;
     std::map<std::string, Channel *> _channels;
     bool                             _isRegistered;
-    // std::string                      _userModes;
 };

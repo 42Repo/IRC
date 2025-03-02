@@ -231,7 +231,7 @@ void CommandHandler::handleMode(Client *client, const std::vector<std::string> &
                 break;
             }
         }
-    } else { // User modes (not supported)
+    } else {
         client->sendNumericReply(ERR_UNKNOWNMODE(modeString, client->getNickname()));
     }
 }
