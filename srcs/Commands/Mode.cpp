@@ -115,7 +115,6 @@ static void handleModeOperator(Client *client, Channel *channel, bool adding, st
         throw Error::IRCError(ERR_NOTONCHANNEL(client->getNickname(), first_arg).c_str());
     }
 
-    // TODO : peut etre ajouter un check ici
     if (adding) {
         channel->addUserMode(targetClient, 'o');
     } else {

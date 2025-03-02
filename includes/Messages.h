@@ -108,7 +108,7 @@
 #define ERR_ERRONEUSNICKNAME(nick) (std::string("432 ") + nick + (" :Erroneous nickname"))
 
 // 433
-#define ERR_NICKNAMEINUSE(nick) (std::string("433 ") + nick + (" :Nickname is already in use"))
+#define ERR_NICKNAMEINUSE(nick) (std::string("433 ") + (":Nickname ") + nick + (" is already in use"))
 
 // 436
 #define ERR_NICKCOLLISION(nick, user, host)                                                        \

@@ -53,9 +53,16 @@ std::string Client::getRealname() const { return _realname; }
 std::string Client::getHostname() const { return _hostname; }
 
 void Client::sendMessage(const std::string &msg) {
-    ssize_t bytesSent = send(this->_fd, msg.c_str(), msg.length(), 0);
+    ssize_t bytesSent = send(_fd, msg.c_str(), msg.length(), 0);
+
     if (bytesSent == -1) {
-        // TODO: Implement error handling
+        _server->removeClient(this);
+        return;
+    } else if (bytesSent == 0) {
+        _server->removeClient(this);
+        return;
+    } else if (static_cast<size_t>(bytesSent) != msg.length()) {
+        _server->removeClient(this);
     }
 }
 
