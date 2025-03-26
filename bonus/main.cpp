@@ -27,7 +27,6 @@ static int stringToInt(const std::string &str) {
 void handle_sigint(int sig) {
     if(sig == SIGINT && !g_shutdown)
         g_shutdown = 1;
-    std::cout << "bah" << std::endl;
 }
 
 static int setSignal(void) {

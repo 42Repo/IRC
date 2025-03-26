@@ -89,7 +89,6 @@ void Bot::joinServer() {
 
 void Bot::loginToServ() {
 
-    std::cout << "PASS " + _password << std::endl;
     sendMessage("PASS " + _password);
     sendMessage("NICK " + _name);
     sendMessage("USER " + _name + " 0 * :bot");
@@ -101,7 +100,6 @@ void Bot::loginToServ() {
         if (bytesRead > 0) {
             buffer[bytesRead] = '\0';
             answer(commandParser(buffer));
-            std::cout << buffer << std::endl;
         } else if (bytesRead == 0) {
             std::cout << "Server closed connexion" << std::endl;
             break;
