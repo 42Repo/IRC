@@ -22,18 +22,21 @@ void CommandHandler::handleInvite(Client *client, const std::vector<std::string>
     if (args.size() < 2)
         throw Error::IRCError(ERR_NEEDMOREPARAMS("INVITE").c_str());
 
-    channel->addInvitedUser(args[0]);
-
     if (!target) {
         client->sendNumericReply(ERR_NOSUCHNICK(client->getNickname(), args[0]));
         return;
     }
-
+    
     if (!channel) {
         client->sendNumericReply(ERR_NOSUCHCHANNEL(client->getNickname(), args[1]));
         return;
     }
-
+    if(channel->isMember(target) || client == target) {
+        client->sendNumericReply(ERR_USERONCHANNEL(client->getNickname(), args[0], args[1]));
+        return;
+    }
+    
+    channel->addInvitedUser(args[0]);
     client->sendNumericReply(RPL_INVITING(client->getNickname(), args[1], args[0]));
 
     target->sendMessage(std::string(":") + client->getUsername() + "!" + client->getNickname() +

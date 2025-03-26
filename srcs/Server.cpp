@@ -44,10 +44,6 @@ static void setNonBlocking(int fd) {
     if (flags == -1) {
         throw std::runtime_error("Failed to get socket flags: " + std::string(strerror(errno)));
     }
-    if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) {
-        throw std::runtime_error("Failed to set socket to non-blocking mode: " +
-                                 std::string(strerror(errno)));
-    }
 }
 
 std::string Server::getPassword() { return _password; }

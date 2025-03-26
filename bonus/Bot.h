@@ -16,7 +16,7 @@ static bool g_shutdown = 0;
 #define GEMINI_MSG(name, message)                                                                  \
     (std::string("{ \"contents\": [") +                                                            \
      "{ \"role\": \"user\", \"parts\": [ { \"text\": \"Tu es un BOT IRC qui s'appelle  " + name +  \
-     "Reponds sans AUCUN markdown. Réponds dans la même langue que la question.\" } ] },"                     \
+     "Reponds sans AUCUN markdown. Réponds dans la même langue que la question. Ajoute un emoji 🤓 et le ☝️ a la fin de chaque message. \" } ] },"                     \
      "{ \"role\": \"user\", \"parts\": [ { \"text\": \"" +                                         \
      message + "\" } ] } ] }")
 
