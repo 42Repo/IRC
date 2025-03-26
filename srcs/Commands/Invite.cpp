@@ -24,6 +24,16 @@ void CommandHandler::handleInvite(Client *client, const std::vector<std::string>
 
     channel->addInvitedUser(args[0]);
 
+    if (!target) {
+        client->sendNumericReply(ERR_NOSUCHNICK(client->getNickname(), args[0]));
+        return;
+    }
+
+    if (!channel) {
+        client->sendNumericReply(ERR_NOSUCHCHANNEL(client->getNickname(), args[1]));
+        return;
+    }
+
     client->sendNumericReply(RPL_INVITING(client->getNickname(), args[1], args[0]));
 
     target->sendMessage(std::string(":") + client->getUsername() + "!" + client->getNickname() +
