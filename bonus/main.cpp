@@ -32,13 +32,11 @@ void handle_sigint(int sig) {
 
 static int setSignal(void) {
     struct sigaction sa;
-    sa.sa_handler = handle_sigint; // Définition du handler
-    sigemptyset(&sa.sa_mask);      // Pas de masquage de signaux supplémentaires
-    sa.sa_flags = 0;               // Options par défaut
+    sa.sa_handler = handle_sigint;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
 
-    // Appliquer la gestion du signal SIGINT
     if (sigaction(SIGINT, &sa, NULL) == -1) {
-        // std::/("sigaction");
         return EXIT_FAILURE;
     }
     return 0;

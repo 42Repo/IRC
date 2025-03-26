@@ -99,7 +99,7 @@ void Bot::loginToServ() {
         std::memset(buffer, 0, sizeof(buffer));
         ssize_t bytesRead = recv(_fd, buffer, sizeof(buffer) - 1, 0);
         if (bytesRead > 0) {
-            buffer[bytesRead] = '\0'; // Assurer une fin de chaîne correcte
+            buffer[bytesRead] = '\0';
             answer(commandParser(buffer));
             std::cout << buffer << std::endl;
         } else if (bytesRead == 0) {
@@ -111,7 +111,6 @@ void Bot::loginToServ() {
     }
     sendMessage("QUIT :Leaving");
     close(_fd);
-    // std::cout << "ciao" << std::endl;
 }
 
 static bool startsWith(const std::string &str, const std::string &prefix) {

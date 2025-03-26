@@ -128,7 +128,6 @@
 // 443
 #define ERR_USERONCHANNEL(user, target, channel)                                                   \
     (std::string("443 ") + user + " " + target + " " + channel + " :is already on channel")
-//: irc.example.com 443 user42 victimUser #mon-canal :is already on channel
 
 // 451
 #define ERR_NOTREGISTERED(nick) (std::string("451 ") + nick + " :You have not registered")
@@ -178,101 +177,3 @@
 
 // 502
 #define ERR_USERSDONTMATCH "502 :Cannot change mode for other users"
-
-/*
-    pass/user
-
-    461 ERR_NEEDMOREPARAMS
-        Not enough params
-
-    462 ERR_ALREADYREGISTRED
-        Client already registred
-
-    464 ERR_PASSWDMISMATCH
-        Invalid pass
-
-    431 ERR_NONICKNAMEGIVEN
-        Missing nick param
-
-    432 ERR_ERRONEUSNICKNAME
-        Nick with a forbidden char
-
-    433 ERR_NICKNAMEINUSE
-        Nick already exists on server
-
-    436 ERR_NICKCOLLISION
-        Nick already exists on connected server
-
-    437 ERR_UNAVAILRESOURCE
-        Didnt respect the nick delay
-
-    484 ERR_RESTRICTED
-        Si il est restricted r+
-
-
-    join
-
-    461 ERR_NEEDMOREPARAMS | dup
-    474 ERR_BANNEDFROMCHAN
-    473 ERR_INVITEONLYCHAN
-    475 ERR_BADCHANNELKEY
-    478 ERR_CHANNELISFULL
-    476 ERR_BADCHANMASK
-    403 ERR_NOSUCHCHANNEL
-    405 ERR_TOOMANYCHANNELS
-    407 ERR_TOOMANYTARGETS
-    437 ERR_UNAVAILRESOURCE | dup
-    332 RPL_TOPIC
-
-
-    mode
-
-    461 ERR_NEEDMOREPARAMS | dup
-    502 ERR_USERSDONTMATCH
-    501 ERR_UMODEUNKNOWNFLAG
-    221 RPL_UMODEIS
-
-
-    topic
-
-    461 ERR_NEEDMOREPARAMS | dup
-    442 ERR_NOTONCHANNEL
-    331 RPL_NOTOPIC
-    332 RPL_TOPIC | dup
-    482 ERR_CHANOPRIVSNEEDED
-    477 ERR_NOCHANMODES
-
-
-    kick
-
-    461 ERR_NEEDMOREPARAMS | dup
-    403 ERR_NOSUCHCHANNEL | dup
-    476 ERR_BADCHANMASK | dup
-    482 ERR_CHANOPRIVSNEEDED | dup
-    441 ERR_USERNOTINCHANNEL
-    442 ERR_NOTONCHANNEL | dup
-
-
-    invite
-
-    461 ERR_NEEDMOREPARAMS | dup
-    442 ERR_NOTONCHANNEL | dup
-    401 ERR_NOSUCHNICK
-    482 ERR_CHANOPRIVSNEEDED | dup
-    443 ERR_USERONCHANNEL
-    341 RPL_INVITING
-    301 RPL_AWAY
-
-
-    privmsg
-
-    OK 411 ERR_NORECIPIENT
-    OK 412 ERR_NOTEXTTOSEND
-    OK 401 ERR_NOSUCHNICK
-    OK 401 ERR_NOSUCHCHANNEL
-    404 ERR_CANNOTSENDTOCHAN
-    413 ERR_NOTOPLEVEL
-    414 ERR_WILDTOPLEVEL
-    407 ERR_TOOMANYTARGETS
-
-*/

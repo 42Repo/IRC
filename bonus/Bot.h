@@ -12,7 +12,7 @@
 #include <vector>
 
 static bool g_shutdown = 0;
-// Message sent to Gemini
+
 #define GEMINI_MSG(name, message)                                                                  \
     (std::string("{ \"contents\": [") +                                                            \
      "{ \"role\": \"user\", \"parts\": [ { \"text\": \"Tu es un BOT IRC qui s'appelle  " + name +  \
@@ -20,7 +20,6 @@ static bool g_shutdown = 0;
      "{ \"role\": \"user\", \"parts\": [ { \"text\": \"" +                                         \
      message + "\" } ] } ] }")
 
-// Gemini API URL
 #define GEMINI_URL(api)                                                                            \
     ("https://generativelanguage.googleapis.com/v1/models/"                                        \
      "gemini-2.0-flash:generateContent?key=" +                                                           \
