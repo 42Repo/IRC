@@ -30,8 +30,7 @@ void Bot::sendMessage(const std::string &msg) {
     std::string sentMsg = msg + "\r\n";
     ssize_t     bytesSent = send(_fd, sentMsg.c_str(), sentMsg.length(), 0);
     if (bytesSent == -1) {
-        // Handle error (e.g., log it, close the connection)
-        // TODO: Implement error handling
+      throw std::runtime_error("Failed to send message");
     }
 }
 
@@ -110,7 +109,9 @@ void Bot::loginToServ() {
             break;
         }
     }
-    std::cout << "ciao" << std::endl;
+    sendMessage("QUIT :Leaving");
+    close(_fd);
+    // std::cout << "ciao" << std::endl;
 }
 
 static bool startsWith(const std::string &str, const std::string &prefix) {
@@ -171,7 +172,7 @@ static std::vector<std::string> splitAnswer(std::string answer)
         {
             answerSplited.push_back(temp);
             temp.clear();
-            ++i; // Sauter le 'n' car on a déjà traité "\n"
+            ++i;
         }
         else
         {
@@ -179,7 +180,7 @@ static std::vector<std::string> splitAnswer(std::string answer)
         }
     }
     
-    answerSplited.push_back(temp); // Ajouter le dernier segment
+    answerSplited.push_back(temp);
     return answerSplited;
 }
 void Bot::answer(std::vector<std::string> message) {
@@ -207,7 +208,8 @@ void Bot::answer(std::vector<std::string> message) {
 
         for(std::vector<std::string>::iterator it = answerSplited.begin(); it != answerSplited.end(); ++it)
         {
-
+            if (it->empty())
+                continue;
             sendMessage("PRIVMSG " + message[2] + " :" + *it);
         }
     }
