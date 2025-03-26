@@ -1,6 +1,7 @@
 #include "Bot.h"
 #include <vector>
 
+
 static std::vector<std::string> commandParser(std::string input) {
     std::vector<std::string> command(4);
 
@@ -95,10 +96,9 @@ void Bot::loginToServ() {
     sendMessage("USER " + _name + " 0 * :bot");
 
     char buffer[1024];
-    while (true) {
+    while (!g_shutdown) {
         std::memset(buffer, 0, sizeof(buffer));
         ssize_t bytesRead = recv(_fd, buffer, sizeof(buffer) - 1, 0);
-
         if (bytesRead > 0) {
             buffer[bytesRead] = '\0'; // Assurer une fin de chaîne correcte
             answer(commandParser(buffer));
@@ -107,10 +107,10 @@ void Bot::loginToServ() {
             std::cout << "Server closed connexion" << std::endl;
             break;
         } else {
-            std::cout << "Error" << std::endl;
             break;
         }
     }
+    std::cout << "ciao" << std::endl;
 }
 
 static bool startsWith(const std::string &str, const std::string &prefix) {

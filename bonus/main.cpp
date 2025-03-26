@@ -2,6 +2,7 @@
 #include <csignal>
 #include <sstream>
 
+
 static bool isValidPort(int port) { return port >= 1024 && port <= 65535; }
 
 static bool isValidPassword(const std::string &password) {
@@ -24,8 +25,9 @@ static int stringToInt(const std::string &str) {
 }
 
 void handle_sigint(int sig) {
-    (void)sig;
-    std::cout << "omg sig" << std::endl;
+    if(sig == SIGINT && !g_shutdown)
+        g_shutdown = 1;
+    std::cout << "bah" << std::endl;
 }
 
 static int setSignal(void) {
@@ -47,7 +49,8 @@ int main(int argc, char **argv) {
         std::cout << "Usage: ./bot [adress] [port] [password] [name] [Gemini API Key]" << std::endl;
         return 1;
     }
-
+    
+    setSignal();
     try {
         int port = stringToInt(argv[2]);
         if (!isValidPort(port)) {
@@ -69,7 +72,6 @@ int main(int argc, char **argv) {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
-    setSignal();
 
     return 0;
 }

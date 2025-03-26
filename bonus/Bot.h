@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <vector>
 
+static bool g_shutdown = 0;
 // Message sent to Gemini
 #define GEMINI_MSG(name, message)                                                                  \
     (std::string("{ \"contents\": [") +                                                            \
