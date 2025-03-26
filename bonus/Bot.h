@@ -15,15 +15,14 @@
 #define GEMINI_MSG(name, message)                                                                  \
     (std::string("{ \"contents\": [") +                                                            \
      "{ \"role\": \"user\", \"parts\": [ { \"text\": \"Tu es un BOT IRC qui s'appelle  " + name +  \
-     ". Fais des réponses en une seule ligne (tu peux faire plusieurs phrases, mais sans \\n) "    \
-     "et sans markdown. Réponds dans la même langue que la question.\" } ] },"                     \
+     "Reponds sans AUCUN markdown. Réponds dans la même langue que la question.\" } ] },"                     \
      "{ \"role\": \"user\", \"parts\": [ { \"text\": \"" +                                         \
      message + "\" } ] } ] }")
 
 // Gemini API URL
 #define GEMINI_URL(api)                                                                            \
     ("https://generativelanguage.googleapis.com/v1/models/"                                        \
-     "gemini-pro:generateContent?key=" +                                                           \
+     "gemini-2.0-flash:generateContent?key=" +                                                           \
      api)
 
 class Bot {

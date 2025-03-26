@@ -1,4 +1,5 @@
 #include "Bot.h"
+#include <vector>
 
 static std::vector<std::string> commandParser(std::string input) {
     std::vector<std::string> command(4);
@@ -159,6 +160,28 @@ bool Bot::isAlreadyJoined(std::string channel) {
     return false;
 }
 
+static std::vector<std::string> splitAnswer(std::string answer)
+{
+    std::vector<std::string> answerSplited;
+    std::string temp;
+    
+    for (size_t i = 0; i < answer.size(); ++i)
+    {
+        if (i < answer.size() - 1 && answer[i] == '\\' && answer[i + 1] == 'n')
+        {
+            answerSplited.push_back(temp);
+            temp.clear();
+            ++i; // Sauter le 'n' car on a déjà traité "\n"
+        }
+        else
+        {
+            temp += answer[i];
+        }
+    }
+    
+    answerSplited.push_back(temp); // Ajouter le dernier segment
+    return answerSplited;
+}
 void Bot::answer(std::vector<std::string> message) {
 
     if (message[3].length() > 0 && endsWith(message[3], "\r"))
@@ -179,7 +202,13 @@ void Bot::answer(std::vector<std::string> message) {
         sendMessage("WHO " + message[3]);
     } else if (message[1] == "PRIVMSG" && message[3].length() > 0 &&
                startsWith(message[3], "!tellme")) {
-        std::string answer = getLLMReply(message[3]);
-        sendMessage("PRIVMSG " + message[2] + " :" + parseGeminiAnswer(answer));
+        std::string answer = parseGeminiAnswer(getLLMReply(message[3]));
+        std::vector<std::string> answerSplited = splitAnswer(answer);
+
+        for(std::vector<std::string>::iterator it = answerSplited.begin(); it != answerSplited.end(); ++it)
+        {
+
+            sendMessage("PRIVMSG " + message[2] + " :" + *it);
+        }
     }
 }
