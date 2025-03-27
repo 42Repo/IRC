@@ -85,7 +85,7 @@ void CommandHandler::handleJoin(Client *client, const std::vector<std::string> &
         if (channel->hasChannelMode('i') && !channel->isOperator(client) && !isInvited) {
             throw Error::IRCError(ERR_INVITEONLYCHAN(channelName).c_str());
         }
-        if (channel->hasChannelMode('k') && channel->getPassword() != password) {
+        if (channel->hasChannelMode('k') && channel->getPassword() != password && !isInvited) {
             throw Error::IRCError(ERR_BADCHANNELKEY(channelName).c_str());
         }
 
