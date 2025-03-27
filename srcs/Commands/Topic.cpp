@@ -23,7 +23,7 @@ void CommandHandler::handleTopic(Client *client, const std::vector<std::string> 
         throw Error::IRCError(ERR_NOTONCHANNEL(client->getNickname(), channel->getName()).c_str());
 
     if (input[3].length() > 1) {
-        if (!channel->isOperator(client))
+        if (!channel->isOperator(client) && channel->hasChannelMode('t'))
             throw Error::IRCError(
                 ERR_CHANOPRIVSNEEDED(client->getNickname(), channel->getName()).c_str());
         channel->setTimestamp(tv.tv_sec);
