@@ -41,14 +41,14 @@
 #define RPL_CHANNELMODEIS(channel, mode) (std::string("324 ") + channel + " " + mode)
 
 // 331
-#define RPL_NOTOPIC(channel) (std::string("331 ") + channel + ":No topic is set")
+#define RPL_NOTOPIC(user, channel) (std::string("331 ") + user + " " + channel + " :No topic is set")
 
 // 332
 #define RPL_TOPIC(nick, channel, topic) (std::string("332 ") + nick + " " + channel + " :" + topic)
 
 // 333
 #define RPL_TOPICTIME(nick, channel, admin, timestamp)                                             \
-    (std::string("333 ") + nick + " " + channel + " " + admin + " " + timestamp)
+    (std::string("333 ") + nick + " " + channel + " " + admin + " " + timestamp + " :test")
 
 // 341
 #define RPL_INVITING(nick, channel, target)                                                        \

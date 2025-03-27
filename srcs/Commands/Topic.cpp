@@ -33,10 +33,15 @@ void CommandHandler::handleTopic(Client *client, const std::vector<std::string> 
                             "@" + client->getHostname() + " TOPIC " + input[2] + " :" +
                             channel->getTopic() + "\r\n");
     } else {
-        client->sendNumericReply(RPL_TOPIC(client->getNickname(), input[2], channel->getTopic()));
-
-        client->sendNumericReply(
-            RPL_TOPICTIME(client->getNickname(), input[2], channel->getTopicSetter(),
-                          intToStr(static_cast<size_t>(channel->getTimestamp()))));
+        if (channel->getTopic().empty())
+            client->sendNumericReply(RPL_NOTOPIC(client->getNickname(), input[2]));
+        else
+        {
+            client->sendNumericReply(RPL_TOPIC(client->getNickname(), input[2], channel->getTopic()));
+            
+            client->sendNumericReply(
+                RPL_TOPICTIME(client->getNickname(), input[2], channel->getTopicSetter(),
+                              intToStr(static_cast<size_t>(channel->getTimestamp()))));
+        }
     }
 }
